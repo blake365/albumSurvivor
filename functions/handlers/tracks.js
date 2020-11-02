@@ -16,7 +16,7 @@ exports.getAllTracks = (req, res) => {
           votes: doc.data().votes,
         })
       })
-      return res.json(commentaries)
+      return res.json(trackList)
     })
     .catch(err => console.error(err))
 }
@@ -30,7 +30,7 @@ exports.voteForTrack = (req, res) => {
 
   const trackDocument = db.doc(`/tracks/${req.params.trackId}`)
 
-  let trackData
+  let trackData = {}
 
   trackDocument
     .get()
@@ -43,14 +43,16 @@ exports.voteForTrack = (req, res) => {
         return res.status(404).json({ error: 'Track not found' })
       }
     })
+    //TODO: will probably need to change this to allow daily voting
+    //FIXME: currently only limits to 1 vote per track instead of 1 vote per day/list of tracks
     .then(data => {
       if (data.empty) {
         return db
           .collection('votes')
           .add({
             trackId: req.params.trackId,
-            name: req.params.name,
             userName: req.user.userName,
+            name: trackData.name,
             createdAt: new Date().toISOString(),
           })
           .then(() => {

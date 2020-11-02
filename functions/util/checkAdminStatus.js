@@ -1,4 +1,4 @@
-module.exports.checkAdminStatus = (req, res, next) => {
+module.exports = checkAdminStatus = (req, res, next) => {
   if (req.user.type !== 'admin') {
     return res
       .status(500)

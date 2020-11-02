@@ -97,14 +97,15 @@ exports.login = (req, res) => {
 }
 
 //get any users details
-//TODO: get vote history
+//FIXME: get vote history
 exports.getUserDetails = (req, res) => {
-  let userData = []
+  let userData = ['hello']
   db.doc(`/users/${req.params.userName}`)
     .get()
     .then(doc => {
       if (doc.exists) {
         userData.user = doc.data()
+        console.log(userData.user)
         return db
           .collection('votes')
           .where('userName', '==', req.params.userName)
@@ -140,6 +141,7 @@ exports.getAuthenticatedUser = (req, res) => {
     .get()
     .then(doc => {
       if (doc.exists) {
+        console.log('exists')
         userData.credentials = doc.data()
         return db
           .collection('votes')
@@ -149,28 +151,27 @@ exports.getAuthenticatedUser = (req, res) => {
     })
     .then(data => {
       userData.votes = []
-      data
-        .forEach(doc => {
-          userData.votes.push(doc.data())
-          return res.json(userData)
-        })
-        .catch(err => {
-          console.error(err)
-          return res.status(500).json({ error: err.code })
-        })
-    })
-}
-// Add user details
-exports.addUserDetails = (req, res) => {
-  let userDetails = reduceUserDetails(req.body)
-
-  db.doc(`/users/${req.user.handle}`)
-    .update(userDetails)
-    .then(() => {
-      return res.json({ message: 'Details added successfully' })
+      data.forEach(doc => {
+        userData.votes.push(doc.data())
+      })
+      return res.json(userData)
     })
     .catch(err => {
       console.error(err)
       return res.status(500).json({ error: err.code })
     })
 }
+// Add user details
+// exports.addUserDetails = (req, res) => {
+//   let userDetails = reduceUserDetails(req.body)
+
+//   db.doc(`/users/${req.user.handle}`)
+//     .update(userDetails)
+//     .then(() => {
+//       return res.json({ message: 'Details added successfully' })
+//     })
+//     .catch(err => {
+//       console.error(err)
+//       return res.status(500).json({ error: err.code })
+//     })
+// }

@@ -1,11 +1,23 @@
 const functions = require('firebase-functions')
 
-const { getAllTracks } = require('./handlers/tracks')
+const {
+  getAllTracks,
+  voteForTrack,
+  deleteTrack,
+  unvoteForTrack,
+} = require('./handlers/tracks')
+
+const {
+  getAllCommentary,
+  postCommentary,
+  getCommentary,
+  deleteCommentary,
+} = require('./handlers/commentary')
 
 const {
   signup,
   login,
-  addUserDetails,
+  // addUserDetails,
   getAuthenticatedUser,
   getUserDetails,
   // markNotificationsRead,
@@ -16,17 +28,21 @@ const app = express()
 const FBAuth = require('./util/FBAuth')
 const checkAdminStatus = require('./util/checkAdminStatus')
 const { db } = require('./util/admin')
-const { deleteCommentary } = require('./handlers/commentary')
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // tracks routes
 app.get('/tracks', getAllTracks)
 // app.post('/scream', FBAuth, postOneScream)
+
 // app.get('/scream/:screamId', getScream)
-app.delete('/track/:trackId', FBAuth, deleteTrack) // probably won't take this approach
-app.get('/track/:trackId/vote', FBAuth, voteForTrack) //may not need this either
-app.get('/track/:trackId/unvote', FBAuth, unvoteForTrack) //may not need this either
+
+// app.delete('/track/:trackId', FBAuth, deleteTrack) // probably won't take this approach
+
+app.get('/tracks/:trackId/vote', FBAuth, voteForTrack) //may not need this either
+
+// app.get('/track/:trackId/unvote', FBAuth, unvoteForTrack) //may not need this either
 
 //commentary
 app.get('/commentary', getAllCommentary)
@@ -42,8 +58,10 @@ app.delete(
 // User routes
 app.post('/signup', signup)
 app.post('/login', login)
-app.post('/user', FBAuth, addUserDetails)
+// app.post('/user', FBAuth, addUserDetails)
 app.get('/user', FBAuth, getAuthenticatedUser)
 app.get('/user/:userName', getUserDetails)
 
 exports.api = functions.https.onRequest(app)
+
+//TODO: create daily reset function

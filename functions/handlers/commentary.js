@@ -27,7 +27,7 @@ exports.postCommentary = (req, res) => {
 
   const newCommentary = {
     body: req.body.body,
-    userHandle: req.user.handle,
+    userName: req.user.userName,
     createdAt: new Date().toISOString(),
   }
 
