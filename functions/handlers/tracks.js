@@ -14,6 +14,7 @@ exports.getAllTracks = (req, res) => {
           name: doc.data().name,
           description: doc.data().description,
           votes: doc.data().votes,
+          trackListing: doc.data().trackListing,
         })
       })
       return res.json(trackList)
