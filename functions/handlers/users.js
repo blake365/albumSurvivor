@@ -18,6 +18,12 @@ exports.signup = (req, res) => {
     userName: req.body.userName,
   }
 
+  const dummyVote = {
+    trackId: 123,
+    voteDay: 0,
+    createdAt: new Date().toISOString(),
+  }
+
   const { valid, errors } = validateSignupData(newUser)
 
   if (!valid) return res.status(400).json(errors)
@@ -51,7 +57,12 @@ exports.signup = (req, res) => {
       }
       return db.doc(`/users/${newUser.userName}`).set(userCredentials)
     })
-
+    .then(() => {
+      return db
+        .doc(`users/${newUser.userName}/`)
+        .collection('votes')
+        .add(dummyVote)
+    })
     .then(() => {
       return res.status(201).json({ token })
     })

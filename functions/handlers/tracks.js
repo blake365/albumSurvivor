@@ -61,9 +61,7 @@ exports.castVote = (req, res) => {
     .get()
     .then(query => {
       doc = query.docs[0]
-      if (doc.data().voteDay === todayDate) {
-        return res.status(403).json({ error: 'You have already voted today' })
-      } else {
+      if (doc.data().voteDay !== todayDate) {
         const trackDocument = db.doc(`/tracks/${req.params.trackId}`)
         let trackData = {}
         return trackDocument
@@ -84,6 +82,8 @@ exports.castVote = (req, res) => {
           .then(() => {
             return res.json(trackData)
           })
+      } else {
+        return res.status(403).json({ error: 'You have already voted today' })
       }
     })
     .catch(err => {
@@ -92,58 +92,70 @@ exports.castVote = (req, res) => {
     })
 }
 
-// exports.voteForTrack = (req, res) => {
-//   const voteDocument = db
-//     .collection(`/users/${req.params.userName}/votes`)
-//     .where('trackId', '==', req.params.trackId)
-//     .where('voteTime', '==', new Date().toISOString())
-//     .limit(1)
-
-//   const trackDocument = db.doc(`/tracks/${req.params.trackId}`)
-
-//   let trackData = {}
-
-//   trackDocument
-//     .get()
-//     .then(doc => {
-//       if (doc.exists) {
-//         trackData = doc.data()
-//         trackData.trackId = doc.id
-//         return voteDocument.get()
-//       } else {
-//         return res.status(404).json({ error: 'Track not found' })
-//       }
-//     })
-//     //TODO: will probably need to change this to allow daily voting
-//     //FIXME: currently only limits to 1 vote per track instead of 1 vote per day/list of tracks
-//     .then(data => {
-//       if (data.empty) {
-//         return db
-//           .collection('votes')
-//           .add({
-//             trackId: req.params.trackId,
-//             userName: req.user.userName,
-//             name: trackData.name,
-//             createdAt: new Date().toISOString(),
-//           })
-//           .then(() => {
-//             trackData.votes++
-//             return trackDocument.update({
-//               votes: trackData.votes,
-//             })
-//           })
-//           .then(() => {
-//             return res.json(trackData)
-//           })
-//       } else {
-//         return res.status(400).json({ error: 'Track already voted for' })
-//       }
-//     })
-//     .catch(err => {
-//       console.error(err)
-//       res.status(500).json({ error: err.code })
-//     })
-// }
+exports.tallyVotesTest = (req, res) => {
+  let aliveTracks = []
+  db.collection('tracks')
+    .where('alive', '==', true)
+    .get()
+    .then(data => {
+      // find the highest number of votes
+      let mostVotes = 0
+      data.forEach(track => {
+        aliveTracks.push(track.data())
+        if (mostVotes < track.data().votes) mostVotes = track.data().votes
+      })
+      // console.log(aliveTracks)
+      return mostVotes
+    })
+    .then(mostVotes => {
+      // use highest number of votes to get specific track
+      return db
+        .collection('tracks')
+        .where('votes', '==', mostVotes)
+        .limit(1)
+        .get()
+        .then(query => {
+          let trackId = ''
+          query.forEach(doc => {
+            //set track to alive: false
+            trackId = doc.data().trackId
+          })
+          return trackId
+        })
+        .then(trackId => {
+          db.doc(`tracks/${trackId}`)
+            .get()
+            .then(doc => {
+              return doc.ref.update({
+                alive: false,
+              })
+            })
+        })
+        .then(() => {
+          // console.log(aliveTracks)
+          let batch = db.batch()
+          if (aliveTracks.length > 0) {
+            aliveTracks.forEach(track => {
+              batch.update(db.doc(`tracks/${track.trackId}`), { votes: 0 })
+            })
+            batch
+              .commit()
+              .then(() => {
+                return res.json({ message: 'Votes reset to 0' })
+              })
+              .catch(err => {
+                console.error(err)
+                return res.status(500).json({ error: err.code })
+              })
+          } else {
+            return
+          }
+        })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
 
 //TODO: add new tracks for new poll creation
 
@@ -187,4 +199,4 @@ exports.castVote = (req, res) => {
 //       console.error(err)
 //       res.status(500).json({ error: err.code })
 //     })
-// }
+//
