@@ -15,7 +15,7 @@ const initialState = {
   authenticated: false,
   loading: false,
   credentials: {},
-  history: [],
+  voteHistory: [],
   voted: false,
 }
 
@@ -43,13 +43,6 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         voted: true,
-        history: [
-          ...state.history,
-          {
-            userName: state.credentials.userName,
-            trackId: action.payload.trackId,
-          },
-        ],
       }
     case LIKE_SCREAM:
       return {

@@ -1,21 +1,21 @@
 const theme = {
   palette: {
     primary: {
-      light: '#33c9dc',
-      main: '#00bcd4',
-      dark: '#008394',
+      light: '#121858',
+      main: '#3f51b5',
+      dark: '#121858',
       contrastText: '#fff',
     },
     secondary: {
-      light: '#ff6333',
-      main: '#ff3d00',
-      dark: '#b22a00',
-      contrastText: '#fff',
+      light: '#4aedc4',
+      main: '#1de9b6',
+      dark: '#14a37f',
+      contrastText: '#000',
     },
   },
   spreadThis: {
     typography: {
-      useNextVarients: true,
+      useNextVariants: true,
     },
     form: {
       textAlign: 'center',

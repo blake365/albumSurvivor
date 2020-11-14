@@ -1,15 +1,31 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { Grid } from '@material-ui/core'
+import { CardActions, Grid, withStyles } from '@material-ui/core'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Radio from '@material-ui/core/Radio'
 
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 
-export class PollOption extends Component {
+const styles = theme => ({
+  ...theme.spreadThis,
+  content: {
+    padding: 8,
+    '&:hover': {
+      background: '#4aedc4',
+    },
+    '&:last-child': {
+      paddingBottom: 8,
+    },
+  },
+  trackInfo: {
+    overflow: 'scroll',
+  },
+})
+
+class PollOption extends Component {
   constructor(props) {
     super(props)
     this.handleChange = this.handleChange.bind(this)
@@ -21,20 +37,28 @@ export class PollOption extends Component {
 
   render() {
     const {
+      classes,
       track: { name, description, trackId },
-      //   user: {
-      //     authenticated,
-      //     credentials: { handle },
-      //   },
     } = this.props
 
     return (
-      <Card variant='outlined' style={{ margin: 4 }}>
-        <CardContent>
+      <Card
+        variant='outlined'
+        style={
+          this.props.selection === trackId
+            ? {
+                background: 'linear-gradient(45deg, #4aedc4 30%, #fff 90%)',
+                border: 'solid 1px black',
+                margin: 4,
+              }
+            : { margin: 4 }
+        }
+      >
+        <CardContent className={classes.content}>
           <Grid container alignItems='center' justify='center'>
-            <Grid item xs={10}>
-              <Typography variant='h4'>{name}</Typography>
-              <Typography variant='body2'>{description}</Typography>
+            <Grid item xs={10} className={classes.trackInfo}>
+              <Typography variant='h5'>{name}</Typography>
+              <Typography variant='subtitle1'>{description}</Typography>
             </Grid>
             <Grid item>
               <Radio
@@ -43,6 +67,7 @@ export class PollOption extends Component {
                 value={trackId}
                 name={name}
                 inputProps={{ 'aria-label': name }}
+                color='primary'
               />
             </Grid>
           </Grid>
@@ -53,12 +78,12 @@ export class PollOption extends Component {
 }
 
 PollOption.propTypes = {
-  user: PropTypes.object.isRequired,
   track: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = state => ({
-  user: state.user,
-})
+// const mapStateToProps = state => ({
+//   user: state.user,
+// })
 
-export default connect(mapStateToProps)(PollOption)
+export default withStyles(styles)(PollOption)

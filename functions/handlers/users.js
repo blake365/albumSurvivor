@@ -51,6 +51,7 @@ exports.signup = (req, res) => {
       }
       return db.doc(`/users/${newUser.userName}`).set(userCredentials)
     })
+
     .then(() => {
       return res.status(201).json({ token })
     })
@@ -99,7 +100,7 @@ exports.login = (req, res) => {
 //get any users details
 //FIXME: get vote history
 exports.getUserDetails = (req, res) => {
-  let userData = ['hello']
+  let userData = {}
   db.doc(`/users/${req.params.userName}`)
     .get()
     .then(doc => {
@@ -107,8 +108,7 @@ exports.getUserDetails = (req, res) => {
         userData.user = doc.data()
         console.log(userData.user)
         return db
-          .collection('votes')
-          .where('userName', '==', req.params.userName)
+          .collection(`/users/${req.params.userName}/votes`)
           .orderBy('createdAt', 'desc')
           .get()
       } else {
@@ -119,11 +119,8 @@ exports.getUserDetails = (req, res) => {
       userData.voteHistory = []
       data.forEach(doc => {
         userData.voteHistory.push({
-          name: doc.data().name,
           createdAt: doc.data().createdAt,
-          userName: doc.data().userName,
-          userImage: doc.data().userImage,
-          trackId: doc.id,
+          trackId: doc.data().trackId,
         })
       })
       return res.json(userData)
@@ -141,18 +138,23 @@ exports.getAuthenticatedUser = (req, res) => {
     .get()
     .then(doc => {
       if (doc.exists) {
-        console.log('exists')
         userData.credentials = doc.data()
         return db
-          .collection('votes')
-          .where('userName', '==', req.user.userName)
+          .collection(`/users/${req.user.userName}/votes`)
+          .orderBy('createdAt', 'desc')
           .get()
+      } else {
+        return res.status(404).json({ error: 'User not found' })
       }
     })
     .then(data => {
-      userData.votes = []
+      userData.voteHistory = []
       data.forEach(doc => {
-        userData.votes.push(doc.data())
+        userData.voteHistory.push({
+          createdAt: doc.data().createdAt,
+          trackId: doc.data().trackId,
+          name: doc.data().name,
+        })
       })
       return res.json(userData)
     })
@@ -161,6 +163,25 @@ exports.getAuthenticatedUser = (req, res) => {
       return res.status(500).json({ error: err.code })
     })
 }
+
+// correlate trackID with track name in user doc
+// const trackNameAssociater = trackId => {
+//   let trackData = {}
+//   let voteData = {}
+
+//   db.doc(`/tracks/${trackId}`)
+//     .get()
+//     .then(doc => {
+//       trackData = doc.data()
+//       trackData.name = doc.data().name
+//       console.log(trackData.name)
+//       return trackData
+//     })
+//   voteData.name = trackData.name
+//   console.log(voteData.name)
+//   return voteData.name
+// }
+
 // Add user details
 // exports.addUserDetails = (req, res) => {
 //   let userDetails = reduceUserDetails(req.body)

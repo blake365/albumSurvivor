@@ -1,4 +1,5 @@
 //validation helpers
+//FIXME: input is empty from sign up page
 const isEmpty = input => {
   if (input.trim() === '') return true
   else return false

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
+import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { getTracks, postVote } from '../redux/actions/dataActions'
@@ -10,12 +11,16 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import PollOption from './PollOption'
 import Button from '@material-ui/core/Button'
+import Snackbar from '@material-ui/core/Snackbar'
+import MuiAlert from '@material-ui/lab/Alert'
 
 const styles = theme => ({
   ...theme.spreadThis,
   submitButton: {
-    width: 120,
+    width: 'auto',
+    height: 60,
     margin: 5,
+    fontSize: '1.2rem',
     alignSelf: 'center',
   },
   progressSpinner: {
@@ -38,6 +43,8 @@ class Poll extends Component {
       selection: '',
       submitted: false,
       disabled: false,
+      open: false,
+      errors: {},
     }
   }
 
@@ -51,16 +58,33 @@ class Poll extends Component {
 
   submitVote = event => {
     event.preventDefault()
-    this.setState({ submitted: true, disabled: true })
-    this.props.postVote(this.state.selection)
+    if (this.state.selection !== '') {
+      this.setState({ submitted: true, disabled: true, open: true })
+      this.props.postVote(
+        this.state.selection,
+        this.props.user.credentials.userName
+      )
+    } else return
+  }
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    this.setState({ open: false })
   }
 
   render() {
-    const { classes } = this.props
-    const { tracks, loading } = this.props.data
-    const selection = this.state.selection
-
-    console.log(selection)
+    const {
+      classes,
+      data: { tracks },
+      UI: { loading },
+      user: { authenticated },
+    } = this.props
+    // const { tracks } = this.props.data
+    // const { authenticated } = this.props.user
+    const { selection, errors } = this.state
 
     let pollOptionMarkup = !loading ? (
       tracks.map(track => (
@@ -74,24 +98,59 @@ class Poll extends Component {
     ) : (
       <p>Loading</p>
     )
+
+    let submitButtonOption = authenticated ? (
+      <Button
+        type='submit'
+        variant='contained'
+        color='secondary'
+        disabled={this.state.disabled}
+        className={classes.submitButton}
+        onClick={this.submitVote}
+      >
+        Cast Vote
+      </Button>
+    ) : (
+      <Button
+        type='link'
+        component={Link}
+        to='/login'
+        variant='contained'
+        color='primary'
+        disabled={this.state.disabled}
+        className={classes.submitButton}
+      >
+        Login to Vote
+      </Button>
+    )
+
+    //TODO: work on error and success alerts, integrate redux
+    let messageOverlayMarkup = this.state.submitted ? (
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={this.state.open}
+        autoHideDuration={8000}
+        onClose={this.handleClose}
+      >
+        <MuiAlert
+          onClose={this.handleClose}
+          severity='success'
+          elevation={6}
+          variant='filled'
+        >
+          Your vote was recorded!
+        </MuiAlert>
+      </Snackbar>
+    ) : (
+      <div></div>
+    )
+
     return (
       <Paper className={classes.pollBody}>
-        <Typography variant='h5'>
-          Vote for your <strong>least</strong> favorite song on the album
-        </Typography>
-        <Typography variant='body1'>{tracks.length} songs remain</Typography>
+        {messageOverlayMarkup}
         <FormControl disabled={this.state.disabled} fullWidth>
           {pollOptionMarkup}
-          <Button
-            type='submit'
-            variant='contained'
-            color='secondary'
-            disabled={this.state.disabled}
-            className={classes.submitButton}
-            onClick={this.submitVote}
-          >
-            Cast Vote
-          </Button>
+          {submitButtonOption}
         </FormControl>
       </Paper>
     )
@@ -107,6 +166,7 @@ Poll.propTypes = {
 const mapStateToProps = state => ({
   data: state.data,
   user: state.user,
+  UI: state.UI,
 })
 
 export default connect(mapStateToProps, { getTracks, postVote })(

@@ -5,20 +5,33 @@ import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+
 // import AppBar from '@material-ui/core/AppBar'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { logoutUser } from '../../redux/actions/userActions'
 
 import HomeIcon from '@material-ui/icons/Home'
-
+import AlbumIcon from '@material-ui/icons/Album'
 import MyButton from '../../util/MyButton'
 
 export class Navbar extends Component {
+  handleLogout = () => {
+    this.props.logoutUser()
+  }
+
   render() {
-    const { authenticated } = this.props
+    const {
+      authenticated,
+      user: { credentials },
+    } = this.props
     return (
       <AppBar>
-        <Toolbar className='nav-container'>
+        <Toolbar className=''>
+          <Typography variant='h5' color='secondary'>
+            Album <AlbumIcon color='secondary' fontSize='large' /> Survivor
+          </Typography>
           {authenticated ? (
             <Fragment>
               <Link to='/'>
@@ -26,6 +39,10 @@ export class Navbar extends Component {
                   <HomeIcon />
                 </MyButton>
               </Link>
+              <Button color='inherit'>{credentials.userName}</Button>
+              <Button color='inherit' onClick={this.handleLogout}>
+                Logout
+              </Button>
             </Fragment>
           ) : (
             <Fragment>
@@ -48,10 +65,14 @@ export class Navbar extends Component {
 
 Navbar.propTypes = {
   authenticated: PropTypes.bool.isRequired,
+  logoutUser: PropTypes.func.isRequired,
 }
 
+// const mapActionsToProps = { logoutUser}
+
 const mapStateToProps = state => ({
+  user: state.user,
   authenticated: state.user.authenticated,
 })
 
-export default connect(mapStateToProps)(Navbar)
+export default connect(mapStateToProps, { logoutUser })(Navbar)

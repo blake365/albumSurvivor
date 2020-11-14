@@ -25,7 +25,7 @@ class login extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      handle: '',
+      userName: '',
       errors: {},
     }
   }
@@ -39,7 +39,7 @@ class login extends Component {
       email: this.state.email,
       password: this.state.password,
       confirmPassword: this.state.confirmPassword,
-      handle: this.state.handle,
+      userName: this.state.userName,
     }
     this.props.signupUser(newUserData, this.props.history)
   }
@@ -108,14 +108,14 @@ class login extends Component {
               fullWidth
             />
             <TextField
-              id='handle'
-              name='handle'
+              id='userName'
+              name='userName'
               type='text'
-              label='Handle'
+              label='User Name'
               className={classes.textField}
-              helperText={errors.handle}
-              error={errors.handle ? true : false}
-              value={this.state.handle}
+              helperText={errors.userName}
+              error={errors.userName ? true : false}
+              value={this.state.userName}
               onChange={this.handleChange}
               fullWidth
             />

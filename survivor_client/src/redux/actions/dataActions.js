@@ -38,13 +38,12 @@ export const getTracks = () => dispatch => {
 export const postVote = trackId => dispatch => {
   dispatch({ type: LOADING_UI })
   axios
-    .post(`/track/${trackId}/vote`)
+    .post(`/tracks/${trackId}/vote`)
     .then(res => {
       dispatch({
         type: POST_VOTE,
         payload: res.data,
       })
-      dispatch(clearErrors())
     })
     .catch(err => {
       dispatch({
