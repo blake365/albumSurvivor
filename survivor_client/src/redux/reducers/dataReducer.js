@@ -15,6 +15,7 @@ const initialState = {
   track: {},
   loading: false,
   voted: false,
+  message: null,
 }
 
 const dataReducer = (state = initialState, action) => {
@@ -35,6 +36,7 @@ const dataReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         voted: true,
+        message: action.payload,
       }
     case LIKE_SCREAM:
     case UNLIKE_SCREAM:

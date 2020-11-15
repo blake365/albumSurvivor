@@ -6,15 +6,19 @@ import { connect } from 'react-redux'
 import Poll from '../components/Poll'
 import Hero from '../components/Hero'
 import Profile from '../components/Profile'
+import MessageSlot from '../components/MessageSlot'
 
 import PropTypes from 'prop-types'
 
 export class home extends Component {
   render() {
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
           <Hero />
+        </Grid>
+        <Grid item xs={12}>
+          <MessageSlot />
         </Grid>
         <Grid item sm={8} xs={12}>
           <Poll />

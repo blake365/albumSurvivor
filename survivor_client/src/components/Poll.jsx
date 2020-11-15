@@ -8,11 +8,8 @@ import { getTracks, postVote } from '../redux/actions/dataActions'
 
 import FormControl from '@material-ui/core/FormControl'
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
 import PollOption from './PollOption'
 import Button from '@material-ui/core/Button'
-import Snackbar from '@material-ui/core/Snackbar'
-import MuiAlert from '@material-ui/lab/Alert'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -59,20 +56,9 @@ class Poll extends Component {
   submitVote = event => {
     event.preventDefault()
     if (this.state.selection !== '') {
-      this.setState({ submitted: true, disabled: true, open: true })
-      this.props.postVote(
-        this.state.selection,
-        this.props.user.credentials.userName
-      )
+      this.setState({ submitted: true, disabled: true })
+      this.props.postVote(this.state.selection)
     } else return
-  }
-
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-
-    this.setState({ open: false })
   }
 
   render() {
@@ -84,7 +70,7 @@ class Poll extends Component {
     } = this.props
     // const { tracks } = this.props.data
     // const { authenticated } = this.props.user
-    const { selection, errors } = this.state
+    const { selection } = this.state
 
     let pollOptionMarkup = !loading ? (
       tracks.map(track => (
@@ -96,6 +82,7 @@ class Poll extends Component {
         />
       ))
     ) : (
+      //TODO: create loading spinner
       <p>Loading</p>
     )
 
@@ -124,30 +111,8 @@ class Poll extends Component {
       </Button>
     )
 
-    //TODO: work on error and success alerts, integrate redux
-    let messageOverlayMarkup = this.state.submitted ? (
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={this.state.open}
-        autoHideDuration={8000}
-        onClose={this.handleClose}
-      >
-        <MuiAlert
-          onClose={this.handleClose}
-          severity='success'
-          elevation={6}
-          variant='filled'
-        >
-          Your vote was recorded!
-        </MuiAlert>
-      </Snackbar>
-    ) : (
-      <div></div>
-    )
-
     return (
       <Paper className={classes.pollBody}>
-        {messageOverlayMarkup}
         <FormControl disabled={this.state.disabled} fullWidth>
           {pollOptionMarkup}
           {submitButtonOption}

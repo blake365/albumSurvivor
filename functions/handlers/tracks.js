@@ -80,10 +80,12 @@ exports.castVote = (req, res) => {
             db.collection(`/users/${req.user.userName}/votes`).add(voteDocument)
           })
           .then(() => {
-            return res.json(trackData)
+            return res
+              .status(200)
+              .json({ message: 'Your vote has been submitted!' })
           })
       } else {
-        return res.status(403).json({ error: 'You have already voted today' })
+        return res.status(403).json({ error: 'You have already voted today!' })
       }
     })
     .catch(err => {
@@ -141,7 +143,9 @@ exports.tallyVotesTest = (req, res) => {
             batch
               .commit()
               .then(() => {
-                return res.json({ message: 'Votes reset to 0' })
+                return res.json({
+                  message: 'It is a new day! Votes reset to 0',
+                })
               })
               .catch(err => {
                 console.error(err)

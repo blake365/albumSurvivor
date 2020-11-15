@@ -12,9 +12,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { logoutUser } from '../../redux/actions/userActions'
 
-import HomeIcon from '@material-ui/icons/Home'
 import AlbumIcon from '@material-ui/icons/Album'
-import MyButton from '../../util/MyButton'
 
 const styles = theme => ({
   ...theme.spreadThis,
