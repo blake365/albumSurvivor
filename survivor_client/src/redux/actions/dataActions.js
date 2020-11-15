@@ -1,5 +1,6 @@
 import {
   SET_TRACKS,
+  SET_DEAD_TRACKS,
   POST_VOTE,
   LOADING_DATA,
   SET_ERRORS,
@@ -45,6 +46,24 @@ export const postVote = trackId => dispatch => {
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,
+      })
+    })
+}
+
+export const getGraveyardTracks = () => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get('/tracks/dead')
+    .then(res => {
+      dispatch({
+        type: SET_DEAD_TRACKS,
+        payload: res.data,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
       })
     })
 }

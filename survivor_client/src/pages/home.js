@@ -9,6 +9,7 @@ import Profile from '../components/Profile'
 import MessageSlot from '../components/MessageSlot'
 
 import PropTypes from 'prop-types'
+import Graveyard from '../components/Graveyard'
 
 export class home extends Component {
   render() {
@@ -25,6 +26,9 @@ export class home extends Component {
         </Grid>
         <Grid item sm={4} xs={12}>
           <Profile />
+        </Grid>
+        <Grid item sm={4} xs={12}>
+          <Graveyard />
         </Grid>
       </Grid>
     )

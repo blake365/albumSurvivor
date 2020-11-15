@@ -27,9 +27,9 @@ exports.getDeadTracks = (req, res) => {
     .where('alive', '==', false)
     .get()
     .then(data => {
-      let trackList = []
+      let deadTrackList = []
       data.forEach(doc => {
-        trackList.push({
+        deadTrackList.push({
           trackId: doc.id,
           name: doc.data().name,
           description: doc.data().description,

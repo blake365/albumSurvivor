@@ -14,6 +14,7 @@ export const STOP_LOADING_UI = 'STOP_LOADING_UI'
 //Data reducer types
 export const SET_TRACKS = 'SET_TRACKS'
 export const POST_VOTE = 'POST_VOTE'
+export const SET_DEAD_TRACKS = 'SET_DEAD_TRACKS'
 export const SET_SCREAM = 'SET_SCREAM'
 export const LIKE_SCREAM = 'LIKE_SCREAM'
 export const UNLIKE_SCREAM = 'UNLIKE_SCREAM'

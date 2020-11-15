@@ -33,8 +33,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // tracks routes
 app.get('/tracks', getAliveTracks)
-app.get('/tracks/tally', tallyVotesTest)
-app.get('/tracks/dead', getAliveTracks)
+// app.get('/tracks/tally', tallyVotesTest)
+app.get('/tracks/dead', getDeadTracks)
 app.post('/tracks/:trackId/vote', FBAuth, castVote)
 
 //commentary
@@ -62,10 +62,10 @@ exports.api = functions.https.onRequest(app)
 
 // minutes, hours, day of month, month, day of week - '0 0 * * *' daily at midnight
 exports.scheduledFunctionCrontab = functions.pubsub
-  .schedule('9 14 * * *')
+  .schedule('0 19 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
-    console.log('This will be run every day at XXX Eastern!')
+    console.log('This will be run every day at 7PM Eastern!')
     db.collection('tracks')
       .where('alive', '==', true)
       .get()

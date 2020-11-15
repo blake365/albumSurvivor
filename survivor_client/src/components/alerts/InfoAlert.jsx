@@ -20,6 +20,7 @@ class InfoAlert extends Component {
         <Collapse in={this.state.open}>
           <Alert
             severity='info'
+            variant='filled'
             action={
               <IconButton
                 aria-label='close'

@@ -11,14 +11,21 @@ import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { logoutUser } from '../../redux/actions/userActions'
+import Chip from '@material-ui/core/Chip'
 
 import AlbumIcon from '@material-ui/icons/Album'
 
 const styles = theme => ({
   ...theme.spreadThis,
   title: {
-    marginLeft: 10,
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    lineHeight: 1,
+    '&>*': {
+      marginLeft: 10,
+    },
   },
 })
 
@@ -36,13 +43,15 @@ export class Navbar extends Component {
     return (
       <AppBar>
         <Toolbar className=''>
-          <Link to='/'>
-            <AlbumIcon color='secondary' fontSize='large' />
-          </Link>
-          <Typography variant='h6' color='secondary' className={classes.title}>
-            Album Survivor
-          </Typography>
-
+          <div className={classes.title}>
+            <Link to='/'>
+              <AlbumIcon color='secondary' fontSize='large' />
+            </Link>
+            <Typography variant='h6' color='secondary'>
+              Album Survivor
+            </Typography>
+            <Chip label='BETA' variant='outlined' color='secondary' />
+          </div>
           {authenticated ? (
             <Fragment>
               <Button color='inherit'>{credentials.userName}</Button>
