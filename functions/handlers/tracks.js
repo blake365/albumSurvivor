@@ -1,4 +1,4 @@
-const { user } = require('firebase-functions/lib/providers/auth')
+// const { user } = require('firebase-functions/lib/providers/auth')
 const { db } = require('../util/admin')
 
 exports.getAliveTracks = (req, res) => {
@@ -25,6 +25,7 @@ exports.getAliveTracks = (req, res) => {
 exports.getDeadTracks = (req, res) => {
   db.collection('tracks')
     .where('alive', '==', false)
+    .orderBy('voteOutDay', 'desc')
     .get()
     .then(data => {
       let deadTrackList = []
@@ -35,6 +36,8 @@ exports.getDeadTracks = (req, res) => {
           description: doc.data().description,
           votes: doc.data().votes,
           trackListing: doc.data().trackListing,
+          voteOutDay: doc.data().voteOutDay,
+          respect: doc.data().respect,
         })
       })
       return res.json(deadTrackList)
@@ -94,70 +97,92 @@ exports.castVote = (req, res) => {
     })
 }
 
-exports.tallyVotesTest = (req, res) => {
-  let aliveTracks = []
-  db.collection('tracks')
-    .where('alive', '==', true)
+// exports.tallyVotesTest = (req, res) => {
+//   let aliveTracks = []
+//   db.collection('tracks')
+//     .where('alive', '==', true)
+//     .get()
+//     .then(data => {
+//       // find the highest number of votes
+//       let mostVotes = 0
+//       data.forEach(track => {
+//         aliveTracks.push(track.data())
+//         if (mostVotes < track.data().votes) mostVotes = track.data().votes
+//       })
+//       // console.log(aliveTracks)
+//       return mostVotes
+//     })
+//     .then(mostVotes => {
+//       // use highest number of votes to get specific track
+//       return db
+//         .collection('tracks')
+//         .where('votes', '==', mostVotes)
+//         .limit(1)
+//         .get()
+//         .then(query => {
+//           let trackId = ''
+//           query.forEach(doc => {
+//             //set track to alive: false
+//             trackId = doc.data().trackId
+//           })
+//           return trackId
+//         })
+//         .then(trackId => {
+//           db.doc(`tracks/${trackId}`)
+//             .get()
+//             .then(doc => {
+//               return doc.ref.update({
+//                 alive: false,
+//               })
+//             })
+//         })
+//         .then(() => {
+//           // console.log(aliveTracks)
+//           let batch = db.batch()
+//           if (aliveTracks.length > 0) {
+//             aliveTracks.forEach(track => {
+//               batch.update(db.doc(`tracks/${track.trackId}`), { votes: 0 })
+//             })
+//             batch
+//               .commit()
+//               .then(() => {
+//                 return res.json({
+//                   message: 'It is a new day! Votes reset to 0',
+//                 })
+//               })
+//               .catch(err => {
+//                 console.error(err)
+//                 return res.status(500).json({ error: err.code })
+//               })
+//           } else {
+//             return
+//           }
+//         })
+//     })
+//     .catch(err => {
+//       console.log(err)
+//     })
+// }
+
+exports.payRespects = (req, res) => {
+  const trackDocument = db.doc(`/tracks/${req.params.trackId}`)
+  let trackData = {}
+
+  trackDocument
     .get()
-    .then(data => {
-      // find the highest number of votes
-      let mostVotes = 0
-      data.forEach(track => {
-        aliveTracks.push(track.data())
-        if (mostVotes < track.data().votes) mostVotes = track.data().votes
+    .then(doc => {
+      trackData = doc.data()
+      trackData.respect++
+      return trackDocument.update({
+        respect: trackData.respect,
       })
-      // console.log(aliveTracks)
-      return mostVotes
     })
-    .then(mostVotes => {
-      // use highest number of votes to get specific track
-      return db
-        .collection('tracks')
-        .where('votes', '==', mostVotes)
-        .limit(1)
-        .get()
-        .then(query => {
-          let trackId = ''
-          query.forEach(doc => {
-            //set track to alive: false
-            trackId = doc.data().trackId
-          })
-          return trackId
-        })
-        .then(trackId => {
-          db.doc(`tracks/${trackId}`)
-            .get()
-            .then(doc => {
-              return doc.ref.update({
-                alive: false,
-              })
-            })
-        })
-        .then(() => {
-          // console.log(aliveTracks)
-          let batch = db.batch()
-          if (aliveTracks.length > 0) {
-            aliveTracks.forEach(track => {
-              batch.update(db.doc(`tracks/${track.trackId}`), { votes: 0 })
-            })
-            batch
-              .commit()
-              .then(() => {
-                return res.json({
-                  message: 'It is a new day! Votes reset to 0',
-                })
-              })
-              .catch(err => {
-                console.error(err)
-                return res.status(500).json({ error: err.code })
-              })
-          } else {
-            return
-          }
-        })
+    .then(() => {
+      return res.json(trackData)
     })
     .catch(err => {
-      console.log(err)
+      console.error(err)
+      res.status(500).json({ error: err.code })
     })
 }
 

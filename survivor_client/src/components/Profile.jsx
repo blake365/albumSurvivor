@@ -25,11 +25,17 @@ class Profile extends Component {
       user: { voteHistory },
     } = this.props
 
-    let voteHistoryMarkup = voteHistory.map((vote, index) => (
-      <Typography variant='h6' key={index}>
-        {vote.name}
-      </Typography>
-    ))
+    let voteHistoryMarkup = voteHistory
+      .filter(vote => {
+        if ((vote.voteDay = 0)) {
+          return false
+        } else return true
+      })
+      .map((vote, index) => (
+        <Typography variant='h6' key={index}>
+          {vote.name}
+        </Typography>
+      ))
 
     return (
       <Paper className={classes.profileBody}>

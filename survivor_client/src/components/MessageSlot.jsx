@@ -25,7 +25,8 @@ class MessageSlot extends Component {
   render() {
     const {
       classes,
-      data: { message },
+      user: { authenticated },
+      data: { message, deadTracks },
       UI: { errors },
     } = this.props
 
@@ -35,7 +36,9 @@ class MessageSlot extends Component {
       } else if (message?.message) {
         return <MessageAlert message={message} />
       } else {
-        return <InfoAlert />
+        if (!authenticated) {
+          return <InfoAlert update={false} />
+        } else return <InfoAlert update={deadTracks} />
       }
     }
 
@@ -46,6 +49,7 @@ class MessageSlot extends Component {
 const mapStateToProps = state => ({
   UI: state.UI,
   data: state.data,
+  user: state.user,
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(MessageSlot))

@@ -25,10 +25,10 @@ export class home extends Component {
           <Poll />
         </Grid>
         <Grid item sm={4} xs={12}>
-          <Profile />
+          <Graveyard />
         </Grid>
         <Grid item sm={4} xs={12}>
-          <Graveyard />
+          <Profile />
         </Grid>
       </Grid>
     )

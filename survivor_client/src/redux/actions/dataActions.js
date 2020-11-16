@@ -2,6 +2,7 @@ import {
   SET_TRACKS,
   SET_DEAD_TRACKS,
   POST_VOTE,
+  PAY_RESPECTS,
   LOADING_DATA,
   SET_ERRORS,
   CLEAR_ERRORS,
@@ -86,6 +87,18 @@ export const postScream = newScream => dispatch => {
         payload: err.response.data,
       })
     })
+}
+
+export const payRespects = trackId => dispatch => {
+  axios
+    .get(`/tracks/${trackId}/payrespects`)
+    .then(res => {
+      dispatch({
+        type: PAY_RESPECTS,
+        payload: res.data,
+      })
+    })
+    .catch(err => console.error(err))
 }
 
 export const clearErrors = () => dispatch => {

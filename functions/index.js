@@ -4,7 +4,8 @@ const {
   getAliveTracks,
   getDeadTracks,
   castVote,
-  tallyVotesTest,
+  payRespects,
+  // tallyVotesTest,
 } = require('./handlers/tracks')
 
 const {
@@ -36,6 +37,7 @@ app.get('/tracks', getAliveTracks)
 // app.get('/tracks/tally', tallyVotesTest)
 app.get('/tracks/dead', getDeadTracks)
 app.post('/tracks/:trackId/vote', FBAuth, castVote)
+app.get('/tracks/:trackId/payrespects', payRespects)
 
 //commentary
 app.get('/commentary', getAllCommentary)
@@ -75,7 +77,6 @@ exports.scheduledFunctionCrontab = functions.pubsub
         data.forEach(track => {
           if (mostVotes < track.data().votes) mostVotes = track.data().votes
         })
-        console.log(mostVotes)
         return mostVotes
       })
       .then(mostVotes => {
@@ -100,40 +101,44 @@ exports.scheduledFunctionCrontab = functions.pubsub
               .then(doc => {
                 return doc.ref.update({
                   alive: false,
+                  voteOutDay: new Date(),
+                  respect: 0,
                 })
-              })
-          })
-          .then(() => {
-            let aliveTracks = []
-            db.collection('tracks')
-              .where('alive', '==', true)
-              .get()
-              .then(data => {
-                data.forEach(track => {
-                  aliveTracks.push(track.data())
-                })
-                return aliveTracks
               })
               .then(() => {
-                // console.log(aliveTracks)
-                let batch = db.batch()
-                if (aliveTracks.length > 0) {
-                  aliveTracks.forEach(track => {
-                    batch.update(db.doc(`tracks/${track.trackId}`), {
-                      votes: 0,
+                console.log('made it to vote reset')
+                let aliveTracks = []
+                db.collection('tracks')
+                  .where('alive', '==', true)
+                  .get()
+                  .then(data => {
+                    data.forEach(track => {
+                      aliveTracks.push(track.data())
                     })
+                    return aliveTracks
                   })
-                  batch
-                    .commit()
-                    .then(() => {
+                  .then(() => {
+                    // console.log(aliveTracks)
+                    let batch = db.batch()
+                    if (aliveTracks.length > 0) {
+                      aliveTracks.forEach(track => {
+                        batch.update(db.doc(`tracks/${track.trackId}`), {
+                          votes: 0,
+                        })
+                      })
+                      batch
+                        .commit()
+                        .then(() => {
+                          console.log('made it to end with no errors')
+                          return
+                        })
+                        .catch(err => {
+                          console.error(err)
+                        })
+                    } else {
                       return
-                    })
-                    .catch(err => {
-                      console.error(err)
-                    })
-                } else {
-                  return
-                }
+                    }
+                  })
               })
           })
           .catch(err => {

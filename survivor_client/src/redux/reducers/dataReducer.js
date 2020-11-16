@@ -1,6 +1,7 @@
 import {
   SET_TRACKS,
   SET_DEAD_TRACKS,
+  PAY_RESPECTS,
   LOADING_DATA,
   SUBMIT_COMMENT,
   POST_VOTE,
@@ -40,6 +41,17 @@ const dataReducer = (state = initialState, action) => {
         loading: false,
         voted: true,
         message: action.payload,
+      }
+    case PAY_RESPECTS:
+      let index = state.deadTracks.findIndex(track => {
+        return track.trackId === action.payload.trackId
+      })
+      state.deadTracks[index] = action.payload
+      if (state.deadTracks.trackId === action.payload.trackId) {
+        state.deadTracks = { ...state.deadTracks, ...action.payload }
+      }
+      return {
+        ...state,
       }
 
     case SUBMIT_COMMENT: {

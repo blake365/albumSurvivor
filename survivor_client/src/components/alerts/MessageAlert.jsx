@@ -25,11 +25,11 @@ class MessageAlert extends Component {
         <Collapse in={this.state.open}>
           <Alert
             severity='success'
+            variant='filled'
             action={
               <IconButton
                 aria-label='close'
                 color='inherit'
-                size='large'
                 onClick={this.handleClose}
               >
                 <CloseIcon fontSize='inherit' />
