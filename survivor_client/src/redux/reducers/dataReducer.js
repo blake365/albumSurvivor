@@ -5,6 +5,7 @@ import {
   LOADING_DATA,
   SUBMIT_COMMENT,
   POST_VOTE,
+  POST_TRACK,
 } from '../types'
 
 const initialState = {
@@ -53,7 +54,8 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
       }
-
+    case POST_TRACK:
+      return { ...state }
     case SUBMIT_COMMENT: {
       return {
         ...state,

@@ -172,10 +172,12 @@ exports.payRespects = (req, res) => {
     .get()
     .then(doc => {
       trackData = doc.data()
-      trackData.respect++
-      return trackDocument.update({
-        respect: trackData.respect,
-      })
+      if (doc.data().respect < 1000) {
+        trackData.respect++
+        return trackDocument.update({
+          respect: trackData.respect,
+        })
+      } else return trackData
     })
     .then(() => {
       return res.json(trackData)
@@ -188,29 +190,31 @@ exports.payRespects = (req, res) => {
 
 //TODO: add new tracks for new poll creation
 
-// exports.postNewTrack = (req, res) => {
-//   if (req.body.body.trim() === '') {
-//     return res.status(400).json({ body: 'Body must not be empty' })
-//   }
+exports.postNewTrack = (req, res) => {
+  if (req.body.name.trim() === '' || req.body.trackListing.trim() === '') {
+    return res.status(400).json({ body: 'Field(s) must not be empty' })
+  }
 
-//   const newCommentary = {
-//     body: req.body.body,
-//     userHandle: req.user.handle,
-//     createdAt: new Date().toISOString(),
-//   }
+  const newTrack = {
+    name: req.body.name,
+    description: req.body.description,
+    trackListing: req.body.trackListing,
+    votes: 0,
+    alive: true,
+  }
 
-//   db.collection('commentary')
-//     .add(newCommentary)
-//     .then(doc => {
-//       const resCommentary = newCommentary
-//       resCommentary.commentaryId = doc.id
-//       res.json(resCommentary)
-//     })
-//     .catch(err => {
-//       res.status(500).json({ error: 'something went wrong' })
-//       console.error(err)
-//     })
-// }
+  db.collection('tracks')
+    .add(newTrack)
+    .then(doc => {
+      const resTrack = newTrack
+      resTrack.trackId = doc.id
+      res.json(resTrack)
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'something went wrong' })
+      console.error(err)
+    })
+}
 
 // exports.getTrack = (req, res) => {
 //   let commentaryData = {}

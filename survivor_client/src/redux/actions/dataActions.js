@@ -3,6 +3,7 @@ import {
   SET_DEAD_TRACKS,
   POST_VOTE,
   PAY_RESPECTS,
+  POST_TRACK,
   LOADING_DATA,
   SET_ERRORS,
   CLEAR_ERRORS,
@@ -99,6 +100,25 @@ export const payRespects = trackId => dispatch => {
       })
     })
     .catch(err => console.error(err))
+}
+
+export const postNewTrack = newTrackData => dispatch => {
+  dispatch({ type: LOADING_UI })
+  axios
+    .post('/track', newTrackData)
+    .then(res => {
+      dispatch({
+        type: POST_TRACK,
+        payload: res.data,
+      })
+      dispatch(clearErrors())
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      })
+    })
 }
 
 export const clearErrors = () => dispatch => {

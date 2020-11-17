@@ -22,7 +22,16 @@ class InfoAlert extends Component {
     const { update } = this.props
     let removedSong = {}
     let infoMarkup = () => {
-      if (update) {
+      if (update.length === 0) {
+        return (
+          <Fragment>
+            <AlertTitle>Welcome!</AlertTitle>
+            <strong>
+              This is the first round of survivor. Cast your vote!
+            </strong>
+          </Fragment>
+        )
+      } else if (update) {
         removedSong = update[0]
         return (
           <Fragment>
@@ -35,8 +44,8 @@ class InfoAlert extends Component {
           <Fragment>
             <AlertTitle>Welcome!</AlertTitle>
             <div>
-              You may vote one time per day. The day will reset at 7PM Eastern
-              time.
+              Make an account or login to vote. You may vote one time per day.
+              The day will reset at 7PM Eastern time.
             </div>
           </Fragment>
         )

@@ -5,6 +5,7 @@ const {
   getDeadTracks,
   castVote,
   payRespects,
+  postNewTrack,
   // tallyVotesTest,
 } = require('./handlers/tracks')
 
@@ -34,10 +35,11 @@ app.use(express.urlencoded({ extended: true }))
 
 // tracks routes
 app.get('/tracks', getAliveTracks)
+app.post('/track', FBAuth, checkAdminStatus, postNewTrack)
 // app.get('/tracks/tally', tallyVotesTest)
 app.get('/tracks/dead', getDeadTracks)
 app.post('/tracks/:trackId/vote', FBAuth, castVote)
-app.get('/tracks/:trackId/payrespects', payRespects)
+app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 
 //commentary
 app.get('/commentary', getAllCommentary)

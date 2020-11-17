@@ -57,7 +57,7 @@ class PollOption extends Component {
         <CardContent className={classes.content}>
           <Grid container alignItems='center' justify='center'>
             <Grid item xs={10} className={classes.trackInfo}>
-              <Typography variant='h5'>{name}</Typography>
+              <Typography variant='h6'>{name}</Typography>
               {/* <Typography variant='subtitle1'>{description}</Typography> */}
             </Grid>
             <Grid item>

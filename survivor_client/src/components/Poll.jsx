@@ -9,6 +9,7 @@ import { getTracks, postVote } from '../redux/actions/dataActions'
 import FormControl from '@material-ui/core/FormControl'
 import Paper from '@material-ui/core/Paper'
 import PollOption from './PollOption'
+import PollHeader from './PollHeader'
 import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
@@ -24,7 +25,7 @@ const styles = theme => ({
     position: 'absolute',
   },
   pollBody: {
-    padding: 20,
+    padding: 10,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -113,6 +114,7 @@ class Poll extends Component {
 
     return (
       <Paper className={classes.pollBody}>
+        <PollHeader tracks={tracks} />
         <FormControl disabled={this.state.disabled} fullWidth>
           {pollOptionMarkup}
           {submitButtonOption}

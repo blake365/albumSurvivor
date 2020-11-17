@@ -9,7 +9,9 @@ import { payRespects } from '../redux/actions/dataActions'
 
 class LikeButton extends Component {
   handlePayRespects = () => {
-    this.props.payRespects(this.props.trackId)
+    if (this.props.trackId) {
+      this.props.payRespects(this.props.trackId)
+    } else return
   }
 
   render() {
