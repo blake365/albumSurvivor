@@ -40,9 +40,7 @@ class Profile extends Component {
     return (
       <Paper className={classes.profileBody}>
         <Typography variant='h5'>Your vote history: </Typography>
-        <Typography variant='body1'>
-          Votes cast: {voteHistory.length - 1}
-        </Typography>
+        <Typography variant='body1'></Typography>
         {voteHistoryMarkup}
       </Paper>
     )
@@ -50,11 +48,10 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  data: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-  data: state.data,
   user: state.user,
   UI: state.UI,
 })

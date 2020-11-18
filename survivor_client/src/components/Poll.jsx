@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper'
 import PollOption from './PollOption'
 import PollHeader from './PollHeader'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -29,6 +30,12 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    marginBottom: 10,
+  },
+  spinnerDiv: {
+    textAlign: 'center',
+    marginTop: 50,
+    marginBottom: 50,
   },
 })
 
@@ -65,8 +72,8 @@ class Poll extends Component {
   render() {
     const {
       classes,
-      data: { tracks },
-      UI: { loading },
+      data: { tracks, loading },
+
       user: { authenticated },
     } = this.props
     // const { tracks } = this.props.data
@@ -78,13 +85,15 @@ class Poll extends Component {
         <PollOption
           selection={selection}
           track={track}
-          key={track.trackId}
+          key={track.name}
           onSelection={this.handleSelectedTrack}
         />
       ))
     ) : (
       //TODO: create loading spinner
-      <p>Loading</p>
+      <div className={classes.spinnerDiv}>
+        <CircularProgress size={200} thickness={2} />
+      </div>
     )
 
     let submitButtonOption = authenticated ? (

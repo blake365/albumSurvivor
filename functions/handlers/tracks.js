@@ -83,9 +83,10 @@ exports.castVote = (req, res) => {
             db.collection(`/users/${req.user.userName}/votes`).add(voteDocument)
           })
           .then(() => {
-            return res
-              .status(200)
-              .json({ message: 'Your vote has been submitted!' })
+            return res.status(200).json({
+              message: 'Your vote has been submitted!',
+              voteHistory: voteDocument,
+            })
           })
       } else {
         return res.status(403).json({ error: 'You have already voted today!' })
@@ -201,6 +202,7 @@ exports.postNewTrack = (req, res) => {
     trackListing: req.body.trackListing,
     votes: 0,
     alive: true,
+    trackId: '',
   }
 
   db.collection('tracks')
@@ -208,7 +210,12 @@ exports.postNewTrack = (req, res) => {
     .then(doc => {
       const resTrack = newTrack
       resTrack.trackId = doc.id
-      res.json(resTrack)
+      return doc.update({
+        trackId: doc.id,
+      })
+    })
+    .then(() => {
+      return res.status(200).json({ message: 'Track Added' })
     })
     .catch(err => {
       res.status(500).json({ error: 'something went wrong' })

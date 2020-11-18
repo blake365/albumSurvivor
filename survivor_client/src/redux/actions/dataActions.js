@@ -7,9 +7,10 @@ import {
   LOADING_DATA,
   SET_ERRORS,
   CLEAR_ERRORS,
-  POST_SCREAM,
   LOADING_UI,
   STOP_LOADING_UI,
+  LOADING_USER,
+  SET_USER,
 } from '../types'
 
 import axios from 'axios'
@@ -43,6 +44,8 @@ export const postVote = trackId => dispatch => {
         payload: res.data,
       })
       dispatch(clearErrors())
+      dispatch(getUserData())
+      dispatch(getTracks())
     })
     .catch(err => {
       dispatch({
@@ -66,26 +69,6 @@ export const getGraveyardTracks = () => dispatch => {
       dispatch({
         type: SET_ERRORS,
         payload: [],
-      })
-    })
-}
-
-//post a new scream
-export const postScream = newScream => dispatch => {
-  dispatch({ type: LOADING_UI })
-  axios
-    .post('/scream', newScream)
-    .then(res => {
-      dispatch({
-        type: POST_SCREAM,
-        payload: res.data,
-      })
-      dispatch(clearErrors())
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
       })
     })
 }
@@ -125,20 +108,15 @@ export const clearErrors = () => dispatch => {
   dispatch({ type: CLEAR_ERRORS })
 }
 
-// export const getUserData = userHandle => dispatch => {
-//   dispatch({ type: LOADING_DATA })
-//   axios
-//     .get(`/user/${userHandle}`)
-//     .then(res => {
-//       dispatch({
-//         type: SET_TRACKS,
-//         payload: res.data.screams,
-//       })
-//     })
-//     .catch(() => {
-//       dispatch({
-//         type: SET_TRACKS,
-//         payload: null,
-//       })
-//     })
-// }
+export const getUserData = () => dispatch => {
+  dispatch({ type: LOADING_USER })
+  axios
+    .get('/user')
+    .then(res => {
+      dispatch({
+        type: SET_USER,
+        payload: res.data,
+      })
+    })
+    .catch(err => console.log(err))
+}

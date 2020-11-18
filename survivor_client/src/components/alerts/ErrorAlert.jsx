@@ -11,6 +11,12 @@ class ErrorAlert extends Component {
     open: true,
   }
 
+  componentDidMount() {
+    setTimeout(() => {
+      this.handleClose()
+    }, 10000)
+  }
+
   handleClose = () => {
     this.setState({ open: false })
   }

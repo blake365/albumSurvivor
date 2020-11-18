@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-
+import { Link } from 'react-router-dom'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
 import CloseIcon from '@material-ui/icons/Close'
@@ -36,7 +36,9 @@ class InfoAlert extends Component {
         return (
           <Fragment>
             <AlertTitle>Welcome Back!</AlertTitle>
-            <strong>{removedSong?.name} was the last song voted out</strong>
+            <div>
+              <strong>{removedSong.name}</strong> was the last song voted out
+            </div>
           </Fragment>
         )
       } else {
@@ -44,8 +46,9 @@ class InfoAlert extends Component {
           <Fragment>
             <AlertTitle>Welcome!</AlertTitle>
             <div>
-              Make an account or login to vote. You may vote one time per day.
-              The day will reset at 7PM Eastern time.
+              <Link to='/signup'>Make an account</Link> or{' '}
+              <Link to='/login'>login</Link> to vote. You may vote one time per
+              day. The day will reset at 7PM Eastern time.
             </div>
           </Fragment>
         )

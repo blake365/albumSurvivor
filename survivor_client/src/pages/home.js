@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Grid } from '@material-ui/core'
-
+import withStyles from '@material-ui/core/styles/withStyles'
 import { connect } from 'react-redux'
 
 import Poll from '../components/Poll'
@@ -11,8 +11,23 @@ import MessageSlot from '../components/MessageSlot'
 import PropTypes from 'prop-types'
 import Graveyard from '../components/Graveyard'
 
+const styles = theme => ({
+  ...theme.spreadThis,
+  spacer: {
+    marginBottom: '10px',
+  },
+})
+
 export class home extends Component {
   render() {
+    const {
+      classes,
+      user: { authenticated },
+    } = this.props
+
+    let width
+    authenticated ? (width = 8) : (width = 12)
+
     return (
       <Grid container spacing={1}>
         <Grid item xs={12}>
@@ -21,26 +36,26 @@ export class home extends Component {
         <Grid item xs={12}>
           <MessageSlot />
         </Grid>
-        <Grid item sm={8} xs={12}>
+        <Grid item sm={width} xs={12}>
           <Poll />
-        </Grid>
-        <Grid item sm={4} xs={12}>
-          <Profile />
-        </Grid>
-        <Grid item sm={8} xs={12}>
           <Graveyard />
         </Grid>
+        {authenticated && (
+          <Grid item sm={4} xs={12}>
+            <Profile />
+          </Grid>
+        )}
       </Grid>
     )
   }
 }
 
 home.propTypes = {
-  data: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-  data: state.data,
+  user: state.user,
 })
 
-export default connect(mapStateToProps)(home)
+export default connect(mapStateToProps)(withStyles(styles)(home))
