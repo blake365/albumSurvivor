@@ -26,32 +26,27 @@ export class home extends Component {
       user: { authenticated },
     } = this.props
 
-    let width
-    authenticated ? (width = 6) : (width = 12)
-
     return (
-      <Container>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Hero />
-          </Grid>
-          <Grid item xs={12}>
-            <MessageSlot />
-          </Grid>
-          <Grid item sm={width} xs={12}>
-            <Poll />
-            <Graveyard />
-          </Grid>
-          <Grid item sm={6} xs={12}>
-            <Commentary />
-          </Grid>
-          {authenticated && (
-            <Grid item sm={3} xs={12}>
-              <Profile />
-            </Grid>
-          )}
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Hero />
         </Grid>
-      </Container>
+        <Grid item xs={12}>
+          <MessageSlot />
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Poll />
+          <Graveyard />
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Commentary />
+        </Grid>
+        {authenticated && (
+          <Grid item sm={3} xs={12}>
+            <Profile />
+          </Grid>
+        )}
+      </Grid>
     )
   }
 }

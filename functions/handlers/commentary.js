@@ -30,7 +30,7 @@ exports.postCommentary = (req, res) => {
     title: req.body.title,
     body: req.body.body,
     userName: req.user.userName,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().toDateString(),
   }
 
   db.collection('commentary')

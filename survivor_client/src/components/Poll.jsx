@@ -120,7 +120,7 @@ class Poll extends Component {
     )
 
     return (
-      <Paper className={classes.pollBody}>
+      <Paper className={classes.pollBody} elevation={2}>
         <PollHeader tracks={tracks} />
         <FormControl disabled={this.state.disabled} fullWidth>
           {pollOptionMarkup}
