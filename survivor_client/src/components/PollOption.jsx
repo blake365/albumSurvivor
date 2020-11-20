@@ -6,22 +6,33 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Radio from '@material-ui/core/Radio'
+import Avatar from '@material-ui/core/Avatar'
 
 // import { connect } from 'react-redux'
 
 const styles = theme => ({
   ...theme.spreadThis,
   content: {
-    padding: 8,
+    padding: 0,
     '&:hover': {
       background: '#4aedc4',
     },
     '&:last-child': {
-      paddingBottom: 8,
+      paddingBottom: 0,
     },
   },
   trackInfo: {
+    margin: 8,
+    flexGrow: 1,
     overflow: 'scroll',
+  },
+  voteDisplay: {
+    margin: 7,
+    padding: 0,
+    backgroundColor: '#3d3d3d',
+  },
+  radio: {
+    margin: 8,
   },
 })
 
@@ -37,6 +48,8 @@ class PollOption extends Component {
 
   render() {
     const {
+      selection,
+      submitted,
       classes,
       track: { name, description, trackId, votes },
     } = this.props
@@ -45,7 +58,7 @@ class PollOption extends Component {
       <Card
         variant='outlined'
         style={
-          this.props.selection === trackId
+          selection === trackId
             ? {
                 background: 'linear-gradient(45deg, #4aedc4 30%, #fff 90%)',
                 border: 'solid 1px black',
@@ -55,22 +68,25 @@ class PollOption extends Component {
         }
       >
         <CardContent className={classes.content}>
-          <Grid container alignItems='center' justify='center'>
-            <Grid item xs={10} className={classes.trackInfo}>
-              <Typography variant='h6'>
-                {name}: {votes} votes
-              </Typography>
+          <Grid container alignItems='center'>
+            <Grid item className={classes.trackInfo}>
+              <Typography variant='h6'>{name}</Typography>
               {/* <Typography variant='subtitle1'>{description}</Typography> */}
             </Grid>
             <Grid item>
-              <Radio
-                checked={this.props.selection === trackId}
-                onChange={this.handleChange}
-                value={trackId}
-                name={name}
-                inputProps={{ 'aria-label': name }}
-                color='primary'
-              />
+              {submitted ? (
+                <Avatar className={classes.voteDisplay}>{votes}</Avatar>
+              ) : (
+                <Radio
+                  className={classes.radio}
+                  checked={selection === trackId}
+                  onChange={this.handleChange}
+                  value={trackId}
+                  name={name}
+                  inputProps={{ 'aria-label': name }}
+                  color='primary'
+                />
+              )}
             </Grid>
           </Grid>
         </CardContent>
@@ -83,9 +99,5 @@ PollOption.propTypes = {
   track: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 }
-
-// const mapStateToProps = state => ({
-//   user: state.user,
-// })
 
 export default withStyles(styles)(PollOption)

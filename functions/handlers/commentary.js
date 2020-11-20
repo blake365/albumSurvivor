@@ -10,6 +10,7 @@ exports.getAllCommentary = (req, res) => {
       data.forEach(doc => {
         commentaries.push({
           commentaryId: doc.id,
+          title: doc.data().title,
           body: doc.data().body,
           userName: doc.data().userName,
           createdAt: doc.data().createdAt,
@@ -26,6 +27,7 @@ exports.postCommentary = (req, res) => {
   }
 
   const newCommentary = {
+    title: req.body.title,
     body: req.body.body,
     userName: req.user.userName,
     createdAt: new Date().toISOString(),

@@ -4,11 +4,9 @@ import {
   //   SET_ERRORS,
   //   CLEAR_ERRORS,
   //   LOADING_UI,
-  LIKE_SCREAM,
   LOADING_USER,
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
-  UNLIKE_SCREAM,
 } from '../types'
 
 const initialState = {
@@ -30,6 +28,7 @@ const userReducer = (state = initialState, action) => {
       return initialState
     case SET_USER:
       return {
+        ...state,
         authenticated: true,
         loading: false,
         ...action.payload,
@@ -44,24 +43,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         voted: true,
       }
-    case LIKE_SCREAM:
-      return {
-        ...state,
-        likes: [
-          ...state.likes,
-          {
-            userHandle: state.credentials.handle,
-            screamId: action.payload.screamId,
-          },
-        ],
-      }
-    case UNLIKE_SCREAM:
-      return {
-        ...state,
-        likes: state.likes.filter(
-          like => like.screamId !== action.payload.screamId
-        ),
-      }
+
     default:
       return state
   }

@@ -6,6 +6,8 @@ import {
   SUBMIT_COMMENT,
   POST_VOTE,
   POST_TRACK,
+  POST_COMMENTARY,
+  SET_COMMENTARY,
 } from '../types'
 
 const initialState = {
@@ -15,6 +17,7 @@ const initialState = {
   loading: false,
   voted: false,
   message: null,
+  commentary: [],
 }
 
 const dataReducer = (state = initialState, action) => {
@@ -56,13 +59,17 @@ const dataReducer = (state = initialState, action) => {
       }
     case POST_TRACK:
       return { ...state }
-    case SUBMIT_COMMENT: {
+
+    case POST_COMMENTARY: {
       return {
         ...state,
-        scream: {
-          ...state.scream,
-          comments: [action.payload, ...state.scream.comments],
-        },
+      }
+    }
+    case SET_COMMENTARY: {
+      return {
+        ...state,
+        commentary: action.payload,
+        loading: false,
       }
     }
     default:

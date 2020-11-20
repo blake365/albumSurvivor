@@ -11,6 +11,8 @@ import {
   STOP_LOADING_UI,
   LOADING_USER,
   SET_USER,
+  POST_COMMENTARY,
+  SET_COMMENTARY,
 } from '../types'
 
 import axios from 'axios'
@@ -100,6 +102,43 @@ export const postNewTrack = newTrackData => dispatch => {
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,
+      })
+    })
+}
+
+export const postNewCommentary = newCommentaryData => dispatch => {
+  dispatch({ type: LOADING_UI })
+  axios
+    .post('/commentary', newCommentaryData)
+    .then(res => {
+      dispatch({
+        type: POST_COMMENTARY,
+        payload: res.data,
+      })
+      dispatch(clearErrors())
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      })
+    })
+}
+
+export const getCommentary = () => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get('/commentary')
+    .then(res => {
+      dispatch({
+        type: SET_COMMENTARY,
+        payload: res.data,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
       })
     })
 }

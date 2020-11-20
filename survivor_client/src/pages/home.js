@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { connect } from 'react-redux'
 
@@ -10,6 +10,7 @@ import MessageSlot from '../components/MessageSlot'
 
 import PropTypes from 'prop-types'
 import Graveyard from '../components/Graveyard'
+import Commentary from '../components/Commentary'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -26,26 +27,31 @@ export class home extends Component {
     } = this.props
 
     let width
-    authenticated ? (width = 8) : (width = 12)
+    authenticated ? (width = 6) : (width = 12)
 
     return (
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Hero />
-        </Grid>
-        <Grid item xs={12}>
-          <MessageSlot />
-        </Grid>
-        <Grid item sm={width} xs={12}>
-          <Poll />
-          <Graveyard />
-        </Grid>
-        {authenticated && (
-          <Grid item sm={4} xs={12}>
-            <Profile />
+      <Container>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Hero />
           </Grid>
-        )}
-      </Grid>
+          <Grid item xs={12}>
+            <MessageSlot />
+          </Grid>
+          <Grid item sm={width} xs={12}>
+            <Poll />
+            <Graveyard />
+          </Grid>
+          <Grid item sm={6} xs={12}>
+            <Commentary />
+          </Grid>
+          {authenticated && (
+            <Grid item sm={3} xs={12}>
+              <Profile />
+            </Grid>
+          )}
+        </Grid>
+      </Container>
     )
   }
 }

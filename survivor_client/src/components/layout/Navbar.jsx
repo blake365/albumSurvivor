@@ -7,6 +7,8 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -47,16 +49,20 @@ export class Navbar extends Component {
             <Link to='/'>
               <AlbumIcon color='secondary' fontSize='large' />
             </Link>
-            <Typography variant='h6' color='secondary'>
-              Album Survivor
-            </Typography>
+            <Link to='/'>
+              <Typography variant='h6' color='secondary'>
+                Album Survivor
+              </Typography>
+            </Link>
             <Chip label='BETA' variant='outlined' color='secondary' />
           </div>
           {authenticated ? (
             <Fragment>
-              <Button color='inherit'>{credentials.userName}</Button>
+              <Button color='inherit'>
+                <AccountBoxIcon />
+              </Button>
               <Button color='inherit' onClick={this.handleLogout}>
-                Logout
+                <ExitToAppIcon />
               </Button>
             </Fragment>
           ) : (

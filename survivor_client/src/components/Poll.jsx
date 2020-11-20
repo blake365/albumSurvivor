@@ -73,12 +73,10 @@ class Poll extends Component {
     const {
       classes,
       data: { tracks, loading },
-
       user: { authenticated },
     } = this.props
-    // const { tracks } = this.props.data
-    // const { authenticated } = this.props.user
-    const { selection } = this.state
+
+    const { selection, submitted } = this.state
 
     let pollOptionMarkup = !loading ? (
       tracks.map(track => (
@@ -87,10 +85,10 @@ class Poll extends Component {
           track={track}
           key={track.name}
           onSelection={this.handleSelectedTrack}
+          submitted={submitted}
         />
       ))
     ) : (
-      //TODO: create loading spinner
       <div className={classes.spinnerDiv}>
         <CircularProgress size={200} thickness={2} />
       </div>

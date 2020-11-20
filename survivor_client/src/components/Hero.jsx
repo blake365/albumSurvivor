@@ -8,6 +8,7 @@ const styles = theme => ({
   ...theme.spreadThis,
   heroBody: {
     padding: 20,
+    background: 'inherit',
   },
 })
 
@@ -15,7 +16,7 @@ class Hero extends Component {
   render() {
     const { classes } = this.props
     return (
-      <Paper className={classes.heroBody}>
+      <Paper className={classes.heroBody} elevation={0}>
         <Typography variant='h4' color='primary'>
           Welcome to Album Survivor
         </Typography>
