@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-
+import { PersistGate } from 'redux-persist/integration/react'
 //redux
 import { Provider } from 'react-redux'
-import store from './redux/store'
+import { store, persistor } from './redux/store'
 import { SET_AUTHENTICATED } from './redux/types'
 import { logoutUser, getUserData } from './redux/actions/userActions'
 
@@ -46,15 +46,17 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>
         <Provider store={store}>
           <Router>
-            <Navbar />
-            <div className='container'>
-              <Switch>
-                <Route exact path='/' component={home} />
-                <AuthRoute exact path='/login' component={login} />
-                <AuthRoute exact path='/signup' component={signup} />
-                <AuthRoute2 exact path='/admin' component={admin} />
-              </Switch>
-            </div>
+            <PersistGate persistor={persistor}>
+              <Navbar />
+              <div className='container'>
+                <Switch>
+                  <Route exact path='/' component={home} />
+                  <AuthRoute exact path='/login' component={login} />
+                  <AuthRoute exact path='/signup' component={signup} />
+                  <AuthRoute2 exact path='/admin' component={admin} />
+                </Switch>
+              </div>
+            </PersistGate>
           </Router>
         </Provider>
       </MuiThemeProvider>

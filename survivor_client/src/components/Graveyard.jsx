@@ -6,14 +6,12 @@ import { connect } from 'react-redux'
 import { getGraveyardTracks } from '../redux/actions/dataActions'
 
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import FavoriteIcon from '@material-ui/icons/Favorite'
 import LikeButton from './LikeButton'
 
 const styles = theme => ({
@@ -44,7 +42,6 @@ class Graveyard extends Component {
   render() {
     const {
       classes,
-      UI: loading,
       data: { deadTracks, tracks },
     } = this.props
 
@@ -134,7 +131,6 @@ Graveyard.propTypes = {
 
 const mapStateToProps = state => ({
   data: state.data,
-  UI: state.UI,
 })
 
 export default connect(mapStateToProps, { getGraveyardTracks })(

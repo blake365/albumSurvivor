@@ -4,10 +4,8 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
 
-import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 
 import { getCommentary } from '../redux/actions/dataActions'
@@ -33,7 +31,6 @@ class Commentary extends Component {
   render() {
     const {
       classes,
-      UI: loading,
       data: { commentary },
     } = this.props
 

@@ -7,12 +7,10 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-import AccountBoxIcon from '@material-ui/icons/AccountBox'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
+import ProfilePopper from './ProfilePopper'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { logoutUser } from '../../redux/actions/userActions'
 import Chip from '@material-ui/core/Chip'
 
 import AlbumIcon from '@material-ui/icons/Album'
@@ -37,13 +35,9 @@ export class Navbar extends Component {
   }
 
   render() {
-    const {
-      classes,
-      authenticated,
-      user: { credentials },
-    } = this.props
+    const { classes, authenticated } = this.props
     return (
-      <AppBar>
+      <AppBar position='absolute'>
         <Toolbar className=''>
           <div className={classes.title}>
             <Link to='/'>
@@ -58,12 +52,9 @@ export class Navbar extends Component {
           </div>
           {authenticated ? (
             <Fragment>
-              <Button color='inherit'>
-                <AccountBoxIcon />
-              </Button>
-              <Button color='inherit' onClick={this.handleLogout}>
-                <ExitToAppIcon />
-              </Button>
+              <div>
+                <ProfilePopper />
+              </div>
             </Fragment>
           ) : (
             <Fragment>
@@ -88,7 +79,6 @@ export class Navbar extends Component {
 
 Navbar.propTypes = {
   authenticated: PropTypes.bool.isRequired,
-  logoutUser: PropTypes.func.isRequired,
 }
 
 // const mapActionsToProps = { logoutUser}
@@ -98,6 +88,4 @@ const mapStateToProps = state => ({
   authenticated: state.user.authenticated,
 })
 
-export default connect(mapStateToProps, { logoutUser })(
-  withStyles(styles)(Navbar)
-)
+export default connect(mapStateToProps)(withStyles(styles)(Navbar))

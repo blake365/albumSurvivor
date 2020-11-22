@@ -40,6 +40,7 @@ class PollHeader extends Component {
       <div className={classes.card} elevation={0}>
         <div className={classes.coverContainer}>
           <img
+            alt='album cover'
             className={classes.cover}
             src='https://www.covermesongs.com/wp-content/uploads/2020/04/Royal_Scam.jpg'
             title='The Royal Scam'

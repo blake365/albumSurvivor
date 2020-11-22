@@ -6,23 +6,39 @@ import { connect } from 'react-redux'
 
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import { Button } from '@material-ui/core'
+import { Link } from 'react-router-dom'
+
+import { logoutUser } from '../redux/actions/userActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
   profileBody: {
+    position: 'relative',
     padding: 20,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    zIndex: 500,
+    width: 200,
+    overflow: 'scroll',
+  },
+  button: {
+    height: 40,
+    margin: '0px auto 8px auto',
+    width: '80%',
   },
 })
 
 class Profile extends Component {
+  handleLogout = () => {
+    this.props.logoutUser()
+  }
+
   render() {
     const {
       classes,
-      UI: loading,
-      user: { voteHistory },
+      user: { voteHistory, credentials },
     } = this.props
 
     let voteHistoryMarkup = voteHistory
@@ -38,9 +54,29 @@ class Profile extends Component {
       ))
 
     return (
-      <Paper className={classes.profileBody}>
-        <Typography variant='h5'>Your vote history: </Typography>
-        <Typography variant='body1'></Typography>
+      <Paper className={classes.profileBody} elevation={5}>
+        {credentials.type === 'admin' ? (
+          <Button
+            component={Link}
+            to='/admin'
+            variant='contained'
+            className={classes.button}
+          >
+            Admin Page
+          </Button>
+        ) : (
+          <div></div>
+        )}
+        <Button
+          color='primary'
+          variant='contained'
+          className={classes.button}
+          onClick={this.handleLogout}
+        >
+          Log Out
+        </Button>
+        <Typography variant='h5'>Vote History: </Typography>
+        <Typography variant='body2'></Typography>
         {voteHistoryMarkup}
       </Paper>
     )
@@ -56,4 +92,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile))
+export default connect(mapStateToProps, { logoutUser })(
+  withStyles(styles)(Profile)
+)

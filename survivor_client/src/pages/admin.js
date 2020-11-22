@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core'
 
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
-
+import Paper from '@material-ui/core/Paper'
 import { connect } from 'react-redux'
 
 import SubmitTrack from '../components/SubmitTrack'
@@ -16,19 +16,24 @@ const styles = theme => ({
 })
 
 class admin extends Component {
-  render() {
-    const { type, classes } = this.props
+  componentDidMount() {}
 
-    return (
-      <Grid container spacing={2}>
-        <Grid item sm={8} xs={12}>
-          <SubmitCommentary />
+  render() {
+    const { user } = this.props
+    let adminMarkup =
+      user.credentials.type !== 'admin' ? (
+        <div>No No</div>
+      ) : (
+        <Grid container spacing={2}>
+          <Grid item sm={8} xs={12}>
+            <SubmitCommentary />
+          </Grid>
+          <Grid item sm={4} xs={12}>
+            <SubmitTrack />
+          </Grid>
         </Grid>
-        <Grid item sm={4} xs={12}>
-          <SubmitTrack />
-        </Grid>
-      </Grid>
-    )
+      )
+    return <div>{adminMarkup}</div>
   }
 }
 
@@ -39,7 +44,7 @@ admin.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  type: state.user.credentials.type,
+  user: state.user,
   UI: state.UI,
 })
 
