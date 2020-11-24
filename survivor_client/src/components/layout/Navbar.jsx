@@ -48,7 +48,6 @@ export class Navbar extends Component {
                 Album Survivor
               </Typography>
             </Link>
-            <Chip label='BETA' variant='outlined' color='secondary' />
           </div>
           {authenticated ? (
             <Fragment>

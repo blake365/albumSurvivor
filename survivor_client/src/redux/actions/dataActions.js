@@ -13,6 +13,7 @@ import {
   SET_USER,
   POST_COMMENTARY,
   SET_COMMENTARY,
+  SET_MESSAGE,
 } from '../types'
 
 import axios from 'axios'
@@ -43,6 +44,10 @@ export const postVote = trackId => dispatch => {
     .then(res => {
       dispatch({
         type: POST_VOTE,
+        payload: res.data,
+      })
+      dispatch({
+        type: SET_MESSAGE,
         payload: res.data,
       })
       dispatch(clearErrors())

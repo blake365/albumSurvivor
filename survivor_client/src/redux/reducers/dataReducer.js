@@ -43,8 +43,6 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        voted: true,
-        message: action.payload,
       }
     case PAY_RESPECTS:
       let index = state.deadTracks.findIndex(track => {

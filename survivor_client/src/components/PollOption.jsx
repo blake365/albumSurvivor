@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Radio from '@material-ui/core/Radio'
 import Avatar from '@material-ui/core/Avatar'
+import Chip from '@material-ui/core/Chip'
 
 // import { connect } from 'react-redux'
 
@@ -30,6 +31,10 @@ const styles = theme => ({
     margin: 7,
     padding: 0,
     backgroundColor: '#3d3d3d',
+  },
+  winnerDisplay: {
+    margin: 7,
+    padding: 0,
   },
   radio: {
     margin: 8,
@@ -75,7 +80,15 @@ class PollOption extends Component {
             </Grid>
             <Grid item>
               {submitted ? (
-                <Avatar className={classes.voteDisplay}>{votes}</Avatar>
+                submitted === 'winner' ? (
+                  <Chip
+                    label='WINNER'
+                    color='primary'
+                    className={classes.winnerDisplay}
+                  />
+                ) : (
+                  <Avatar className={classes.voteDisplay}>{votes}</Avatar>
+                )
               ) : (
                 <Radio
                   className={classes.radio}

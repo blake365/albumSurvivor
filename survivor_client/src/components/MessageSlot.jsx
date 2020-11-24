@@ -26,8 +26,8 @@ class MessageSlot extends Component {
     const {
       classes,
       user: { authenticated },
-      data: { message, deadTracks },
-      UI: { errors },
+      data: { deadTracks },
+      UI: { errors, message },
     } = this.props
 
     let messageMarkup = function () {

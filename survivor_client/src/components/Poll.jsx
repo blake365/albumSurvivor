@@ -12,6 +12,7 @@ import PollOption from './PollOption'
 import PollHeader from './PollHeader'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Typography from '@material-ui/core/Typography'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -78,21 +79,53 @@ class Poll extends Component {
 
     const { selection, submitted } = this.state
 
-    let pollOptionMarkup = !loading ? (
-      tracks.map(track => (
-        <PollOption
-          selection={selection}
-          track={track}
-          key={track.name}
-          onSelection={this.handleSelectedTrack}
-          submitted={submitted}
-        />
-      ))
-    ) : (
-      <div className={classes.spinnerDiv}>
-        <CircularProgress size={200} thickness={2} />
-      </div>
+    let pollOptionMarkup = tracks.map(track => (
+      <PollOption
+        selection={selection}
+        track={track}
+        key={track.name}
+        onSelection={this.handleSelectedTrack}
+        submitted={submitted}
+      />
+    ))
+
+    let winnerMarkup = tracks.map(track => (
+      <PollOption
+        selection={track.trackId}
+        track={track}
+        key={track.name}
+        onSelection={this.handleSelectedTrack}
+        submitted='winner'
+      />
+    ))
+
+    let pollEndedMarkup = (
+      <Typography variant='h5'>
+        The poll has ended, check back soon for the next album
+      </Typography>
     )
+
+    function checkForWinner() {
+      if (loading) {
+        return (
+          <div className={classes.spinnerDiv}>
+            <CircularProgress size={200} thickness={2} />
+          </div>
+        )
+      } else if (tracks.length === 0) {
+        return pollEndedMarkup
+      } else if (tracks.length === 1) {
+        return winnerMarkup
+      } else {
+        return pollOptionMarkup
+      }
+    }
+
+    function checkForButton() {
+      if (tracks.length > 1) {
+        return submitButtonOption
+      } else return
+    }
 
     let submitButtonOption = authenticated ? (
       <Button
@@ -120,13 +153,15 @@ class Poll extends Component {
     )
 
     return (
-      <Paper className={classes.pollBody} elevation={2}>
-        <PollHeader tracks={tracks} />
-        <FormControl disabled={this.state.disabled} fullWidth>
-          {pollOptionMarkup}
-          {submitButtonOption}
-        </FormControl>
-      </Paper>
+      <div>
+        <Paper className={classes.pollBody} elevation={2}>
+          <PollHeader tracks={tracks} />
+          <FormControl disabled={this.state.disabled} fullWidth>
+            {checkForWinner()}
+            {checkForButton()}
+          </FormControl>
+        </Paper>
+      </div>
     )
   }
 }

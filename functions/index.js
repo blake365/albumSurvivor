@@ -44,7 +44,7 @@ app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 //commentary
 app.get('/commentary', getAllCommentary)
 app.post('/commentary', FBAuth, checkAdminStatus, postCommentary)
-app.get('/commentary/:commentaryId', getCommentary) // may not use this
+// app.get('/commentary/:commentaryId', getCommentary) -- may not use this
 app.delete(
   '/commentary/:commentaryId',
   FBAuth,
@@ -59,8 +59,6 @@ app.get('/user', FBAuth, getAuthenticatedUser)
 // app.get('/user/:userName', getUserDetails)
 
 exports.api = functions.https.onRequest(app)
-
-//TODO: create daily reset and vote tally function
 
 //vote tally
 

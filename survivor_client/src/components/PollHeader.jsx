@@ -30,32 +30,51 @@ const styles = theme => ({
     // display: 'inline-block',
     margin: '2px 4px 2px 4px',
   },
+  header: {
+    width: '100%',
+    textAlign: 'center',
+    color: theme.palette.primary.main,
+  },
 })
 
 class PollHeader extends Component {
   render() {
-    const { classes } = this.props
+    const { classes, tracks } = this.props
+
+    let finalRoundMarkup = tracks.length === 2 && (
+      <Typography variant='h3'>Final Round!</Typography>
+    )
+
+    let winnerMarkup = tracks.length === 1 && (
+      <Typography variant='h3'>{tracks[0].name} is the Winner!</Typography>
+    )
 
     return (
-      <div className={classes.card} elevation={0}>
-        <div className={classes.coverContainer}>
-          <img
-            alt='album cover'
-            className={classes.cover}
-            src='https://www.covermesongs.com/wp-content/uploads/2020/04/Royal_Scam.jpg'
-            title='The Royal Scam'
-          />
+      <div>
+        <div className={classes.header}>
+          {finalRoundMarkup}
+          {winnerMarkup}
         </div>
-        <div>
-          <Typography variant='h5' className={classes.content}>
-            In Rainbows
-          </Typography>
-          <Typography variant='body1' className={classes.content}>
-            by
-          </Typography>
-          <Typography variant='h5' className={classes.content}>
-            Radiohead
-          </Typography>
+        <div className={classes.card} elevation={0}>
+          <div className={classes.coverContainer}>
+            <img
+              alt='album cover'
+              className={classes.cover}
+              src='https://www.covermesongs.com/wp-content/uploads/2020/04/Royal_Scam.jpg'
+              title='The Royal Scam'
+            />
+          </div>
+          <div>
+            <Typography variant='h5' className={classes.content}>
+              In Rainbows
+            </Typography>
+            <Typography variant='body1' className={classes.content}>
+              by
+            </Typography>
+            <Typography variant='h5' className={classes.content}>
+              Radiohead
+            </Typography>
+          </div>
         </div>
       </div>
     )
