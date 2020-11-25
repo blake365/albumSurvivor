@@ -131,7 +131,7 @@ class Poll extends Component {
       <Button
         type='submit'
         variant='contained'
-        color='secondary'
+        color='primary'
         disabled={this.state.disabled}
         className={classes.submitButton}
         onClick={this.submitVote}
@@ -144,7 +144,7 @@ class Poll extends Component {
         component={Link}
         to='/login'
         variant='contained'
-        color='primary'
+        color='secondary'
         disabled={this.state.disabled}
         className={classes.submitButton}
       >

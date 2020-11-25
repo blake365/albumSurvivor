@@ -16,7 +16,7 @@ const styles = theme => ({
   content: {
     padding: 0,
     '&:hover': {
-      background: '#4aedc4',
+      background: '#4caf50',
     },
     '&:last-child': {
       paddingBottom: 0,
@@ -30,7 +30,7 @@ const styles = theme => ({
   voteDisplay: {
     margin: 7,
     padding: 0,
-    backgroundColor: '#3d3d3d',
+    backgroundColor: '#4caf50',
   },
   winnerDisplay: {
     margin: 7,
@@ -65,7 +65,7 @@ class PollOption extends Component {
         style={
           selection === trackId
             ? {
-                background: 'linear-gradient(45deg, #4aedc4 30%, #fff 90%)',
+                background: 'linear-gradient(45deg, #81c784 30%, #fff 90%)',
                 border: 'solid 1px black',
                 margin: 4,
               }

@@ -28,12 +28,13 @@ export class home extends Component {
         <Grid item xs={12}>
           <MessageSlot />
         </Grid>
-        <Grid item sm={6} xs={12}>
-          <Commentary />
-        </Grid>
+
         <Grid item sm={6} xs={12}>
           <Poll />
           <Graveyard />
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <Commentary />
         </Grid>
       </Grid>
     )

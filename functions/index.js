@@ -10,6 +10,17 @@ const {
 } = require('./handlers/tracks')
 
 const {
+  getAllAlbums,
+  getActiveAlbums,
+  getOneAlbum,
+  postNewAlbum,
+  getOneAlbumsTracks,
+  postNewTrackToAlbum,
+} = require('./handlers/albums')
+
+// const { getArchivedRounds, getIndividualRound } = require('./handlers/archives')
+
+const {
   getAllCommentary,
   postCommentary,
   getCommentary,
@@ -40,6 +51,28 @@ app.post('/track', FBAuth, checkAdminStatus, postNewTrack)
 app.get('/tracks/dead', getDeadTracks)
 app.post('/tracks/:trackId/vote', FBAuth, castVote)
 app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
+
+//TODO: build archive routes and handlers
+//archive routes
+// app.get('/archives', getArchivedRounds)
+// app.get('/archives/:roundId', getIndividualRound)
+
+//album routes
+app.get('/albums', getAllAlbums)
+app.get('/albums/active', getActiveAlbums)
+app.get('/albums/:albumId', getOneAlbum)
+app.get('/albums/:albumId/tracks', getOneAlbumsTracks)
+app.post('/albums', FBAuth, checkAdminStatus, postNewAlbum)
+app.post(
+  '/albums/:albumId/tracks',
+  FBAuth,
+  checkAdminStatus,
+  postNewTrackToAlbum
+)
+
+//TODO: make vote and like functions for tracks nested in albums
+// app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote)
+// app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects)
 
 //commentary
 app.get('/commentary', getAllCommentary)

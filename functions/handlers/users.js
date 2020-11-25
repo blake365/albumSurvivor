@@ -109,7 +109,6 @@ exports.login = (req, res) => {
 }
 
 //get any users details
-//FIXME: get vote history
 exports.getUserDetails = (req, res) => {
   let userData = {}
   db.doc(`/users/${req.params.userName}`)

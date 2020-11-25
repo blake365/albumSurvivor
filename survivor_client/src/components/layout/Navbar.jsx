@@ -19,6 +19,7 @@ const styles = theme => ({
   ...theme.spreadThis,
   title: {
     flexGrow: 1,
+    color: 'fff',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -41,10 +42,10 @@ export class Navbar extends Component {
         <Toolbar className=''>
           <div className={classes.title}>
             <Link to='/'>
-              <AlbumIcon color='secondary' fontSize='large' />
+              <AlbumIcon fontSize='large' style={{ color: '#fff' }} />
             </Link>
             <Link to='/'>
-              <Typography variant='h6' color='secondary'>
+              <Typography variant='h6' style={{ color: '#fff' }}>
                 Album Survivor
               </Typography>
             </Link>

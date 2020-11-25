@@ -21,7 +21,6 @@ class ProfilePopper extends Component {
     this.setState({ open: false, anchorEl: null })
   }
 
-  //FIXME: figure out click away listener....
   render() {
     const { open, anchorEl } = this.state
 
