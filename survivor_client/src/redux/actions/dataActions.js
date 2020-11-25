@@ -223,3 +223,14 @@ export const getUserData = () => dispatch => {
     })
     .catch(err => console.log(err))
 }
+
+// upload image
+export const uploadImage = (albumId, formData) => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .post(`/albums/${albumId}/art`, formData)
+    .then(() => {
+      dispatch(getAlbums())
+    })
+    .catch(err => console.log(err))
+}

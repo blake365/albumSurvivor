@@ -9,10 +9,11 @@ export default function MyButton({
   btnClassName,
   tipClassName,
   tip,
+  value,
 }) {
   return (
     <Tooltip title={tip} className={tipClassName} placement='top'>
-      <IconButton onClick={onClick} className={btnClassName}>
+      <IconButton onClick={onClick} className={btnClassName} value={value}>
         {children}
       </IconButton>
     </Tooltip>

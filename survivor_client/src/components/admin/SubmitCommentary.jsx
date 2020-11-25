@@ -11,7 +11,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
-import { postNewTrack } from '../redux/actions/dataActions'
+import { postNewCommentary } from '../../redux/actions/dataActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -29,30 +29,28 @@ const styles = theme => ({
     width: 78,
     position: 'relative',
   },
+  formContainer: {
+    height: '100%',
+  },
 })
 
 class SubmitTrack extends Component {
   constructor() {
     super()
     this.state = {
-      name: '',
-      description: '',
-      trackListing: '',
+      body: '',
+      title: '',
       errors: {},
     }
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    this.setState({
-      loading: true,
-    })
-    const newTrackData = {
-      name: this.state.name,
-      description: this.state.description,
-      trackListing: this.state.trackListing,
+    const newCommentaryData = {
+      body: this.state.body,
+      title: this.state.title,
     }
-    this.props.postNewTrack(newTrackData)
+    this.props.postNewCommentary(newCommentaryData)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,44 +73,36 @@ class SubmitTrack extends Component {
     const { errors } = this.state
 
     return (
-      <Paper className={classes.form}>
+      <Paper className={(classes.formContainer, classes.form)}>
         <Typography variant='h5' className={classes.pageTitle}>
-          Add A New Song
+          Add New Commentary
         </Typography>
         <form noValidate onSubmit={this.handleSubmit}>
           <TextField
-            id='name'
-            name='name'
+            id='title'
+            name='title'
             type='text'
-            label='name'
+            label='Title'
             className={classes.textField}
-            helperText={errors.name}
-            error={errors.name ? true : false}
-            value={this.state.name}
+            helperText={errors.title}
+            error={errors.title ? true : false}
+            value={this.state.title}
             onChange={this.handleChange}
           />
           <TextField
-            id='description'
-            name='description'
+            id='body'
+            name='body'
             type='text'
-            label='description'
+            label='Body Text'
             className={classes.textField}
-            helperText={errors.description}
-            error={errors.description ? true : false}
-            value={this.state.description}
+            helperText={errors.body}
+            error={errors.body ? true : false}
+            value={this.state.body}
             onChange={this.handleChange}
+            multiline
+            rows={3}
           />
-          <TextField
-            id='trackListing'
-            name='trackListing'
-            type='number'
-            label='Track List Number'
-            className={classes.textField}
-            helperText={errors.trackListing}
-            error={errors.trackListing ? true : false}
-            value={this.state.trackListing}
-            onChange={this.handleChange}
-          />
+
           {errors.general && (
             <Typography variant='body2' className={classes.customError}>
               {errors.general}
@@ -148,6 +138,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { postNewTrack })(
+export default connect(mapStateToProps, { postNewCommentary })(
   withStyles(styles)(SubmitTrack)
 )

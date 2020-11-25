@@ -1,4 +1,6 @@
-const { db } = require('../util/admin')
+const { db, admin } = require('../util/admin')
+const config = require('../util/config')
+const { uuid } = require('uuidv4')
 
 exports.getAllAlbums = (req, res) => {
   db.collection('albums')
@@ -116,6 +118,9 @@ exports.postNewAlbum = (req, res) => {
     .then(() => {
       return res.status(200).json({ message: 'Album Added' })
     })
+    .then(() => {
+      this.uploadImage()
+    })
     .catch(err => {
       res.status(500).json({ error: 'something went wrong' })
       console.error(err)
@@ -154,4 +159,62 @@ exports.postNewTrackToAlbum = (req, res) => {
       res.status(500).json({ error: 'something went wrong' })
       console.error(err)
     })
+}
+
+//album art image upload
+exports.uploadImage = (req, res) => {
+  const BusBoy = require('busboy')
+  const path = require('path')
+  const os = require('os')
+  const fs = require('fs')
+
+  const busboy = new BusBoy({ headers: req.headers })
+
+  let imageFileName
+  let imageToBeUploaded = {}
+  let generatedToken = uuid()
+
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    if (
+      mimetype !== 'image/jpeg' &&
+      mimetype !== 'image/png' &&
+      mimetype !== 'image/jpg'
+    ) {
+      return res.status(400).json({ error: 'Wrong file type submitted' })
+    }
+    // image.png
+    const imageExtension = filename.split('.')[filename.split('.').length - 1]
+    imageFileName = `${Math.round(
+      Math.random() * 100000000
+    ).toString()}.${imageExtension}`
+    const filepath = path.join(os.tmpdir(), imageFileName)
+    imageToBeUploaded = { filepath, mimetype }
+    file.pipe(fs.createWriteStream(filepath))
+  })
+  busboy.on('finish', () => {
+    admin
+      .storage()
+      .bucket(config.storageBucket)
+      .upload(imageToBeUploaded.filepath, {
+        resumable: false,
+        metadata: {
+          metadata: {
+            contentType: imageToBeUploaded.mimetype,
+            firebaseaStorageDownloadTokens: generatedToken,
+          },
+        },
+      })
+      .then(() => {
+        const albumArt = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media&token=${generatedToken}`
+        return db.doc(`/albums/${req.params.albumId}`).update({ albumArt })
+      })
+      .then(() => {
+        return res.json({ message: 'Image uploaded successfully' })
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(500).json({ error: err.code })
+      })
+  })
+  busboy.end(req.rawBody)
 }

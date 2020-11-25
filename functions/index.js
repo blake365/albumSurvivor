@@ -16,6 +16,7 @@ const {
   postNewAlbum,
   getOneAlbumsTracks,
   postNewTrackToAlbum,
+  uploadImage,
 } = require('./handlers/albums')
 
 // const { getArchivedRounds, getIndividualRound } = require('./handlers/archives')
@@ -59,6 +60,7 @@ app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 
 //album routes
 app.get('/albums', getAllAlbums)
+app.post('/albums/:albumId/art', FBAuth, uploadImage)
 app.get('/albums/active', getActiveAlbums)
 app.get('/albums/:albumId', getOneAlbum)
 app.get('/albums/:albumId/tracks', getOneAlbumsTracks)
