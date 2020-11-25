@@ -99,7 +99,7 @@ exports.postNewAlbum = (req, res) => {
     genre: req.body.genre,
     numTracks: req.body.numTracks,
     releaseYear: req.body.releaseYear,
-    createdAt: new Date().toISOString,
+    createdAt: new Date().toISOString(),
     activePoll: req.body.activePoll,
     albumId: '',
   }
@@ -131,6 +131,8 @@ exports.postNewTrackToAlbum = (req, res) => {
     name: req.body.name,
     description: req.body.description,
     trackListing: req.body.trackListing,
+    length: req.body.length,
+    lyrics: req.body.lyrics,
     votes: 0,
     alive: true,
     trackId: '',

@@ -8,10 +8,14 @@ import {
   POST_TRACK,
   POST_COMMENTARY,
   SET_COMMENTARY,
+  POST_ALBUM,
+  SET_ALBUMS,
 } from '../types'
 
 const initialState = {
   tracks: [],
+  albums: [],
+  album: {},
   track: {},
   deadTracks: [],
   loading: false,
@@ -31,6 +35,12 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         tracks: action.payload,
+        loading: false,
+      }
+    case SET_ALBUMS:
+      return {
+        ...state,
+        albums: action.payload,
         loading: false,
       }
     case SET_DEAD_TRACKS:
@@ -57,19 +67,21 @@ const dataReducer = (state = initialState, action) => {
       }
     case POST_TRACK:
       return { ...state }
+    case POST_ALBUM:
+      return { ...state }
 
-    case POST_COMMENTARY: {
+    case POST_COMMENTARY:
       return {
         ...state,
       }
-    }
-    case SET_COMMENTARY: {
+
+    case SET_COMMENTARY:
       return {
         ...state,
         commentary: action.payload,
         loading: false,
       }
-    }
+
     default:
       return state
   }

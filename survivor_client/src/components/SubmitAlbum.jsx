@@ -1,0 +1,200 @@
+import React, { Component } from 'react'
+// import axios from 'axios'
+
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Paper from '@material-ui/core/Paper'
+
+import withStyles from '@material-ui/core/styles/withStyles'
+import PropTypes from 'prop-types'
+
+import { connect } from 'react-redux'
+import { postNewAlbum } from '../redux/actions/dataActions'
+import { Checkbox } from '@material-ui/core'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+
+const styles = theme => ({
+  ...theme.spreadThis,
+  pageTitle: {
+    padding: '10px',
+  },
+  textField: {
+    width: '80%',
+    margin: '10px auto 10px auto',
+  },
+  button: {
+    marginTop: 20,
+    marginBottom: 20,
+    height: 46,
+    width: 78,
+    position: 'relative',
+  },
+})
+
+class SubmitAlbum extends Component {
+  constructor() {
+    super()
+    this.state = {
+      albumName: '',
+      artist: '',
+      genre: '',
+      numTracks: '',
+      releaseYear: '',
+      activePoll: true,
+      errors: {},
+    }
+  }
+
+  handleSubmit = event => {
+    event.preventDefault()
+    this.setState({
+      loading: true,
+    })
+    const newAlbumData = {
+      albumName: this.state.albumName,
+      artist: this.state.artist,
+      genre: this.state.genre,
+      numTracks: this.state.numTracks,
+      releaseYear: this.state.releaseYear,
+      activePoll: this.state.activePoll,
+    }
+    this.props.postNewAlbum(newAlbumData)
+  }
+
+  // componentWillUpdate(nextProps) {
+  //   if (nextProps.UI.errors) {
+  //     this.setState({ errors: nextProps.UI.errors })
+  //   }
+  // }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    })
+  }
+
+  handleSwitchChange = event => {
+    this.setState({
+      [event.target.name]: event.target.checked,
+    })
+  }
+
+  render() {
+    const {
+      classes,
+      UI: { loading },
+    } = this.props
+    const { errors } = this.state
+
+    return (
+      <Paper className={classes.form}>
+        <Typography variant='h5' className={classes.pageTitle}>
+          Add A New Album
+        </Typography>
+        <form noValidate onSubmit={this.handleSubmit}>
+          <TextField
+            id='albumName'
+            name='albumName'
+            type='text'
+            label='Album Name'
+            className={classes.textField}
+            helperText={errors.albumName}
+            error={errors.albumName ? true : false}
+            value={this.state.albumName}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='artist'
+            name='artist'
+            type='text'
+            label='Artist'
+            className={classes.textField}
+            helperText={errors.artist}
+            error={errors.artist ? true : false}
+            value={this.state.artist}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='genre'
+            name='genre'
+            type='text'
+            label='Genre'
+            className={classes.textField}
+            helperText={errors.genre}
+            error={errors.genre ? true : false}
+            value={this.state.genre}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='numTracks'
+            name='numTracks'
+            type='number'
+            label='Number of Tracks'
+            className={classes.textField}
+            helperText={errors.numTracks}
+            error={errors.numTracks ? true : false}
+            value={this.state.numTracks}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='releaseYear'
+            name='releaseYear'
+            type='number'
+            label='Release Year'
+            className={classes.textField}
+            helperText={errors.releaseYear}
+            error={errors.releaseYear ? true : false}
+            value={this.state.releaseYear}
+            onChange={this.handleChange}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={this.state.activePoll}
+                onChange={this.handleSwitchChange}
+                name='activePoll'
+              />
+            }
+            label='Make this album an active poll?'
+          />
+          {errors.general && (
+            <Typography variant='body2' className={classes.customError}>
+              {errors.general}
+            </Typography>
+          )}
+          <br />
+          <Button
+            type='submit'
+            variant='contained'
+            color='primary'
+            label='Submit'
+            className={classes.button}
+          >
+            {loading ? (
+              <CircularProgress className={classes.progress} size={30} />
+            ) : (
+              'Submit'
+            )}
+          </Button>
+          <br />
+        </form>
+      </Paper>
+    )
+  }
+}
+
+SubmitAlbum.propTypes = {
+  classes: PropTypes.object.isRequired,
+  UI: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = state => ({
+  UI: state.UI,
+})
+
+export default connect(mapStateToProps, { postNewAlbum })(
+  withStyles(styles)(SubmitAlbum)
+)

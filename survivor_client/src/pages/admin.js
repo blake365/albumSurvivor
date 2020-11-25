@@ -10,6 +10,8 @@ import { connect } from 'react-redux'
 
 import SubmitTrack from '../components/SubmitTrack'
 import SubmitCommentary from '../components/SubmitCommentary'
+import SubmitAlbum from '../components/SubmitAlbum'
+import SubmitTrackToAlbum from '../components/SubmitTrackToAlbum'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -25,11 +27,13 @@ class admin extends Component {
         <div>No No</div>
       ) : (
         <Grid container spacing={2}>
-          <Grid item sm={8} xs={12}>
+          <Grid item sm={6} xs={12}>
             <SubmitCommentary />
           </Grid>
-          <Grid item sm={4} xs={12}>
-            <SubmitTrack />
+          <Grid item sm={6} xs={12}>
+            {/** <SubmitTrack /> **/}
+            <SubmitAlbum />
+            <SubmitTrackToAlbum />
           </Grid>
         </Grid>
       )
