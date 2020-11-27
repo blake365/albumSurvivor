@@ -17,6 +17,7 @@ const {
   getOneAlbumsTracks,
   postNewTrackToAlbum,
   uploadImage,
+  editAlbumDetails,
 } = require('./handlers/albums')
 
 // const { getArchivedRounds, getIndividualRound } = require('./handlers/archives')
@@ -71,6 +72,8 @@ app.post(
   checkAdminStatus,
   postNewTrackToAlbum
 )
+//TODO: put route for editing album data
+app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails)
 
 //TODO: make vote and like functions for tracks nested in albums
 // app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote)

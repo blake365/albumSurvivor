@@ -11,30 +11,41 @@ import SubmitCommentary from '../components/admin/SubmitCommentary'
 import SubmitAlbum from '../components/admin/SubmitAlbum'
 import SubmitTrackToAlbum from '../components/admin/SubmitTrackToAlbum'
 import AlbumList from '../components/admin/AlbumList'
+import MessageSlot from '../components/MessageSlot'
+
+import { getAlbums } from '../redux/actions/dataActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
 })
 
 class admin extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getAlbums()
+  }
 
   render() {
-    const { user } = this.props
+    const {
+      user,
+      data: { albums },
+    } = this.props
     let adminMarkup =
       user.credentials.type !== 'admin' ? (
         <div>No No</div>
       ) : (
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <MessageSlot page='admin' />
+          </Grid>
           <Grid item sm={6} xs={12}>
             <SubmitCommentary />
-            <AlbumList />
+            <AlbumList albums={albums} />
           </Grid>
           <Grid item sm={5} xs={12}>
             {/** <SubmitTrack /> **/}
             <SubmitAlbum />
             <br />
-            <SubmitTrackToAlbum />
+            <SubmitTrackToAlbum albums={albums} />
           </Grid>
         </Grid>
       )
@@ -51,6 +62,9 @@ admin.propTypes = {
 const mapStateToProps = state => ({
   user: state.user,
   UI: state.UI,
+  data: state.data,
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(admin))
+export default connect(mapStateToProps, { getAlbums })(
+  withStyles(styles)(admin)
+)

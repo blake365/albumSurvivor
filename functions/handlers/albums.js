@@ -118,9 +118,6 @@ exports.postNewAlbum = (req, res) => {
     .then(() => {
       return res.status(200).json({ message: 'Album Added' })
     })
-    .then(() => {
-      this.uploadImage()
-    })
     .catch(err => {
       res.status(500).json({ error: 'something went wrong' })
       console.error(err)
@@ -154,6 +151,41 @@ exports.postNewTrackToAlbum = (req, res) => {
     })
     .then(() => {
       return res.status(200).json({ message: 'Track Added' })
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'something went wrong' })
+      console.error(err)
+    })
+}
+
+//TODO: write edit details function
+exports.editAlbumDetails = (req, res) => {
+  const editAlbumData = {
+    albumName: req.body.albumName,
+    artist: req.body.artist,
+    genre: req.body.genre,
+    numTracks: req.body.numTracks,
+    releaseYear: req.body.releaseYear,
+    activePoll: req.body.activePoll,
+  }
+
+  db.doc(`albums/${req.params.albumId}`)
+    .get()
+    .then(doc => {
+      console.log(editAlbumData)
+      function clean(obj) {
+        for (var propName in obj) {
+          if (obj[propName] === null || obj[propName] === '') {
+            delete obj[propName]
+          }
+        }
+      }
+      clean(editAlbumData)
+      console.log(editAlbumData)
+      return doc.ref.update(editAlbumData)
+    })
+    .then(() => {
+      return res.status(200).json({ message: 'Album Edited' })
     })
     .catch(err => {
       res.status(500).json({ error: 'something went wrong' })

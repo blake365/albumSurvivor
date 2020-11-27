@@ -10,6 +10,7 @@ import {
   SET_COMMENTARY,
   POST_ALBUM,
   SET_ALBUMS,
+  SET_ALBUM,
 } from '../types'
 
 const initialState = {
@@ -43,6 +44,11 @@ const dataReducer = (state = initialState, action) => {
         albums: action.payload,
         loading: false,
       }
+    case SET_ALBUM:
+      return {
+        ...state,
+        album: action.payload,
+      }
     case SET_DEAD_TRACKS:
       return {
         ...state,
@@ -69,7 +75,6 @@ const dataReducer = (state = initialState, action) => {
       return { ...state }
     case POST_ALBUM:
       return { ...state }
-
     case POST_COMMENTARY:
       return {
         ...state,

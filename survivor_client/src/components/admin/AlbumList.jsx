@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import EditIcon from '@material-ui/icons/Edit'
+import CardActions from '@material-ui/core/CardActions'
+import Button from '@material-ui/core/Button'
 
 import MyButton from '../../util/MyButton'
 
@@ -21,13 +23,22 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   card: {
     margin: 8,
+    width: 250,
   },
   image: {
+    objectFit: 'cover',
     width: 'auto',
-    height: 150,
+    height: '250px',
+  },
+  active: {
+    color: 'green',
+  },
+  inactive: {
+    color: 'red',
   },
 })
 
@@ -39,10 +50,6 @@ class AlbumList extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.getAlbums()
-  }
-
   handleImageChange = event => {
     const image = event.target.files[0]
     // send to server
@@ -50,8 +57,6 @@ class AlbumList extends Component {
     formData.append('image', image, image.name)
     this.props.uploadImage(this.state.albumId, formData)
   }
-
-  handleMouseOver = event => {}
 
   handleEditPicture = event => {
     this.setState({
@@ -62,47 +67,57 @@ class AlbumList extends Component {
   }
 
   render() {
-    const {
-      classes,
-      data: { albums },
-    } = this.props
+    const { classes, albums } = this.props
 
     let albumListMarkup = albums.map((album, index) => (
-      <Card
-        key={index}
-        className={classes.card}
-        onMouseEnter={this.handleMouseOver}
-        value={index}
-      >
+      <Card key={index} className={classes.card}>
+        <CardMedia
+          image={album.albumArt}
+          className={classes.image}
+          title='album art'
+        />
         <CardContent>
-          <CardMedia
-            image={album.albumArt}
-            className={classes.image}
-            title='album art'
-          />
           <input
             type='file'
             id='imageInput'
             hidden='hidden'
             onChange={this.handleImageChange}
           />
-          <div>
-            Add/Edit Album Art
-            <MyButton
-              name='albumId'
-              value={album.albumId}
-              tip='Edit Album Art'
-              onClick={this.handleEditPicture}
-              btnClassName='button'
-            >
-              {' '}
-              <EditIcon color='primary' value={album.albumId} />
-            </MyButton>
-          </div>
+          <MyButton
+            name='albumId'
+            value={album.albumId}
+            tip='Edit Album Art'
+            onClick={this.handleEditPicture}
+            btnClassName='button'
+          >
+            <EditIcon color='primary' value={album.albumId} />
+            <small>Add Album Art</small>
+          </MyButton>
+          {album.activePoll ? (
+            <Typography variant='body1' className={classes.active}>
+              Active Poll
+            </Typography>
+          ) : (
+            <Typography variant='body1' className={classes.inactive}>
+              Inactive Poll
+            </Typography>
+          )}
           <Typography variant='h5'>{album.albumName}</Typography>
-          <Typography variant='subtitle2'>{album.artist}</Typography>
+          <Typography variant='body1'>{album.artist}</Typography>
           <Typography variant='body1'>{album.genre}</Typography>
+          <Typography variant='body2'>{album.releaseYear}</Typography>
+          <Typography variant='body2'>{album.numTracks} tracks</Typography>
         </CardContent>
+        <CardActions>
+          <Button
+            size='small'
+            color='primary'
+            component={Link}
+            to={`/albums/${album.albumId}`}
+          >
+            Edit Data
+          </Button>
+        </CardActions>
       </Card>
     ))
 
@@ -115,10 +130,9 @@ AlbumList.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  data: state.data,
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { getAlbums, uploadImage })(
+export default connect(mapStateToProps, { uploadImage })(
   withStyles(styles)(AlbumList)
 )

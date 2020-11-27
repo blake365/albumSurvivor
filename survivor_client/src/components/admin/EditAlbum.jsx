@@ -9,12 +9,11 @@ import Paper from '@material-ui/core/Paper'
 
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
 
 import { connect } from 'react-redux'
-import { postNewTrackToAlbum } from '../../redux/actions/dataActions'
+import { editAlbumData } from '../../redux/actions/dataActions'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -34,16 +33,16 @@ const styles = theme => ({
   },
 })
 
-class SubmitTrackToAlbum extends Component {
+class EditAlbum extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
-      description: '',
-      trackListing: '',
-      length: '',
-      lyrics: '',
-      albumId: '',
+      albumName: '',
+      artist: '',
+      genre: '',
+      numTracks: '',
+      releaseYear: '',
+      activePoll: false,
       errors: {},
     }
   }
@@ -53,20 +52,15 @@ class SubmitTrackToAlbum extends Component {
     this.setState({
       loading: true,
     })
-    const newTrackData = {
-      name: this.state.name,
-      description: this.state.description,
-      trackListing: this.state.trackListing,
-      length: this.state.length,
-      lyrics: this.state.lyrics,
+    const editedAlbumData = {
+      albumName: this.state.albumName,
+      artist: this.state.artist,
+      genre: this.state.genre,
+      numTracks: this.state.numTracks,
+      releaseYear: this.state.releaseYear,
+      activePoll: this.state.activePoll,
     }
-    this.props.postNewTrackToAlbum(this.state.albumId, newTrackData)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors })
-    }
+    this.props.editAlbumData(this.props.album.data.albumId, editedAlbumData)
   }
 
   handleChange = event => {
@@ -75,88 +69,91 @@ class SubmitTrackToAlbum extends Component {
     })
   }
 
+  handleSwitchChange = event => {
+    this.setState({
+      [event.target.name]: event.target.checked,
+    })
+  }
+
   render() {
     const {
+      album,
       classes,
       UI: { loading },
-      albums,
     } = this.props
     const { errors } = this.state
 
     return (
       <Paper className={classes.form}>
         <Typography variant='h5' className={classes.pageTitle}>
-          Add A New Song To An Album
+          Edit Album Details
         </Typography>
         <form noValidate onSubmit={this.handleSubmit}>
-          <div className={classes.textField}>
-            <InputLabel id='demo-simple-select-label'>Select Album</InputLabel>
-            <Select
-              labelId='select album'
-              name='albumId'
-              id='albumId'
-              value={this.state.albumId}
-              onChange={this.handleChange}
-            >
-              {albums.map(album => (
-                <MenuItem value={album.albumId}>{album.albumName}</MenuItem>
-              ))}
-            </Select>
-          </div>
           <TextField
-            id='name'
-            name='name'
+            id='albumName'
+            name='albumName'
             type='text'
-            label='Name'
+            label='Album Name'
             className={classes.textField}
-            helperText={errors.name}
-            error={errors.name ? true : false}
-            value={this.state.name}
+            helperText={errors.albumName}
+            error={errors.albumName ? true : false}
+            value={this.state.albumName}
             onChange={this.handleChange}
           />
           <TextField
-            id='description'
-            name='description'
+            id='artist'
+            name='artist'
             type='text'
-            label='Description'
+            label='Artist'
             className={classes.textField}
-            helperText={errors.description}
-            error={errors.description ? true : false}
-            value={this.state.description}
+            helperText={errors.artist}
+            error={errors.artist ? true : false}
+            value={this.state.artist}
             onChange={this.handleChange}
           />
           <TextField
-            id='lyrics'
-            name='lyrics'
+            id='genre'
+            name='genre'
             type='text'
-            label='Lyrics'
+            label='Genre'
             className={classes.textField}
-            helperText={errors.lyrics}
-            error={errors.lyrics ? true : false}
-            value={this.state.lyrics}
+            helperText={errors.genre}
+            error={errors.genre ? true : false}
+            value={this.state.genre}
             onChange={this.handleChange}
           />
           <TextField
-            id='length'
-            name='length'
-            type='text'
-            label='Length'
-            className={classes.textField}
-            helperText={errors.length}
-            error={errors.length ? true : false}
-            value={this.state.length}
-            onChange={this.handleChange}
-          />
-          <TextField
-            id='trackListing'
-            name='trackListing'
+            id='numTracks'
+            name='numTracks'
             type='number'
-            label='Track List Number'
+            label='Number of Tracks'
             className={classes.textField}
-            helperText={errors.trackListing}
-            error={errors.trackListing ? true : false}
-            value={this.state.trackListing}
+            helperText={errors.numTracks}
+            error={errors.numTracks ? true : false}
+            value={this.state.numTracks}
             onChange={this.handleChange}
+          />
+          <TextField
+            id='releaseYear'
+            name='releaseYear'
+            type='number'
+            label='Release Year'
+            className={classes.textField}
+            helperText={errors.releaseYear}
+            error={errors.releaseYear ? true : false}
+            value={this.state.releaseYear}
+            onChange={this.handleChange}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                color='primary'
+                checked={this.state.activePoll}
+                onChange={this.handleSwitchChange}
+                name='activePoll'
+              />
+            }
+            label='Make this album an active poll?'
           />
           {errors.general && (
             <Typography variant='body2' className={classes.customError}>
@@ -184,7 +181,7 @@ class SubmitTrackToAlbum extends Component {
   }
 }
 
-SubmitTrackToAlbum.propTypes = {
+EditAlbum.propTypes = {
   classes: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
 }
@@ -193,6 +190,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { postNewTrackToAlbum })(
-  withStyles(styles)(SubmitTrackToAlbum)
+export default connect(mapStateToProps, { editAlbumData })(
+  withStyles(styles)(EditAlbum)
 )

@@ -19,6 +19,7 @@ import home from './pages/home'
 import login from './pages/login'
 import signup from './pages/signup'
 import admin from './pages/admin'
+import albumPage from './pages/albumPage'
 import Navbar from './components/layout/Navbar'
 import AuthRoute from './util/AuthRoute'
 import axios from 'axios'
@@ -54,6 +55,11 @@ class App extends Component {
                   <AuthRoute exact path='/login' component={login} />
                   <AuthRoute exact path='/signup' component={signup} />
                   <AuthRoute2 exact path='/admin' component={admin} />
+                  <AuthRoute2
+                    exact
+                    path='/albums/:albumId'
+                    component={albumPage}
+                  />
                 </Switch>
               </div>
             </PersistGate>

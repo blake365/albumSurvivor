@@ -16,6 +16,7 @@ import {
   SET_MESSAGE,
   POST_ALBUM,
   SET_ALBUMS,
+  SET_ALBUM,
 } from '../types'
 
 import axios from 'axios'
@@ -47,6 +48,29 @@ export const getAlbums = () => dispatch => {
     .then(res => {
       dispatch({
         type: SET_ALBUMS,
+        payload: res.data,
+      })
+      console.log('got album data')
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
+      })
+    })
+}
+
+//TODO: get one album
+
+export const getAlbum = albumId => dispatch => {
+  console.log(albumId)
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get(`/albums/${albumId}`)
+    .then(res => {
+      console.log(res.data)
+      dispatch({
+        type: SET_ALBUM,
         payload: res.data,
       })
     })
@@ -141,6 +165,34 @@ export const postNewTrackToAlbum = (albumId, newTrackData) => dispatch => {
         type: POST_TRACK,
         payload: res.data,
       })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
+      dispatch(clearErrors())
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      })
+    })
+}
+
+export const editAlbumData = (albumId, editAlbumData) => dispatch => {
+  dispatch({ type: LOADING_UI })
+  axios
+    .put(`/albums/${albumId}`, editAlbumData)
+    .then(res => {
+      dispatch({
+        type: POST_ALBUM,
+        payload: res.data,
+      })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
+      dispatch(getAlbum(albumId))
       dispatch(clearErrors())
     })
     .catch(err => {
@@ -160,6 +212,11 @@ export const postNewAlbum = newAlbumData => dispatch => {
         type: POST_ALBUM,
         payload: res.data,
       })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
+      dispatch(getAlbums())
       dispatch(clearErrors())
     })
     .catch(err => {

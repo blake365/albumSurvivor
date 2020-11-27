@@ -38,11 +38,10 @@ exports.postCommentary = (req, res) => {
     .then(doc => {
       const resCommentary = newCommentary
       resCommentary.commentaryId = doc.id
-      res.json(resCommentary)
+      return res.json(resCommentary)
     })
     .catch(err => {
-      res.status(500).json({ error: 'something went wrong' })
-      console.error(err)
+      return res.status(500).json({ error: 'something went wrong' })
     })
 }
 

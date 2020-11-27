@@ -6,7 +6,7 @@ import InfoAlert from './alerts/InfoAlert'
 import ErrorAlert from './alerts/ErrorAlert'
 import withStyles from '@material-ui/core/styles/withStyles'
 
-//TODO: handle errors and success messages in this component
+//TODO: show no info when loaded from admin page
 
 const styles = theme => ({
   ...theme.spreadThis,
