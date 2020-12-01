@@ -18,6 +18,9 @@ const {
   postNewTrackToAlbum,
   uploadImage,
   editAlbumDetails,
+  castVote2,
+  payRespects2,
+  // editTrackDetails,
 } = require('./handlers/albums')
 
 // const { getArchivedRounds, getIndividualRound } = require('./handlers/archives')
@@ -72,14 +75,22 @@ app.post(
   checkAdminStatus,
   postNewTrackToAlbum
 )
-//TODO: put route for editing album data
 app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails)
+//TODO: put route for editing track data
+// app.put(
+//   '/albums/:albumId/tracks/:trackId',
+//   FBAuth,
+//   checkAdminStatus,
+//   editTrackDetails
+// )
 
 //TODO: make vote and like functions for tracks nested in albums
-// app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote)
-// app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects)
+
+app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2)
+app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2)
 
 //commentary
+// TODO: edit commentary
 app.get('/commentary', getAllCommentary)
 app.post('/commentary', FBAuth, checkAdminStatus, postCommentary)
 // app.get('/commentary/:commentaryId', getCommentary) -- may not use this
@@ -98,8 +109,10 @@ app.get('/user', FBAuth, getAuthenticatedUser)
 
 exports.api = functions.https.onRequest(app)
 
-//vote tally
+// TODO: write archive votes function
 
+// TODO: update vote tally function
+//vote tally
 // minutes, hours, day of month, month, day of week - '0 0 * * *' daily at midnight
 exports.scheduledFunctionCrontab = functions.pubsub
   .schedule('0 19 * * *')

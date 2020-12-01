@@ -11,6 +11,7 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS'
 export const LOADING_DATA = 'LOADING_DATA'
 export const STOP_LOADING_UI = 'STOP_LOADING_UI'
 export const SET_MESSAGE = 'SET_MESSAGE'
+export const CLEAR_MESSAGE = 'CLEAR_MESSAGE'
 
 //Data reducer types
 export const SET_TRACKS = 'SET_TRACKS'

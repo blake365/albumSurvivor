@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import EditIcon from '@material-ui/icons/Edit'
-import CardActions from '@material-ui/core/CardActions'
-import Button from '@material-ui/core/Button'
 
 import MyButton from '../../util/MyButton'
 

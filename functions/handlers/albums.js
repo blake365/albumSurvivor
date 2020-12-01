@@ -31,19 +31,10 @@ exports.getActiveAlbums = (req, res) => {
     .orderBy('createdAt')
     .get()
     .then(data => {
+      let albumData = {}
       let activeAlbumList = []
       data.forEach(doc => {
-        activeAlbumList.push({
-          albumId: doc.id,
-          createdAt: doc.data().createdAt,
-          albumName: doc.data().albumName,
-          artist: doc.data().artist,
-          albumArt: doc.data().albumArt,
-          activePoll: doc.data().activePoll,
-          genre: doc.data().genre,
-          numTracks: doc.data().numTracks,
-          releaseYear: doc.data().releaseYear,
-        })
+        activeAlbumList.push((albumData = doc.data()))
       })
       return res.json(activeAlbumList)
     })
@@ -91,7 +82,20 @@ exports.getOneAlbum = (req, res) => {
 
 //TODO: write function to get just tracks from a specific album
 exports.getOneAlbumsTracks = (req, res) => {
-  return res.json({ message: 'finish this' })
+  db.collection(`albums/${req.params.albumId}/tracks`)
+    .orderBy('trackListing')
+    .get()
+    .then(data => {
+      trackData = []
+      data.forEach(doc => {
+        trackData.push((track = doc.data()))
+      })
+      return res.json(trackData)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({ error: err.code })
+    })
 }
 
 exports.postNewAlbum = (req, res) => {
@@ -158,7 +162,7 @@ exports.postNewTrackToAlbum = (req, res) => {
     })
 }
 
-//TODO: write edit details function
+// edit album details function
 exports.editAlbumDetails = (req, res) => {
   const editAlbumData = {
     albumName: req.body.albumName,
@@ -190,6 +194,90 @@ exports.editAlbumDetails = (req, res) => {
     .catch(err => {
       res.status(500).json({ error: 'something went wrong' })
       console.error(err)
+    })
+}
+
+// TODO: cast vote function
+exports.castVote2 = (req, res) => {
+  const voteDocument = {
+    trackId: req.params.trackId,
+    createdAt: new Date().toISOString(),
+    voteDay: new Date().getDate(),
+    name: '',
+    albumId: req.params.albumId,
+  }
+
+  let todayDate = new Date().getDate()
+  // TODO: figure out how to limit votes to once per album per day
+  db.collection(`/users/${req.user.userName}/votes`)
+    .orderBy('createdAt', 'desc')
+    .limit(1)
+    .get()
+    .then(query => {
+      doc = query.docs[0]
+      if (
+        doc.data().albumId !== req.params.albumId &&
+        doc.data().voteDay !== todayDate
+      ) {
+        const trackDocument = db.doc(
+          `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+        )
+        let trackData = {}
+        return trackDocument
+          .get()
+          .then(doc => {
+            trackData = doc.data()
+            trackData.trackId = doc.id
+            trackData.name = doc.data().name
+            voteDocument.name = trackData.name
+            trackData.votes++
+            return trackDocument.update({
+              votes: trackData.votes,
+            })
+          })
+          .then(() => {
+            db.collection(`/users/${req.user.userName}/votes`).add(voteDocument)
+          })
+          .then(() => {
+            return res.status(200).json({
+              message: 'Your vote has been submitted!',
+              voteHistory: voteDocument,
+            })
+          })
+      } else {
+        return res.status(403).json({ error: 'You have already voted today!' })
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+    })
+}
+
+// TODO: pay respects to graveyard tracks
+exports.payRespects2 = (req, res) => {
+  const trackDocument = db.doc(
+    `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+  )
+  let trackData = {}
+
+  trackDocument
+    .get()
+    .then(doc => {
+      trackData = doc.data()
+      if (doc.data().respect < 999) {
+        trackData.respect++
+        return trackDocument.update({
+          respect: trackData.respect,
+        })
+      } else return trackData
+    })
+    .then(() => {
+      return res.json(trackData)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
     })
 }
 

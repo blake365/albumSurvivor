@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import SubmitTrack from '../components/admin/SubmitTrack'
 import SubmitCommentary from '../components/admin/SubmitCommentary'
@@ -17,7 +18,14 @@ import { getAlbums } from '../redux/actions/dataActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
+  spinnerDiv: {
+    textAlign: 'center',
+    marginTop: 50,
+    marginBottom: 50,
+  },
 })
+
+// TODO: add loading icon so cold starts don't fail to load data into the state ... seems to be solved
 
 class admin extends Component {
   componentDidMount() {
@@ -26,12 +34,17 @@ class admin extends Component {
 
   render() {
     const {
+      classes,
       user,
-      data: { albums },
+      data: { albums, loading },
     } = this.props
     let adminMarkup =
       user.credentials.type !== 'admin' ? (
         <div>No No</div>
+      ) : loading ? (
+        <div className={classes.spinnerDiv}>
+          <CircularProgress size={200} thickness={2} />
+        </div>
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12}>

@@ -60,8 +60,7 @@ export const getAlbums = () => dispatch => {
     })
 }
 
-//TODO: get one album
-
+// get one album
 export const getAlbum = albumId => dispatch => {
   console.log(albumId)
   dispatch({ type: LOADING_DATA })

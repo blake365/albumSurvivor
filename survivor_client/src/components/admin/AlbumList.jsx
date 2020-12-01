@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button'
 
 import MyButton from '../../util/MyButton'
 
-import { getAlbums, uploadImage } from '../../redux/actions/dataActions'
+import { uploadImage } from '../../redux/actions/dataActions'
 import { CardMedia } from '@material-ui/core'
 
 const styles = theme => ({

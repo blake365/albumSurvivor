@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import Collapse from '@material-ui/core/Collapse'
+
+import { clearAllAlerts } from '../../redux/actions/uiActions'
 
 class ErrorAlert extends Component {
   state = {
@@ -19,7 +22,9 @@ class ErrorAlert extends Component {
 
   handleClose = () => {
     this.setState({ open: false })
+    this.props.clearAllAlerts()
   }
+
   render() {
     const { errors } = this.props
 
@@ -46,4 +51,4 @@ class ErrorAlert extends Component {
   }
 }
 
-export default ErrorAlert
+export default connect(null, { clearAllAlerts })(ErrorAlert)

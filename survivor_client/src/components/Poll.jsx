@@ -143,8 +143,8 @@ class Poll extends Component {
         type='link'
         component={Link}
         to='/login'
-        variant='contained'
-        color='secondary'
+        variant='outlined'
+        color='primary'
         disabled={this.state.disabled}
         className={classes.submitButton}
       >

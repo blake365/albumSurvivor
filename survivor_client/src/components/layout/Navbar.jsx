@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography'
 import ProfilePopper from './ProfilePopper'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import Chip from '@material-ui/core/Chip'
 
 import AlbumIcon from '@material-ui/icons/Album'
 

@@ -4,12 +4,16 @@ import {
   LOADING_UI,
   STOP_LOADING_UI,
   SET_MESSAGE,
+  CLEAR_MESSAGE,
 } from '../types'
 
 const initialState = {
   loading: false,
   errors: null,
+  message: null,
 }
+
+// TODO: write clear all reducer for messages and errors
 
 const uiReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -30,6 +34,12 @@ const uiReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         errors: null,
+      }
+    case CLEAR_MESSAGE:
+      return {
+        ...state,
+        loading: false,
+        message: null,
       }
     case LOADING_UI:
       return {
