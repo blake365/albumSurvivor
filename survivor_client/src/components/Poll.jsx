@@ -55,7 +55,7 @@ class Poll extends Component {
   }
 
   componentDidMount() {
-    this.props.getTracks()
+    this.props.getTracks(this.props.albumId)
   }
 
   handleSelectedTrack(selection) {

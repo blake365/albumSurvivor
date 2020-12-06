@@ -10,6 +10,7 @@ import MessageSlot from '../components/MessageSlot'
 import PropTypes from 'prop-types'
 import Graveyard from '../components/Graveyard'
 import Commentary from '../components/Commentary'
+import PollWrapper from '../components/PollWrapper'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -30,6 +31,7 @@ export class home extends Component {
         </Grid>
 
         <Grid item sm={6} xs={12}>
+          <PollWrapper />
           <Poll />
           <Graveyard />
         </Grid>

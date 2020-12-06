@@ -12,7 +12,7 @@ import AlbumDetails from '../components/admin/AlbumDetails'
 import { getAlbum } from '../redux/actions/dataActions'
 import EditAlbum from '../components/admin/EditAlbum'
 
-//TODO: get one album, use albumId in url. allow editing album details
+//get one album, use albumId in url. allow editing album details
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -44,7 +44,6 @@ class albumPage extends Component {
             <AlbumDetails album={album} />
           </Grid>
           <Grid item sm={8} xs={12}>
-            {/**FIXME: write new backend logic to update album document*/}
             <EditAlbum album={album} />
           </Grid>
           <Grid item sm={12} xs={12}></Grid>

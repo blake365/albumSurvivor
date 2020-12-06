@@ -84,16 +84,16 @@ app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails)
 //   editTrackDetails
 // )
 
-//TODO: make vote and like functions for tracks nested in albums
-
+//make vote and like functions for tracks nested in albums
 app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2)
 app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2)
 
 //commentary
-// TODO: edit commentary
+// TODO: edit commentary route and handler
 app.get('/commentary', getAllCommentary)
 app.post('/commentary', FBAuth, checkAdminStatus, postCommentary)
 // app.get('/commentary/:commentaryId', getCommentary) -- may not use this
+// TODO: add ui for commentary deletion
 app.delete(
   '/commentary/:commentaryId',
   FBAuth,
@@ -111,7 +111,8 @@ exports.api = functions.https.onRequest(app)
 
 // TODO: write archive votes function
 
-// TODO: update vote tally function
+// FIXME: update vote tally function
+
 //vote tally
 // minutes, hours, day of month, month, day of week - '0 0 * * *' daily at midnight
 exports.scheduledFunctionCrontab = functions.pubsub

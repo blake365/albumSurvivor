@@ -17,6 +17,8 @@ import {
   POST_ALBUM,
   SET_ALBUMS,
   SET_ALBUM,
+  SET_ACTIVE_ALBUMS,
+  SET_ALBUM_TRACKS,
 } from '../types'
 
 import axios from 'axios'
@@ -40,6 +42,25 @@ export const getTracks = () => dispatch => {
     })
 }
 
+//get tracks from album
+export const getAlbumTracks = albumId => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get(`/albums/${albumId}/tracks`)
+    .then(res => {
+      dispatch({
+        type: SET_ALBUM_TRACKS,
+        payload: res.data,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
+      })
+    })
+}
+
 //get all albums
 export const getAlbums = () => dispatch => {
   dispatch({ type: LOADING_DATA })
@@ -51,6 +72,26 @@ export const getAlbums = () => dispatch => {
         payload: res.data,
       })
       console.log('got album data')
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
+      })
+    })
+}
+
+//get active albums for album wrapper component
+export const getActiveAlbums = () => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get('/albums/active')
+    .then(res => {
+      dispatch({
+        type: SET_ACTIVE_ALBUMS,
+        payload: res.data,
+      })
+      console.log('got active album data')
     })
     .catch(err => {
       dispatch({

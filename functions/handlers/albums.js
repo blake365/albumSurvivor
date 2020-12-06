@@ -197,7 +197,7 @@ exports.editAlbumDetails = (req, res) => {
     })
 }
 
-// TODO: cast vote function
+// cast vote function
 exports.castVote2 = (req, res) => {
   const voteDocument = {
     trackId: req.params.trackId,
@@ -205,47 +205,59 @@ exports.castVote2 = (req, res) => {
     voteDay: new Date().getDate(),
     name: '',
     albumId: req.params.albumId,
+    albumArt: '',
   }
 
   let todayDate = new Date().getDate()
-  // TODO: figure out how to limit votes to once per album per day
+  // TODO: this appears to be working
   db.collection(`/users/${req.user.userName}/votes`)
     .orderBy('createdAt', 'desc')
-    .limit(1)
+    .limit(3)
     .get()
     .then(query => {
-      doc = query.docs[0]
-      if (
-        doc.data().albumId !== req.params.albumId &&
-        doc.data().voteDay !== todayDate
-      ) {
-        const trackDocument = db.doc(
-          `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
-        )
-        let trackData = {}
-        return trackDocument
-          .get()
-          .then(doc => {
-            trackData = doc.data()
-            trackData.trackId = doc.id
-            trackData.name = doc.data().name
-            voteDocument.name = trackData.name
-            trackData.votes++
-            return trackDocument.update({
-              votes: trackData.votes,
+      doc = query.docs
+      console.log('')
+      for (let i = 0; i < doc.length; i++) {
+        let result
+        if (
+          doc[i].data().voteDay !== todayDate ||
+          doc[i].data().albumId !== req.params.albumId
+        ) {
+          console.log(doc[i].data().voteDay)
+          console.log(doc[i].data().albumId)
+          const trackDocument = db.doc(
+            `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+          )
+          let trackData = {}
+          return trackDocument
+            .get()
+            .then(doc => {
+              trackData = doc.data()
+              trackData.trackId = doc.id
+              trackData.name = doc.data().name
+              voteDocument.name = trackData.name
+              trackData.votes++
+              return trackDocument.update({
+                votes: trackData.votes,
+              })
             })
-          })
-          .then(() => {
-            db.collection(`/users/${req.user.userName}/votes`).add(voteDocument)
-          })
-          .then(() => {
-            return res.status(200).json({
-              message: 'Your vote has been submitted!',
-              voteHistory: voteDocument,
+            .then(() => {
+              db.collection(`/users/${req.user.userName}/votes`).add(
+                voteDocument
+              )
             })
-          })
-      } else {
-        return res.status(403).json({ error: 'You have already voted today!' })
+            .then(() => {
+              result = res.status(200).json({
+                message: 'Your vote has been submitted!',
+                voteHistory: voteDocument,
+              })
+            })
+        } else {
+          result = res
+            .status(403)
+            .json({ error: 'You have already voted today!' })
+        }
+        return result
       }
     })
     .catch(err => {
@@ -255,6 +267,7 @@ exports.castVote2 = (req, res) => {
 }
 
 // TODO: pay respects to graveyard tracks
+// song will not recieve respect until a respect field is added when it is voted out
 exports.payRespects2 = (req, res) => {
   const trackDocument = db.doc(
     `/albums/${req.params.albumId}/tracks/${req.params.trackId}`

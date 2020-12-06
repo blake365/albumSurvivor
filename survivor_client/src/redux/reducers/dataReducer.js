@@ -11,10 +11,12 @@ import {
   POST_ALBUM,
   SET_ALBUMS,
   SET_ALBUM,
+  SET_ACTIVE_ALBUMS,
 } from '../types'
 
 const initialState = {
   tracks: [],
+  activeAlbums: [],
   albums: [],
   album: {},
   track: {},
@@ -44,10 +46,21 @@ const dataReducer = (state = initialState, action) => {
         albums: action.payload,
         loading: false,
       }
+    case SET_ACTIVE_ALBUMS:
+      return {
+        ...state,
+        activeAlbums: action.payload,
+        loading: false,
+      }
     case SET_ALBUM:
       return {
         ...state,
         album: action.payload,
+      }
+    case SET_ALBUM_TRACKS:
+      return {
+        ...state,
+        // TODO: handle state for tracks within an album
       }
     case SET_DEAD_TRACKS:
       return {
