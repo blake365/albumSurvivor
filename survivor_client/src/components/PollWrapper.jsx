@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { getActiveAlbums } from '../redux/actions/dataActions'
 
 import AlbumList from './admin/AlbumList'
+import PollTest from './PollTest'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -30,7 +31,14 @@ class PollWrapper extends Component {
       user: { authenticated },
     } = this.props
 
-    return <AlbumList albums={activeAlbums} />
+    let pollTest = activeAlbums.map(album => (
+      <div key={album.albumId}>
+        <div style={{ color: 'red' }}>{album.albumName}</div>
+        <PollTest album={album} />
+      </div>
+    ))
+
+    return <div>{pollTest}</div>
   }
 }
 

@@ -1,4 +1,5 @@
 const functions = require('firebase-functions')
+const cors = require('cors')
 
 const {
   getAliveTracks,
@@ -48,6 +49,7 @@ const { db } = require('./util/admin')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cors())
 
 // tracks routes
 app.get('/tracks', getAliveTracks)

@@ -12,13 +12,14 @@ import {
   SET_ALBUMS,
   SET_ALBUM,
   SET_ACTIVE_ALBUMS,
+  SET_ALBUM_TRACKS,
 } from '../types'
 
 const initialState = {
   tracks: [],
   activeAlbums: [],
   albums: [],
-  album: {},
+  album: [],
   track: {},
   deadTracks: [],
   loading: false,
