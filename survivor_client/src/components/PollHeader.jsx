@@ -39,7 +39,7 @@ const styles = theme => ({
 
 class PollHeader extends Component {
   render() {
-    const { classes, tracks } = this.props
+    const { classes, tracks, albumName, artist, albumArt } = this.props
 
     let finalRoundMarkup = tracks.length === 2 && (
       <Typography variant='h3'>Final Round!</Typography>
@@ -60,19 +60,19 @@ class PollHeader extends Component {
             <img
               alt='album cover'
               className={classes.cover}
-              src='https://www.covermesongs.com/wp-content/uploads/2020/04/Royal_Scam.jpg'
-              title='The Royal Scam'
+              src={albumArt}
+              title={albumName}
             />
           </div>
           <div>
             <Typography variant='h5' className={classes.content}>
-              In Rainbows
+              {albumName}
             </Typography>
             <Typography variant='body1' className={classes.content}>
               by
             </Typography>
             <Typography variant='h5' className={classes.content}>
-              Radiohead
+              {artist}
             </Typography>
           </div>
         </div>

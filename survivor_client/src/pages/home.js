@@ -30,13 +30,8 @@ export class home extends Component {
           <MessageSlot />
         </Grid>
 
-        <Grid item sm={6} xs={12}>
+        <Grid item sm={12} xs={12}>
           <PollWrapper />
-          <Poll />
-          <Graveyard />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Commentary />
         </Grid>
       </Grid>
     )
