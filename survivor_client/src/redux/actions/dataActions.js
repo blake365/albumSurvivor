@@ -147,6 +147,31 @@ export const postVote = trackId => dispatch => {
     })
 }
 
+export const postVote2 = (albumId, trackId) => dispatch => {
+  dispatch({ type: LOADING_UI })
+  axios
+    .post(`/albums/${albumId}/tracks/${trackId}/vote`)
+    .then(res => {
+      dispatch({
+        type: POST_VOTE,
+        payload: res.data,
+      })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
+      dispatch(clearErrors())
+      dispatch(getUserData())
+      dispatch(getActiveAlbums())
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      })
+    })
+}
+
 export const getGraveyardTracks = () => dispatch => {
   dispatch({ type: LOADING_DATA })
   axios

@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
-import { postVote } from '../redux/actions/dataActions'
+import { postVote2 } from '../redux/actions/dataActions'
 
 import FormControl from '@material-ui/core/FormControl'
 import Paper from '@material-ui/core/Paper'
@@ -62,7 +62,7 @@ class PollNew extends Component {
     event.preventDefault()
     if (this.state.selection !== '') {
       this.setState({ submitted: true, disabled: true })
-      this.props.postVote(this.state.selection)
+      this.props.postVote2(this.props.album.albumId, this.state.selection)
     } else return
   }
 
@@ -170,7 +170,7 @@ class PollNew extends Component {
 }
 
 PollNew.propTypes = {
-  postVote: PropTypes.func.isRequired,
+  postVote2: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
 }
 
@@ -180,6 +180,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { postVote })(
+export default connect(mapStateToProps, { postVote2 })(
   withStyles(styles)(PollNew)
 )

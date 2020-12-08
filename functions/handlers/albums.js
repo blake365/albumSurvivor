@@ -209,7 +209,7 @@ exports.castVote2 = (req, res) => {
   }
 
   let todayDate = new Date().getDate()
-  // TODO: this appears to be working
+  // TODO: limit should equal number of active polls
   db.collection(`/users/${req.user.userName}/votes`)
     .orderBy('createdAt', 'desc')
     .limit(3)
@@ -217,47 +217,48 @@ exports.castVote2 = (req, res) => {
     .then(query => {
       doc = query.docs
       console.log('')
-      for (let i = 0; i < doc.length; i++) {
-        let result
+      const votemap = doc.map(doc => {
+        let didVote
         if (
-          doc[i].data().voteDay !== todayDate ||
-          doc[i].data().albumId !== req.params.albumId
+          doc.data().voteDay === todayDate &&
+          doc.data().albumId === req.params.albumId
         ) {
-          console.log(doc[i].data().voteDay)
-          console.log(doc[i].data().albumId)
-          const trackDocument = db.doc(
-            `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
-          )
-          let trackData = {}
-          return trackDocument
-            .get()
-            .then(doc => {
-              trackData = doc.data()
-              trackData.trackId = doc.id
-              trackData.name = doc.data().name
-              voteDocument.name = trackData.name
-              trackData.votes++
-              return trackDocument.update({
-                votes: trackData.votes,
-              })
-            })
-            .then(() => {
-              db.collection(`/users/${req.user.userName}/votes`).add(
-                voteDocument
-              )
-            })
-            .then(() => {
-              result = res.status(200).json({
-                message: 'Your vote has been submitted!',
-                voteHistory: voteDocument,
-              })
-            })
+          didVote = true
         } else {
-          result = res
-            .status(403)
-            .json({ error: 'You have already voted today!' })
+          didVote = false
         }
-        return result
+        return didVote
+      })
+      console.log(votemap)
+
+      if (votemap.includes(true)) {
+        return res.status(403).json({ error: 'You have already voted today!' })
+      } else {
+        const trackDocument = db.doc(
+          `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+        )
+        let trackData = {}
+        return trackDocument
+          .get()
+          .then(doc => {
+            trackData = doc.data()
+            trackData.trackId = doc.id
+            trackData.name = doc.data().name
+            voteDocument.name = trackData.name
+            trackData.votes++
+            return trackDocument.update({
+              votes: trackData.votes,
+            })
+          })
+          .then(() => {
+            db.collection(`/users/${req.user.userName}/votes`).add(voteDocument)
+          })
+          .then(() => {
+            return res.status(200).json({
+              message: 'Your vote has been submitted!',
+              voteHistory: voteDocument,
+            })
+          })
       }
     })
     .catch(err => {
