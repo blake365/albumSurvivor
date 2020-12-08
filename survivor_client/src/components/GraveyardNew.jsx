@@ -62,50 +62,57 @@ class GraveyardNew extends Component {
           </TableHead>
           <TableBody>
             {deadTracks.length === 0 ? (
-              <TableCell align='center' className={classes.title} colSpan={4}>
-                No tracks have been voted out.
-              </TableCell>
+              <TableRow>
+                <TableCell align='center' className={classes.title} colSpan={4}>
+                  No tracks have been voted out.
+                </TableCell>
+              </TableRow>
             ) : (
-              deadTracks.map((row, index) => (
-                <TableRow key={row.name}>
-                  <TableCell
-                    component='th'
-                    scope='row'
-                    align='center'
-                    className={classes.body}
-                  >
-                    {aliveTracks.length +
-                      deadTracks.length -
-                      (deadTracks.length - 1) +
-                      index}
-                  </TableCell>
-                  <TableCell className={classes.body}>{row.name}</TableCell>
-                  <TableCell align='center' className={classes.body}>
-                    {row.votes}
-                  </TableCell>
-                  <TableCell
-                    align='center'
-                    className={classes.body}
-                    style={{ paddingRight: 4 }}
-                  >
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
+              deadTracks
+                .sort(function (a, b) {
+                  // console.log(a.voteOutDay._seconds)
+                  return b.voteOutDay._seconds - a.voteOutDay._seconds
+                })
+                .map((row, index) => (
+                  <TableRow key={row.name}>
+                    <TableCell
+                      component='th'
+                      scope='row'
+                      align='center'
+                      className={classes.body}
                     >
-                      <div style={{ paddingLeft: 12 }}>{row.respect}</div>
-                      {row.respect < 1000 ? (
-                        <LikeButton trackId={row.trackId} />
-                      ) : (
-                        <LikeButton />
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                      {aliveTracks.length +
+                        deadTracks.length -
+                        (deadTracks.length - 1) +
+                        index}
+                    </TableCell>
+                    <TableCell className={classes.body}>{row.name}</TableCell>
+                    <TableCell align='center' className={classes.body}>
+                      {row.votes}
+                    </TableCell>
+                    <TableCell
+                      align='center'
+                      className={classes.body}
+                      style={{ paddingRight: 4 }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <div style={{ paddingLeft: 12 }}>{row.respect}</div>
+                        {row.respect < 1000 ? (
+                          <LikeButton trackId={row.trackId} />
+                        ) : (
+                          <LikeButton />
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
             )}
           </TableBody>
         </Table>
