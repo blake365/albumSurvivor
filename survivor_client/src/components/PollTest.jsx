@@ -48,7 +48,11 @@ class PollTest extends Component {
     return (
       <div className={classes.onePoll}>
         <PollNew tracks={aliveTracks} album={album} />
-        <GraveyardNew deadTracks={deadTracks} aliveTracks={aliveTracks} />
+        <GraveyardNew
+          deadTracks={deadTracks}
+          aliveTracks={aliveTracks}
+          album={album}
+        />
       </div>
     )
   }

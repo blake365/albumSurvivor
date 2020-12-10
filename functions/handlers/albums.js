@@ -31,7 +31,6 @@ exports.getActiveAlbums = (req, res) => {
     .orderBy('createdAt')
     .get()
     .then(data => {
-      let albumData = {}
       let activeAlbumList = []
       data.forEach(doc => {
         activeAlbumList.push((albumData = doc.data()))
@@ -80,7 +79,7 @@ exports.getOneAlbum = (req, res) => {
     })
 }
 
-//TODO: write function to get just tracks from a specific album
+//get just tracks from a specific album
 exports.getOneAlbumsTracks = (req, res) => {
   db.collection(`albums/${req.params.albumId}/tracks`)
     .orderBy('trackListing')

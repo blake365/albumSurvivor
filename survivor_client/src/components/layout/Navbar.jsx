@@ -58,7 +58,7 @@ export class Navbar extends Component {
           ) : (
             <Fragment>
               <Button color='inherit' size='large' component={Link} to='/login'>
-                Login
+                Log In
               </Button>
               <Button
                 color='inherit'
@@ -66,7 +66,7 @@ export class Navbar extends Component {
                 component={Link}
                 to='/signup'
               >
-                Signup
+                Sign Up
               </Button>
             </Fragment>
           )}

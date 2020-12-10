@@ -32,7 +32,7 @@ const styles = theme => ({
 
 class GraveyardNew extends Component {
   render() {
-    const { classes, deadTracks, aliveTracks } = this.props
+    const { classes, deadTracks, aliveTracks, album } = this.props
 
     return (
       <TableContainer component={Paper} className={classes.tableContainer}>
@@ -105,7 +105,10 @@ class GraveyardNew extends Component {
                       >
                         <div style={{ paddingLeft: 12 }}>{row.respect}</div>
                         {row.respect < 1000 ? (
-                          <LikeButton trackId={row.trackId} />
+                          <LikeButton
+                            trackId={row.trackId}
+                            albumId={album.albumId}
+                          />
                         ) : (
                           <LikeButton />
                         )}

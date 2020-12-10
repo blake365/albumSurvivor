@@ -190,9 +190,9 @@ export const getGraveyardTracks = () => dispatch => {
     })
 }
 
-export const payRespects = trackId => dispatch => {
+export const payRespects = (albumId, trackId) => dispatch => {
   axios
-    .get(`/tracks/${trackId}/payrespects`)
+    .get(`/albums/${albumId}/tracks/${trackId}/payrespects`)
     .then(res => {
       dispatch({
         type: PAY_RESPECTS,

@@ -8,7 +8,7 @@ import { payRespects } from '../redux/actions/dataActions'
 class LikeButton extends Component {
   handlePayRespects = () => {
     if (this.props.trackId) {
-      this.props.payRespects(this.props.trackId)
+      this.props.payRespects(this.props.albumId, this.props.trackId)
     } else return
   }
 

@@ -25,7 +25,11 @@ const {
   // editTrackDetails,
 } = require('./handlers/albums')
 
-// const { getArchivedRounds, getIndividualRound } = require('./handlers/archives')
+const {
+  getArchivedRounds,
+  getIndividualRound,
+  archiveTest,
+} = require('./handlers/archives')
 
 const {
   getAllCommentary,
@@ -63,6 +67,7 @@ app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 //TODO: build archive routes and handlers
 //archive routes
 // app.get('/archives', getArchivedRounds)
+// app.get('/archives/archive', archiveTest)
 // app.get('/archives/:roundId', getIndividualRound)
 
 //album routes
@@ -112,9 +117,7 @@ app.get('/user', FBAuth, getAuthenticatedUser)
 
 exports.api = functions.https.onRequest(app)
 
-// TODO: write archive votes function
-
-// FIXME: update vote tally function
+// updated vote tally function
 //vote tally
 // minutes, hours, day of month, month, day of week - '0 0 * * *' daily at midnight
 exports.tallyAllVotes = functions.pubsub
@@ -200,11 +203,70 @@ exports.tallyAllVotes = functions.pubsub
                 })
             })
         })
-        return res.json({ message: 'votes counted and reset' })
+        // return res.json({ message: 'votes counted and reset' })
       })
       .catch(err => {
         console.log(err)
       })
+  })
+
+// TODO: write archive votes function
+
+//archive data before vote tally
+exports.archivePollData = functions.pubsub
+  .schedule('58 18 * * *')
+  .timeZone('America/New_York')
+  .onRun(context => {
+    console.log('This will be run every day at 6:58PM Eastern!')
+    //get albums to archive
+    db.collection('albums')
+      .where('activePoll', '==', true)
+      .orderBy('createdAt')
+      .get()
+      .then(data => {
+        let activeAlbumList = []
+        data.forEach(doc => {
+          activeAlbumList.push((albumData = doc.data()))
+        })
+        activeAlbumList.forEach(album => {
+          albumArchive = {
+            albumName: album.albumName,
+            albumId: album.albumId,
+            archiveCreatedAt: new Date(),
+            archiveId: '',
+          }
+          console.log(albumArchive)
+          db.collection('archive')
+            .add(albumArchive)
+            .then(doc => {
+              let archiveId = doc.id
+              doc.update({
+                archiveId: doc.id,
+              })
+              return archiveId
+            })
+            .then(archiveId => {
+              db.collection(`albums/${album.albumId}/tracks`)
+                .orderBy('trackListing')
+                .get()
+                .then(data => {
+                  data.forEach(doc => {
+                    archiveTrack = {
+                      name: doc.data().name,
+                      votes: doc.data().votes,
+                      trackId: doc.data().trackId,
+                      trackListing: doc.data().trackListing,
+                      alive: doc.data().alive,
+                    }
+                    db.collection(`archive/${archiveId}/tracks`).add(
+                      archiveTrack
+                    )
+                  })
+                })
+            })
+        })
+      })
+    return json({ message: 'archive created' })
   })
 
 //old vote tally for only one poll
