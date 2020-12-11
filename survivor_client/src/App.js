@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import home from './pages/home'
 // import user from './pages/user'
 import login from './pages/login'
+import archive from './pages/archive'
 import signup from './pages/signup'
 import admin from './pages/admin'
 import albumPage from './pages/albumPage'
@@ -24,6 +25,7 @@ import Navbar from './components/layout/Navbar'
 import AuthRoute from './util/AuthRoute'
 import axios from 'axios'
 import AuthRoute2 from './util/AuthRoute2'
+import Footer from './components/layout/Footer'
 
 const theme = createMuiTheme(themeFile)
 
@@ -52,6 +54,7 @@ class App extends Component {
               <div className='container'>
                 <Switch>
                   <Route exact path='/' component={home} />
+                  <Route exact path='/archive' component={archive} />
                   <AuthRoute exact path='/login' component={login} />
                   <AuthRoute exact path='/signup' component={signup} />
                   <AuthRoute2 exact path='/admin' component={admin} />
@@ -62,6 +65,7 @@ class App extends Component {
                   />
                 </Switch>
               </div>
+              <Footer />
             </PersistGate>
           </Router>
         </Provider>

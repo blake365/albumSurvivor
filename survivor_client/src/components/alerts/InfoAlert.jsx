@@ -47,7 +47,7 @@ class InfoAlert extends Component {
             <AlertTitle>Welcome!</AlertTitle>
             <div>
               <Link to='/signup'>Make an account</Link> or{' '}
-              <Link to='/login'>login</Link> to vote. You may vote one time per
+              <Link to='/login'>log in</Link> to vote. You may vote one time per
               day. The day will reset at 7PM Eastern time.
             </div>
           </Fragment>

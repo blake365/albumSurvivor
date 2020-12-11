@@ -3,12 +3,10 @@ import { Grid } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { connect } from 'react-redux'
 
-import Poll from '../components/Poll'
 import Hero from '../components/Hero'
 import MessageSlot from '../components/MessageSlot'
 
 import PropTypes from 'prop-types'
-import Graveyard from '../components/Graveyard'
 import Commentary from '../components/Commentary'
 import PollWrapper from '../components/PollWrapper'
 
@@ -29,7 +27,6 @@ export class home extends Component {
         <Grid item xs={12}>
           <MessageSlot />
         </Grid>
-
         <Grid item sm={12} xs={12}>
           <PollWrapper />
         </Grid>

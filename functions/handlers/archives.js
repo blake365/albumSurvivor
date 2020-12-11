@@ -1,45 +1,43 @@
 const { db } = require('../util/admin')
 
-// exports.archiveTest = (req, res) => {
-//   const newArchive = {
-//     createdAt: new Date().toISOString(),
-//     archiveId: '',
-//   }
-//   let masterList = []
-//   db.collection('albums')
-//     .where('activePoll', '==', true)
-//     .orderBy('createdAt')
-//     .get()
-//     .then(data => {
-//       let activeAlbumList = []
-//       data.forEach(doc => {
-//         activeAlbumList.push((albumData = doc.data().albumId))
-//       })
-//       return activeAlbumList
-//     })
-//     .then(activeAlbumList => {
-//       console.log({ activeAlbumList })
-//       activeAlbumList.forEach(albumId => {
-//         db.collection(`albums/${albumId}/tracks`)
-//           .orderBy('trackListing')
-//           .get()
-//           .then(data => {
-//             let trackData = []
-//             data.forEach(doc => {
-//               trackData.push((track = doc.data()))
-//             })
-//             return trackData
-//           })
-//           .then(trackData => {
-//             masterList.push(trackData)
-//           })
-//         // return masterList
-//       })
-//       return res.json({ masterList })
-//     })
+exports.getAllArchives = (req, res) => {
+  db.collection('archive')
+    .orderBy('archiveCreatedAt', 'desc')
+    .get()
+    .then(data => {
+      let archiveList = []
+      data.forEach(doc => {
+        archiveList.push({
+          albumId: doc.data().albumId,
+          albumName: doc.data().albumName,
+          archiveCreatedAt: doc.data().archiveCreatedAt,
+          archiveId: doc.data().archiveId,
+        })
+      })
+      return res.json(archiveList)
+    })
+    .catch(err => console.error(err))
+}
 
-//     .catch(err => console.error(err))
-// }
+exports.getOneArchiveEntry = (req, res) => {
+  console.log(req.params.archiveId)
+  db.collection(`archive/${req.params.archiveId}/tracks`)
+    .orderBy('trackListing')
+    .where('alive', '==', true)
+    .get()
+    .then(data => {
+      trackData = []
+      data.forEach(doc => {
+        trackData.push((track = doc.data()))
+        console.log(doc.data())
+      })
+      return res.json(trackData)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({ error: err.code })
+    })
+}
 
 exports.archiveTest = (req, res) => {
   //get albums to archive

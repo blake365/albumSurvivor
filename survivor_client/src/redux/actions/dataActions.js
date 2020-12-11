@@ -19,6 +19,7 @@ import {
   SET_ALBUM,
   SET_ACTIVE_ALBUMS,
   SET_ALBUM_TRACKS,
+  SET_ARCHIVES,
 } from '../types'
 
 import axios from 'axios'
@@ -307,6 +308,24 @@ export const postNewCommentary = newCommentaryData => dispatch => {
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,
+      })
+    })
+}
+
+export const getArchives = () => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get('/archives')
+    .then(res => {
+      dispatch({
+        type: SET_ARCHIVES,
+        payload: res.data,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
       })
     })
 }

@@ -26,8 +26,8 @@ const {
 } = require('./handlers/albums')
 
 const {
-  getArchivedRounds,
-  getIndividualRound,
+  getAllArchives,
+  getOneArchiveEntry,
   archiveTest,
 } = require('./handlers/archives')
 
@@ -66,9 +66,9 @@ app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 
 //TODO: build archive routes and handlers
 //archive routes
-// app.get('/archives', getArchivedRounds)
+app.get('/archives', getAllArchives)
 // app.get('/archives/archive', archiveTest)
-// app.get('/archives/:roundId', getIndividualRound)
+app.get('/archives/:archiveId', getOneArchiveEntry)
 
 //album routes
 app.get('/albums', getAllAlbums)

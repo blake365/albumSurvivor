@@ -13,6 +13,7 @@ import {
   SET_ALBUM,
   SET_ACTIVE_ALBUMS,
   SET_ALBUM_TRACKS,
+  SET_ARCHIVES,
 } from '../types'
 
 const initialState = {
@@ -26,6 +27,7 @@ const initialState = {
   voted: false,
   message: null,
   commentary: [],
+  archives: [],
 }
 
 const dataReducer = (state = initialState, action) => {
@@ -98,6 +100,12 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         commentary: action.payload,
+        loading: false,
+      }
+    case SET_ARCHIVES:
+      return {
+        ...state,
+        archives: action.payload,
         loading: false,
       }
 

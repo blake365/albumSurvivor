@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
-
+import { Link } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import { Button } from '@material-ui/core'
 
 const styles = theme => ({
   ...theme.spreadThis,
   heroBody: {
-    padding: 20,
+    padding: '5px 15px 5px 15px',
     background: 'inherit',
   },
 })
@@ -25,6 +26,18 @@ class Hero extends Component {
           Each day the song with the most votes is eliminated until only the
           best song is left standing.
         </Typography>
+        <Button
+          variant='contained'
+          color='primary'
+          component={Link}
+          to='/archive'
+          style={{ marginRight: 10 }}
+        >
+          <strong>Archives</strong>
+        </Button>
+        <Button variant='contained' color='primary'>
+          <strong>Blog</strong>
+        </Button>
       </Paper>
     )
   }
