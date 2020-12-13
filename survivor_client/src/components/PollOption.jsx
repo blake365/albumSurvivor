@@ -56,7 +56,7 @@ class PollOption extends Component {
       selection,
       submitted,
       classes,
-      track: { name, description, trackId, votes },
+      track: { name, trackId, votes },
     } = this.props
 
     return (
@@ -87,7 +87,9 @@ class PollOption extends Component {
                     className={classes.winnerDisplay}
                   />
                 ) : (
-                  <Avatar className={classes.voteDisplay}>{votes}</Avatar>
+                  <Avatar className={classes.voteDisplay}>
+                    {selection === trackId ? votes + 1 : votes}
+                  </Avatar>
                 )
               ) : (
                 <Radio
@@ -97,7 +99,7 @@ class PollOption extends Component {
                   value={trackId}
                   name={name}
                   inputProps={{ 'aria-label': name }}
-                  color='primary'
+                  color='default'
                 />
               )}
             </Grid>

@@ -40,6 +40,9 @@ class albumPage extends Component {
         <div>No No</div>
       ) : (
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <MessageSlot page='admin' />
+          </Grid>
           <Grid item sm={4} xs={12}>
             <AlbumDetails album={album} />
           </Grid>

@@ -7,8 +7,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import SubmitTrack from '../components/admin/SubmitTrack'
-import SubmitCommentary from '../components/admin/SubmitCommentary'
 import SubmitAlbum from '../components/admin/SubmitAlbum'
 import SubmitTrackToAlbum from '../components/admin/SubmitTrackToAlbum'
 import AlbumList from '../components/admin/AlbumList'
@@ -51,11 +49,9 @@ class admin extends Component {
             <MessageSlot page='admin' />
           </Grid>
           <Grid item sm={6} xs={12}>
-            <SubmitCommentary />
             <AlbumList albums={albums} />
           </Grid>
           <Grid item sm={5} xs={12}>
-            {/** <SubmitTrack /> **/}
             <SubmitAlbum />
             <br />
             <SubmitTrackToAlbum albums={albums} />

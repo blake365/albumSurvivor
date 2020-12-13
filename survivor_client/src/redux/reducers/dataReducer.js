@@ -1,9 +1,7 @@
 import {
   SET_TRACKS,
   SET_DEAD_TRACKS,
-  PAY_RESPECTS,
   LOADING_DATA,
-  SUBMIT_COMMENT,
   POST_VOTE,
   POST_TRACK,
   POST_COMMENTARY,
@@ -14,6 +12,7 @@ import {
   SET_ACTIVE_ALBUMS,
   SET_ALBUM_TRACKS,
   SET_ARCHIVES,
+  REFRESH,
 } from '../types'
 
 const initialState = {
@@ -49,6 +48,11 @@ const dataReducer = (state = initialState, action) => {
         albums: action.payload,
         loading: false,
       }
+    case REFRESH:
+      return {
+        ...state,
+        activeAlbums: [],
+      }
     case SET_ACTIVE_ALBUMS:
       return {
         ...state,
@@ -76,17 +80,17 @@ const dataReducer = (state = initialState, action) => {
         ...state,
         loading: false,
       }
-    case PAY_RESPECTS:
-      let index = state.deadTracks.findIndex(track => {
-        return track.trackId === action.payload.trackId
-      })
-      state.deadTracks[index] = action.payload
-      if (state.deadTracks.trackId === action.payload.trackId) {
-        state.deadTracks = { ...state.deadTracks, ...action.payload }
-      }
-      return {
-        ...state,
-      }
+    // case PAY_RESPECTS:
+    // let index = state.deadTracks.findIndex(track => {
+    //   return track.trackId === action.payload.trackId
+    // })
+    // state.deadTracks[index] = action.payload
+    // if (state.deadTracks.trackId === action.payload.trackId) {
+    //   state.deadTracks = { ...state.deadTracks, ...action.payload }
+    // }
+    // return {
+    //   ...state,
+    // }
     case POST_TRACK:
       return { ...state }
     case POST_ALBUM:

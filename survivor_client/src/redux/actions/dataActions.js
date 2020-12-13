@@ -2,13 +2,11 @@ import {
   SET_TRACKS,
   SET_DEAD_TRACKS,
   POST_VOTE,
-  PAY_RESPECTS,
   POST_TRACK,
   LOADING_DATA,
   SET_ERRORS,
   CLEAR_ERRORS,
   LOADING_UI,
-  STOP_LOADING_UI,
   LOADING_USER,
   SET_USER,
   POST_COMMENTARY,
@@ -20,9 +18,16 @@ import {
   SET_ACTIVE_ALBUMS,
   SET_ALBUM_TRACKS,
   SET_ARCHIVES,
+  REFRESH,
 } from '../types'
 
 import axios from 'axios'
+
+// refresh albums
+const refreshAlbums = () => dispatch => {
+  console.log('refresh')
+  dispatch({ type: REFRESH })
+}
 
 //get all tracks
 export const getTracks = () => dispatch => {
@@ -84,6 +89,7 @@ export const getAlbums = () => dispatch => {
 
 //get active albums for album wrapper component
 export const getActiveAlbums = () => dispatch => {
+  console.log('testing')
   dispatch({ type: LOADING_DATA })
   axios
     .get('/albums/active')
@@ -194,11 +200,10 @@ export const getGraveyardTracks = () => dispatch => {
 export const payRespects = (albumId, trackId) => dispatch => {
   axios
     .get(`/albums/${albumId}/tracks/${trackId}/payrespects`)
-    .then(res => {
-      dispatch({
-        type: PAY_RESPECTS,
-        payload: res.data,
-      })
+    .then(() => {
+      console.log('then')
+      dispatch(refreshAlbums())
+      dispatch(getActiveAlbums())
     })
     .catch(err => console.error(err))
 }

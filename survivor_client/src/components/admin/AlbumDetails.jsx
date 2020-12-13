@@ -113,7 +113,7 @@ class AlbumDetails extends Component {
             <div>Tracks:</div>
             {tracks.map((track, index) => (
               <Typography variant='body1' key={index}>
-                {track.trackListing}: {track.name}{' '}
+                {track.trackListing}: {track.name} -- {track.votes}{' '}
               </Typography>
             ))}
           </CardContent>

@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import axios from 'axios'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -16,6 +17,11 @@ const styles = theme => ({
   },
   card: {
     marginBottom: 8,
+  },
+  spinnerDiv: {
+    textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 5,
   },
 })
 
@@ -43,12 +49,25 @@ class ArchivePost extends Component {
     })
   }
 
-  //FIXME: Put in loading spinner while tracks are fetched
-
   render() {
     const { classes, archive } = this.props
 
-    const { tracks } = this.state
+    const { tracks, loading } = this.state
+
+    let markup = !loading ? (
+      tracks.map(track => (
+        <div key={track.trackId}>
+          <Typography variant='body1'>
+            {track.trackListing}. {track.name}: <strong>{track.votes}</strong>{' '}
+            votes
+          </Typography>
+        </div>
+      ))
+    ) : (
+      <div className={classes.spinnerDiv}>
+        <CircularProgress size={20} thickness={2} />
+      </div>
+    )
 
     return (
       <Card className={classes.card}>
@@ -59,13 +78,7 @@ class ArchivePost extends Component {
               {archive.albumName}
             </Typography>
           </Typography>
-          {tracks.map(track => (
-            <div key={track.trackId}>
-              <Typography variant='body1'>
-                {track.name}: <strong>{track.votes}</strong> votes
-              </Typography>
-            </div>
-          ))}
+          {markup}
         </CardContent>
       </Card>
     )

@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { connect } from 'react-redux'
 
-import Hero from '../components/Hero'
 import ArchiveWrapper from '../components/ArchiveWrapper'
 
 const styles = theme => ({

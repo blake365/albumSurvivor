@@ -14,6 +14,7 @@ const styles = theme => ({
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
+    height: 260,
   },
   cover: {
     margin: 4,
@@ -25,6 +26,7 @@ const styles = theme => ({
   },
   coverContainer: {
     marginRight: 10,
+    minWidth: '50%',
   },
   content: {
     // display: 'inline-block',

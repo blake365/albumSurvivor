@@ -37,7 +37,7 @@ class SubmitTrack extends Component {
     this.state = {
       name: '',
       description: '',
-      trackListing: '',
+      trackListing: Number,
       errors: {},
     }
   }

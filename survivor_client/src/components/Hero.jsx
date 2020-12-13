@@ -24,20 +24,23 @@ class Hero extends Component {
         <Typography variant='h6' color='inherit'>
           Vote for your <strong>least</strong> favorite song in the poll below.
           Each day the song with the most votes is eliminated until only the
-          best song is left standing.
+          best song is left standing.{' '}
+          <Button
+            size='small'
+            variant='outlined'
+            color='primary'
+            component={Link}
+            to='/archive'
+            style={{ marginRight: 10 }}
+            elevation={2}
+          >
+            <strong>Vote Archives</strong>
+          </Button>
         </Typography>
-        <Button
-          variant='contained'
-          color='primary'
-          component={Link}
-          to='/archive'
-          style={{ marginRight: 10 }}
-        >
-          <strong>Archives</strong>
-        </Button>
-        <Button variant='contained' color='primary'>
+
+        {/** <Button variant='contained' color='primary'>
           <strong>Blog</strong>
-        </Button>
+        </Button> **/}
       </Paper>
     )
   }

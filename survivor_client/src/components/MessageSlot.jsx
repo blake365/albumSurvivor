@@ -23,8 +23,7 @@ class MessageSlot extends Component {
   render() {
     const {
       classes,
-      user: { authenticated, credentials },
-      data: { deadTracks },
+      user: { authenticated },
       UI: { errors, message },
     } = this.props
 
@@ -36,9 +35,7 @@ class MessageSlot extends Component {
       } else {
         if (!authenticated) {
           return <InfoAlert update={false} />
-        } else if (credentials.type === 'admin') {
-          return <div></div>
-        } else return <InfoAlert update={deadTracks} />
+        }
       }
     }
 

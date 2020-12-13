@@ -39,7 +39,7 @@ class ProfilePopper extends Component {
             id='profile-popper'
             open={open}
             anchorEl={anchorEl}
-            placement='bottom-end'
+            placement='top-end'
             style={{
               position: 'absolute',
               zIndex: 1400,

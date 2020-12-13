@@ -18,7 +18,7 @@ class LikeButton extends Component {
       <MyButton tip='Login to Pay Respects'></MyButton>
     ) : (
       <MyButton tip='Pay Respects' onClick={this.handlePayRespects}>
-        🙏
+        🙌
       </MyButton>
     )
 

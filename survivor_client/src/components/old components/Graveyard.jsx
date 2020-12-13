@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
-import { getGraveyardTracks } from '../redux/actions/dataActions'
+import { getGraveyardTracks } from '../../redux/actions/dataActions'
 
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
@@ -12,7 +12,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import LikeButton from './LikeButton'
+import LikeButton from '../LikeButton'
 
 const styles = theme => ({
   ...theme.spreadThis,

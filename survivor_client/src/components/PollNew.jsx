@@ -146,7 +146,7 @@ class PollNew extends Component {
         disabled={this.state.disabled}
         className={classes.submitButton}
       >
-        Login to Vote
+        Log In to Vote
       </Button>
     )
 

@@ -77,7 +77,6 @@ class EditAlbum extends Component {
 
   render() {
     const {
-      album,
       classes,
       UI: { loading },
     } = this.props

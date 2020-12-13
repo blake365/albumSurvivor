@@ -4,9 +4,6 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
 import { getArchives } from '../redux/actions/dataActions'
-import CircularProgress from '@material-ui/core/CircularProgress'
-
-import PollTest from './PollTest'
 import ArchivePost from './ArchivePost'
 
 const styles = theme => ({

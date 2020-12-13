@@ -7,7 +7,6 @@ import Hero from '../components/Hero'
 import MessageSlot from '../components/MessageSlot'
 
 import PropTypes from 'prop-types'
-import Commentary from '../components/Commentary'
 import PollWrapper from '../components/PollWrapper'
 
 const styles = theme => ({

@@ -4,7 +4,6 @@ import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
 import { getActiveAlbums } from '../redux/actions/dataActions'
-import CircularProgress from '@material-ui/core/CircularProgress'
 
 import PollTest from './PollTest'
 

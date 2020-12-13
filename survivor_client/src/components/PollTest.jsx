@@ -2,13 +2,18 @@ import React, { Component } from 'react'
 import PollNew from './PollNew'
 import axios from 'axios'
 import GraveyardNew from './GraveyardNew'
-import { Grid } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = theme => ({
   ...theme.spreadThis,
   onePoll: {
     flex: 1,
+  },
+  spinnerDiv: {
+    textAlign: 'center',
+    marginTop: 50,
+    marginBottom: 50,
   },
 })
 
@@ -45,7 +50,7 @@ class PollTest extends Component {
 
     let deadTracks = tracks.filter(track => track.alive === false)
 
-    return (
+    let markup = !loading ? (
       <div className={classes.onePoll}>
         <PollNew tracks={aliveTracks} album={album} />
         <GraveyardNew
@@ -54,7 +59,13 @@ class PollTest extends Component {
           album={album}
         />
       </div>
+    ) : (
+      <div className={classes.spinnerDiv}>
+        <CircularProgress size={200} thickness={2} />
+      </div>
     )
+
+    return markup
   }
 }
 
