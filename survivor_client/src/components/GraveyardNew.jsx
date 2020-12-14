@@ -39,8 +39,8 @@ class GraveyardNew extends Component {
         <Table aria-label='graveyard table' size='small'>
           <TableHead>
             <TableRow>
-              <TableCell align='center' className={classes.title} colSpan={4}>
-                The Graveyard
+              <TableCell align='center' className={classes.title} colSpan={5}>
+                Graveyard
               </TableCell>
             </TableRow>
             <TableRow>
@@ -50,6 +50,9 @@ class GraveyardNew extends Component {
               <TableCell className={classes.header}>Song</TableCell>
               <TableCell align='center' className={classes.header}>
                 Votes
+              </TableCell>
+              <TableCell align='center' className={classes.header}>
+                %
               </TableCell>
               <TableCell
                 align='center'
@@ -89,6 +92,9 @@ class GraveyardNew extends Component {
                     <TableCell className={classes.body}>{row.name}</TableCell>
                     <TableCell align='center' className={classes.body}>
                       {row.votes}
+                    </TableCell>
+                    <TableCell align='center' className={classes.body}>
+                      {(row.votes / row.roundVoteTotal) * 100}%
                     </TableCell>
                     <TableCell
                       align='center'

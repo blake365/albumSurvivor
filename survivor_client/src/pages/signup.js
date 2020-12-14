@@ -68,7 +68,7 @@ class login extends Component {
         <Grid item sm />
         <Grid item sm>
           <Typography variant='h2' className={classes.pageTitle}>
-            Signup
+            Sign Up
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             <TextField

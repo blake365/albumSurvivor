@@ -1,0 +1,1 @@
+  // "proxy": "https://us-central1-albumsurvivor.cloudfunctions.net/api"

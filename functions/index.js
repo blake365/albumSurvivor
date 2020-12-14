@@ -44,6 +44,7 @@ const {
   login,
   // addUserDetails,
   getAuthenticatedUser,
+  onGoogleSignIn,
   // getUserDetails,
 } = require('./handlers/users')
 
@@ -114,6 +115,7 @@ app.delete(
 
 // User routes
 app.post('/signup', signup)
+app.post('/loginGoogle', onGoogleSignIn)
 app.post('/login', login)
 app.get('/user', FBAuth, getAuthenticatedUser)
 // app.get('/user/:userName', getUserDetails)
@@ -161,7 +163,6 @@ exports.tallyAllVotes = functions.pubsub
                       respect: 0,
                     })
                   })
-
                   .then(() => {
                     console.log('made it to vote reset')
                     let aliveTracks = []

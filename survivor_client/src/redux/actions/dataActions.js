@@ -25,7 +25,6 @@ import axios from 'axios'
 
 // refresh albums
 const refreshAlbums = () => dispatch => {
-  console.log('refresh')
   dispatch({ type: REFRESH })
 }
 
@@ -77,7 +76,6 @@ export const getAlbums = () => dispatch => {
         type: SET_ALBUMS,
         payload: res.data,
       })
-      console.log('got album data')
     })
     .catch(err => {
       dispatch({
@@ -89,7 +87,6 @@ export const getAlbums = () => dispatch => {
 
 //get active albums for album wrapper component
 export const getActiveAlbums = () => dispatch => {
-  console.log('testing')
   dispatch({ type: LOADING_DATA })
   axios
     .get('/albums/active')
@@ -98,7 +95,6 @@ export const getActiveAlbums = () => dispatch => {
         type: SET_ACTIVE_ALBUMS,
         payload: res.data,
       })
-      console.log('got active album data')
     })
     .catch(err => {
       dispatch({
@@ -110,12 +106,10 @@ export const getActiveAlbums = () => dispatch => {
 
 // get one album
 export const getAlbum = albumId => dispatch => {
-  console.log(albumId)
   dispatch({ type: LOADING_DATA })
   axios
     .get(`/albums/${albumId}`)
     .then(res => {
-      console.log(res.data)
       dispatch({
         type: SET_ALBUM,
         payload: res.data,
@@ -201,7 +195,6 @@ export const payRespects = (albumId, trackId) => dispatch => {
   axios
     .get(`/albums/${albumId}/tracks/${trackId}/payrespects`)
     .then(() => {
-      console.log('then')
       dispatch(refreshAlbums())
       dispatch(getActiveAlbums())
     })

@@ -13,7 +13,10 @@ import PropTypes from 'prop-types'
 
 //redux
 import { connect } from 'react-redux'
-import { loginUser } from '../redux/actions/userActions'
+import { loginUser, loginGoogleUser } from '../redux/actions/userActions'
+
+import GoogleLogin from 'react-google-login'
+import { GoogleLogout } from 'react-google-login'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -44,10 +47,25 @@ class login extends Component {
     this.props.loginUser(userData, this.props.history)
   }
 
+  // handleGoogleSignIn = event => {
+  //   event.preventDefault()
+  //   this.props.loginGoogleUser(googleUser, this.props.history)
+  // }
+
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value,
     })
+  }
+
+  responseGoogle = response => {
+    console.log(response.tokenId)
+    this.props.loginGoogleUser(response, this.props.history)
+  }
+
+  logout = response => {
+    console.log(response)
+    console.log('logged out')
   }
 
   render() {
@@ -59,10 +77,10 @@ class login extends Component {
 
     return (
       <Grid container className={classes.form}>
-        <Grid item sm />
+        <Grid item sm></Grid>
         <Grid item sm>
           <Typography variant='h2' className={classes.pageTitle}>
-            Login
+            Log In
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             <TextField
@@ -104,7 +122,7 @@ class login extends Component {
               {loading ? (
                 <CircularProgress className={classes.progress} size={30} />
               ) : (
-                'Login'
+                'Log In'
               )}
             </Button>
             <br />
@@ -133,6 +151,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   loginUser,
+  loginGoogleUser,
 }
 
 export default connect(

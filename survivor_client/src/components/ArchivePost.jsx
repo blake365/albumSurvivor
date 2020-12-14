@@ -54,6 +54,12 @@ class ArchivePost extends Component {
 
     const { tracks, loading } = this.state
 
+    let totalVotes = 0
+    let totalVotesCalc = tracks.forEach(track => {
+      totalVotes += track.votes
+      return totalVotes
+    })
+
     let markup = !loading ? (
       tracks.map(track => (
         <div key={track.trackId}>
@@ -79,6 +85,7 @@ class ArchivePost extends Component {
             </Typography>
           </Typography>
           {markup}
+          <Typography>Total Votes: {totalVotes}</Typography>
         </CardContent>
       </Card>
     )

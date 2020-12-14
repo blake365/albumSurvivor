@@ -364,78 +364,94 @@ exports.uploadImage = (req, res) => {
 //       //get the tracks from each album
 //       data.forEach(album => {
 //         db.collection(`albums/${album.data().albumId}/tracks`)
-//           //only alive tracks
 //           .where('alive', '==', true)
-//           // sort so the most votes is first item
-//           .orderBy('votes', 'desc')
 //           .get()
 //           .then(query => {
-//             if (query.docs.length >= 1) {
-//               //get the first item from the query
-//               console.log(query.docs[0].data().name)
-//               console.log(query.docs[0].data().trackId)
-//               // get the document for the track with the most votes
-//               db.doc(
-//                 `albums/${album.data().albumId}/tracks/${
-//                   query.docs[0].data().trackId
-//                 }`
-//               )
-//                 .get()
-//                 .then(doc => {
-//                   // update document so alive=false and new fields are added
-//                   return doc.ref.update({
-//                     alive: false,
-//                     voteOutDay: new Date(),
-//                     respect: 0,
-//                   })
-//                 })
-
-//                 .then(() => {
-//                   console.log('made it to vote reset')
-//                   let aliveTracks = []
-//                   db.collection(`albums/${album.data().albumId}/tracks`)
-//                     //new list of alive tracks
-//                     .where('alive', '==', true)
+//             doc = query.docs
+//             let roundVoteTotal = 0
+//             doc.forEach(track => {
+//               roundVoteTotal += track.data().votes
+//               return roundVoteTotal
+//             })
+//             console.log(roundVoteTotal)
+//             return roundVoteTotal
+//           })
+//           .then(roundVoteTotal => {
+//             db.collection(`albums/${album.data().albumId}/tracks`)
+//               //only alive tracks
+//               .where('alive', '==', true)
+//               // sort so the most votes is first item
+//               .orderBy('votes', 'desc')
+//               .get()
+//               .then(query => {
+//                 if (query.docs.length >= 1) {
+//                   //get the first item from the query
+//                   console.log(query.docs[0].data().name)
+//                   console.log(query.docs[0].data().trackId)
+//                   // get the document for the track with the most votes
+//                   db.doc(
+//                     `albums/${album.data().albumId}/tracks/${
+//                       query.docs[0].data().trackId
+//                     }`
+//                   )
 //                     .get()
-//                     .then(data => {
-//                       data.forEach(track => {
-//                         aliveTracks.push(track.data())
+//                     .then(doc => {
+//                       // update document so alive=false and new fields are added
+//                       return doc.ref.update({
+//                         alive: false,
+//                         voteOutDay: new Date(),
+//                         respect: 0,
+//                         roundVoteTotal: roundVoteTotal,
 //                       })
-//                       return aliveTracks
 //                     })
 
 //                     .then(() => {
-//                       let batch = db.batch()
-//                       if (aliveTracks.length > 0) {
-//                         aliveTracks.forEach(track => {
-//                           batch.update(
-//                             db.doc(
-//                               `albums/${album.data().albumId}/tracks/${
-//                                 track.trackId
-//                               }`
-//                             ),
-//                             {
-//                               votes: 0,
-//                             }
-//                           )
+//                       console.log('made it to vote reset')
+//                       let aliveTracks = []
+//                       db.collection(`albums/${album.data().albumId}/tracks`)
+//                         //new list of alive tracks
+//                         .where('alive', '==', true)
+//                         .get()
+//                         .then(data => {
+//                           data.forEach(track => {
+//                             aliveTracks.push(track.data())
+//                           })
+//                           return aliveTracks
 //                         })
-//                         batch
-//                           .commit()
-//                           .then(() => {
-//                             console.log('made it to end with no errors')
+
+//                         .then(() => {
+//                           let batch = db.batch()
+//                           if (aliveTracks.length > 0) {
+//                             aliveTracks.forEach(track => {
+//                               batch.update(
+//                                 db.doc(
+//                                   `albums/${album.data().albumId}/tracks/${
+//                                     track.trackId
+//                                   }`
+//                                 ),
+//                                 {
+//                                   votes: 0,
+//                                 }
+//                               )
+//                             })
+//                             batch
+//                               .commit()
+//                               .then(() => {
+//                                 console.log('made it to end with no errors')
+//                                 return
+//                               })
+//                               .catch(err => {
+//                                 console.error(err)
+//                               })
+//                           } else {
 //                             return
-//                           })
-//                           .catch(err => {
-//                             console.error(err)
-//                           })
-//                       } else {
-//                         return
-//                       }
+//                           }
+//                         })
 //                     })
-//                 })
-//             } else {
-//               return
-//             }
+//                 } else {
+//                   return
+//                 }
+//               })
 //           })
 //       })
 //       return res.json({ message: 'votes counted and reset' })
