@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 import { postVote2, anonVote } from '../redux/actions/dataActions'
@@ -13,6 +12,7 @@ import PollHeader from './PollHeader'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Typography from '@material-ui/core/Typography'
+import Alert from '@material-ui/lab/Alert'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -21,6 +21,11 @@ const styles = theme => ({
     height: 60,
     margin: 5,
     fontSize: '1.2rem',
+    alignSelf: 'center',
+  },
+  submitAlert: {
+    margin: 5,
+    width: 'auto',
     alignSelf: 'center',
   },
   progressSpinner: {
@@ -52,15 +57,13 @@ class PollNew extends Component {
       open: false,
       errors: {},
       voted: false,
-      IP: '',
+      // IP: '',
     }
   }
 
-  componentDidMount() {
-    fetch('https://api.ipify.org/?format=json')
-      .then(results => results.json())
-      .then(data => this.setState({ IP: data.ip }))
-  }
+  // componentDidMount() {
+  //   console.log(this.props.data.IP)
+  // }
 
   handleSelectedTrack(selection) {
     this.setState({ selection })
@@ -69,10 +72,10 @@ class PollNew extends Component {
   submitVote = event => {
     event.preventDefault()
     if (this.state.selection !== '') {
-      let today = new Date().toLocaleDateString()
+      let today = new Date().getDate()
 
       let voteDoc = {
-        date: new Date().toLocaleDateString(),
+        date: new Date().getDate(),
         albumId: this.props.album.albumId,
         selection: this.state.selection,
       }
@@ -93,7 +96,7 @@ class PollNew extends Component {
           this.props.anonVote(
             this.props.album.albumId,
             this.state.selection,
-            this.state.IP
+            this.props.data.IP
           )
           console.log('vote cast')
           window.localStorage.setItem(
@@ -114,7 +117,7 @@ class PollNew extends Component {
       tracks,
       album,
       data: { loading },
-      user: { authenticated },
+      // user: { authenticated },
     } = this.props
 
     const { selection, submitted } = this.state
@@ -168,7 +171,9 @@ class PollNew extends Component {
     }
 
     let submitButtonOption = this.state.voted ? (
-      <div>You have already voted today!</div>
+      <Alert severity='error' variant='filled' className={classes.submitAlert}>
+        You have already voted today!
+      </Alert>
     ) : (
       <Button
         type='submit'

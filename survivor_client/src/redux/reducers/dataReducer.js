@@ -13,6 +13,7 @@ import {
   SET_ALBUM_TRACKS,
   SET_ARCHIVES,
   REFRESH,
+  SET_IP,
 } from '../types'
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
   message: null,
   commentary: [],
   archives: [],
+  IP: null,
 }
 
 const dataReducer = (state = initialState, action) => {
@@ -57,6 +59,12 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         activeAlbums: action.payload,
+        loading: false,
+      }
+    case SET_IP:
+      return {
+        ...state,
+        IP: action.payload,
         loading: false,
       }
     case SET_ALBUM:

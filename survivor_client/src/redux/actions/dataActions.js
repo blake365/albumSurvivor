@@ -19,6 +19,7 @@ import {
   SET_ALBUM_TRACKS,
   SET_ARCHIVES,
   REFRESH,
+  SET_IP,
 } from '../types'
 
 import axios from 'axios'
@@ -96,6 +97,17 @@ export const getActiveAlbums = () => dispatch => {
         payload: res.data,
       })
     })
+    .then(() => {
+      fetch('https://api.ipify.org/?format=json')
+        .then(results => results.json())
+        .then(data =>
+          dispatch({
+            type: SET_IP,
+            payload: data.ip,
+          })
+        )
+    })
+
     .catch(err => {
       dispatch({
         type: SET_ERRORS,

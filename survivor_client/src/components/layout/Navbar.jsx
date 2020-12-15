@@ -24,7 +24,7 @@ const styles = theme => ({
     alignItems: 'center',
     lineHeight: 1,
     '&>*': {
-      marginLeft: 10,
+      marginLeft: 0,
     },
   },
 })
@@ -51,13 +51,34 @@ export class Navbar extends Component {
           </div>
           {authenticated ? (
             <Fragment>
-              <div>
-                <ProfilePopper />
-              </div>
+              <Button
+                size='large'
+                color='inherit'
+                component={Link}
+                to='/archive'
+              >
+                Archives
+              </Button>
+              <ProfilePopper />
             </Fragment>
           ) : (
             <Fragment>
-              <Button color='inherit' size='large' component={Link} to='/login'>
+              <Button
+                size='large'
+                color='inherit'
+                component={Link}
+                to='/archive'
+                style={{ textAlign: 'center' }}
+              >
+                Archives
+              </Button>
+              <Button
+                color='inherit'
+                size='large'
+                component={Link}
+                to='/login'
+                style={{ textAlign: 'center' }}
+              >
                 Log In
               </Button>
               <Button
@@ -65,6 +86,7 @@ export class Navbar extends Component {
                 size='large'
                 component={Link}
                 to='/signup'
+                style={{ textAlign: 'center' }}
               >
                 Sign Up
               </Button>

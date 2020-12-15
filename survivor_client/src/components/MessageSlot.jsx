@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import MessageAlert from './alerts/MessageAlert'
-import InfoAlert from './alerts/InfoAlert'
+// import InfoAlert from './alerts/InfoAlert'
 import ErrorAlert from './alerts/ErrorAlert'
 import withStyles from '@material-ui/core/styles/withStyles'
 
@@ -23,7 +23,6 @@ class MessageSlot extends Component {
   render() {
     const {
       classes,
-      user: { authenticated },
       UI: { errors, message },
     } = this.props
 
@@ -32,10 +31,6 @@ class MessageSlot extends Component {
         return <ErrorAlert errors={errors} />
       } else if (message?.message) {
         return <MessageAlert message={message} />
-      } else {
-        if (!authenticated) {
-          return <InfoAlert update={false} />
-        }
       }
     }
 
@@ -45,8 +40,6 @@ class MessageSlot extends Component {
 
 const mapStateToProps = state => ({
   UI: state.UI,
-  data: state.data,
-  user: state.user,
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(MessageSlot))

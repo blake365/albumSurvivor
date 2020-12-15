@@ -15,9 +15,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { loginUser, loginGoogleUser } from '../redux/actions/userActions'
 
-import GoogleLogin from 'react-google-login'
-import { GoogleLogout } from 'react-google-login'
-
 const styles = theme => ({
   ...theme.spreadThis,
 })

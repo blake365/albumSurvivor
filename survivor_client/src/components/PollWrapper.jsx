@@ -26,7 +26,9 @@ class PollWrapper extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      IP: '',
+    }
   }
 
   componentDidMount() {

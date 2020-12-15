@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { Link } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-import { Button } from '@material-ui/core'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -19,25 +17,15 @@ class Hero extends Component {
     return (
       <Paper className={classes.heroBody} elevation={0}>
         <Typography variant='h4' color='primary'>
-          Welcome to Album Survivor
+          Welcome to Album Survivor!
         </Typography>
         <Typography variant='h6' color='inherit'>
-          Vote for your <strong>least</strong> favorite song in the poll below.
-          Each day the song with the most votes is eliminated until only the
-          best song is left standing.{' '}
-          <Button
-            size='small'
-            variant='outlined'
-            color='primary'
-            component={Link}
-            to='/archive'
-            style={{ marginRight: 10 }}
-            elevation={2}
-          >
-            <strong>Vote Archives</strong>
-          </Button>
+          Vote for your <strong>least</strong> favorite song in the polls below.
+          Each day the songs with the most votes is eliminated until only the
+          best song is left standing. You may vote one time per day and the day
+          will reset at <strong>7PM EST</strong>. Make an account to save your
+          vote history and pay respects to eliminated songs.
         </Typography>
-
         {/** <Button variant='contained' color='primary'>
           <strong>Blog</strong>
         </Button> **/}
