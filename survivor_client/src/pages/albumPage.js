@@ -11,11 +11,17 @@ import MessageSlot from '../components/MessageSlot'
 import AlbumDetails from '../components/admin/AlbumDetails'
 import { getAlbum } from '../redux/actions/dataActions'
 import EditAlbum from '../components/admin/EditAlbum'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 //get one album, use albumId in url. allow editing album details
 
 const styles = theme => ({
   ...theme.spreadThis,
+  spinnerDiv: {
+    textAlign: 'center',
+    marginTop: 50,
+    marginBottom: 50,
+  },
 })
 
 class albumPage extends Component {
@@ -26,18 +32,23 @@ class albumPage extends Component {
   componentDidMount() {
     let path = this.props.location.pathname
     let halves = path.split('/')
-    console.log(halves[2])
+    // console.log(halves[2])
     this.props.getAlbum(halves[2])
   }
 
   render() {
     const {
+      classes,
       user,
-      data: { album },
+      data: { album, loading },
     } = this.props
     let albumPageMarkup =
       user.credentials.type !== 'admin' ? (
         <div>No No</div>
+      ) : loading ? (
+        <div className={classes.spinnerDiv}>
+          <CircularProgress size={200} thickness={2} />
+        </div>
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12}>

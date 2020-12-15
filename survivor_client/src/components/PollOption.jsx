@@ -55,6 +55,7 @@ class PollOption extends Component {
     const {
       selection,
       submitted,
+      voted,
       classes,
       track: { name, trackId, votes },
     } = this.props
@@ -86,6 +87,10 @@ class PollOption extends Component {
                     color='primary'
                     className={classes.winnerDisplay}
                   />
+                ) : voted ? (
+                  <Avatar className={classes.voteDisplay}>
+                    {selection === trackId ? votes : votes}
+                  </Avatar>
                 ) : (
                   <Avatar className={classes.voteDisplay}>
                     {selection === trackId ? votes + 1 : votes}

@@ -66,8 +66,8 @@ class GraveyardNew extends Component {
           <TableBody>
             {deadTracks.length === 0 ? (
               <TableRow>
-                <TableCell align='center' className={classes.title} colSpan={4}>
-                  No tracks have been voted out.
+                <TableCell align='center' className={classes.title} colSpan={5}>
+                  No songs have been voted out.
                 </TableCell>
               </TableRow>
             ) : (

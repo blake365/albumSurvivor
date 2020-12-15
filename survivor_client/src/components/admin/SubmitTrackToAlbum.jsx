@@ -39,10 +39,10 @@ class SubmitTrackToAlbum extends Component {
     super(props)
     this.state = {
       name: '',
-      description: '',
+      // description: '',
       trackListing: '',
-      length: '',
-      lyrics: '',
+      // length: '',
+      // lyrics: '',
       albumId: '',
       errors: {},
     }
@@ -55,10 +55,10 @@ class SubmitTrackToAlbum extends Component {
     })
     const newTrackData = {
       name: this.state.name,
-      description: this.state.description,
+      // description: this.state.description,
       trackListing: this.state.trackListing,
-      length: this.state.length,
-      lyrics: this.state.lyrics,
+      // length: this.state.length,
+      // lyrics: this.state.lyrics,
     }
     this.props.postNewTrackToAlbum(this.state.albumId, newTrackData)
   }
@@ -114,39 +114,7 @@ class SubmitTrackToAlbum extends Component {
             value={this.state.name}
             onChange={this.handleChange}
           />
-          <TextField
-            id='description'
-            name='description'
-            type='text'
-            label='Description'
-            className={classes.textField}
-            helperText={errors.description}
-            error={errors.description ? true : false}
-            value={this.state.description}
-            onChange={this.handleChange}
-          />
-          <TextField
-            id='lyrics'
-            name='lyrics'
-            type='text'
-            label='Lyrics'
-            className={classes.textField}
-            helperText={errors.lyrics}
-            error={errors.lyrics ? true : false}
-            value={this.state.lyrics}
-            onChange={this.handleChange}
-          />
-          <TextField
-            id='length'
-            name='length'
-            type='text'
-            label='Length'
-            className={classes.textField}
-            helperText={errors.length}
-            error={errors.length ? true : false}
-            value={this.state.length}
-            onChange={this.handleChange}
-          />
+
           <TextField
             id='trackListing'
             name='trackListing'

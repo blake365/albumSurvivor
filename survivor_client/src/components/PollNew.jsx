@@ -120,7 +120,7 @@ class PollNew extends Component {
       // user: { authenticated },
     } = this.props
 
-    const { selection, submitted } = this.state
+    const { selection, submitted, voted } = this.state
 
     let PollOptionMarkup = tracks.map(track => (
       <PollOption
@@ -129,6 +129,7 @@ class PollNew extends Component {
         key={track.name}
         onSelection={this.handleSelectedTrack}
         submitted={submitted}
+        voted={voted}
       />
     ))
 

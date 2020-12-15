@@ -71,6 +71,7 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         album: action.payload,
+        loading: false,
       }
     case SET_ALBUM_TRACKS:
       return {

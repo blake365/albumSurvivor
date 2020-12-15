@@ -103,6 +103,39 @@ class SubmitTrack extends Component {
             onChange={this.handleChange}
           />
           <TextField
+            id='description'
+            name='description'
+            type='text'
+            label='Description'
+            className={classes.textField}
+            helperText={errors.description}
+            error={errors.description ? true : false}
+            value={this.state.description}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='lyrics'
+            name='lyrics'
+            type='text'
+            label='Lyrics'
+            className={classes.textField}
+            helperText={errors.lyrics}
+            error={errors.lyrics ? true : false}
+            value={this.state.lyrics}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='length'
+            name='length'
+            type='text'
+            label='Length'
+            className={classes.textField}
+            helperText={errors.length}
+            error={errors.length ? true : false}
+            value={this.state.length}
+            onChange={this.handleChange}
+          />
+          <TextField
             id='trackListing'
             name='trackListing'
             type='number'
