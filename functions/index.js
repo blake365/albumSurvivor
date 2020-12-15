@@ -23,6 +23,7 @@ const {
   castVote2,
   payRespects2,
   tallyVotesTest,
+  anonVote,
   // editTrackDetails,
 } = require('./handlers/albums')
 
@@ -97,6 +98,7 @@ app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails)
 // )
 
 //make vote and like functions for tracks nested in albums
+app.post('/albums/:albumId/tracks/:trackId/anonVote', anonVote)
 app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2)
 app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2)
 
@@ -115,7 +117,7 @@ app.delete(
 
 // User routes
 app.post('/signup', signup)
-app.post('/loginGoogle', onGoogleSignIn)
+// app.post('/loginGoogle', onGoogleSignIn)
 app.post('/login', login)
 app.get('/user', FBAuth, getAuthenticatedUser)
 // app.get('/user/:userName', getUserDetails)
@@ -136,89 +138,110 @@ exports.tallyAllVotes = functions.pubsub
       .get()
       .then(data => {
         //get the tracks from each album
-        data.forEach(album => {
-          db.collection(`albums/${album.data().albumId}/tracks`)
-            //only alive tracks
-            .where('alive', '==', true)
-            // sort so the most votes is first item
-            .orderBy('votes', 'desc')
-            .get()
-            .then(query => {
-              if (query.docs.length >= 1) {
-                //get the first item from the query
-                console.log(query.docs[0].data().name)
-                console.log(query.docs[0].data().trackId)
-                // get the document for the track with the most votes
-                db.doc(
-                  `albums/${album.data().albumId}/tracks/${
-                    query.docs[0].data().trackId
-                  }`
-                )
-                  .get()
-                  .then(doc => {
-                    // update document so alive=false and new fields are added
-                    return doc.ref.update({
-                      alive: false,
-                      voteOutDay: new Date(),
-                      respect: 0,
-                    })
+        data
+          .forEach(
+            album => {
+              db.collection(`albums/${album.data().albumId}/tracks`)
+                .where('alive', '==', true)
+                .get()
+                .then(query => {
+                  doc = query.docs
+                  let roundVoteTotal = 0
+                  doc.forEach(track => {
+                    roundVoteTotal += track.data().votes
+                    return roundVoteTotal
                   })
-                  .then(() => {
-                    console.log('made it to vote reset')
-                    let aliveTracks = []
-                    db.collection(`albums/${album.data().albumId}/tracks`)
-                      //new list of alive tracks
-                      .where('alive', '==', true)
-                      .get()
-                      .then(data => {
-                        data.forEach(track => {
-                          aliveTracks.push(track.data())
-                        })
-                        return aliveTracks
-                      })
-
-                      .then(() => {
-                        let batch = db.batch()
-                        if (aliveTracks.length > 0) {
-                          aliveTracks.forEach(track => {
-                            batch.update(
-                              db.doc(
-                                `albums/${album.data().albumId}/tracks/${
-                                  track.trackId
-                                }`
-                              ),
-                              {
-                                votes: 0,
-                              }
-                            )
+                  // console.log(roundVoteTotal)
+                  return roundVoteTotal
+                })
+                .then(roundVoteTotal => {
+                  db.collection(`albums/${album.data().albumId}/tracks`)
+                    //only alive tracks
+                    .where('alive', '==', true)
+                    // sort so the most votes is first item
+                    .orderBy('votes', 'desc')
+                    .get()
+                    .then(query => {
+                      if (query.docs.length >= 1) {
+                        //get the first item from the query
+                        console.log(query.docs[0].data().name)
+                        console.log(query.docs[0].data().trackId)
+                        // get the document for the track with the most votes
+                        db.doc(
+                          `albums/${album.data().albumId}/tracks/${
+                            query.docs[0].data().trackId
+                          }`
+                        )
+                          .get()
+                          .then(doc => {
+                            // update document so alive=false and new fields are added
+                            return doc.ref.update({
+                              alive: false,
+                              voteOutDay: new Date(),
+                              respect: 0,
+                              roundVoteTotal: roundVoteTotal,
+                            })
                           })
-                          batch
-                            .commit()
-                            .then(() => {
-                              console.log('made it to end with no errors')
-                              return
-                            })
-                            .catch(err => {
-                              console.error(err)
-                            })
-                        } else {
-                          return
-                        }
-                      })
-                  })
-              } else {
-                return
-              }
-            })
-        })
-        // return res.json({ message: 'votes counted and reset' })
-      })
-      .catch(err => {
-        console.log(err)
+                          .then(() => {
+                            console.log('made it to vote reset')
+                            let aliveTracks = []
+                            db.collection(
+                              `albums/${album.data().albumId}/tracks`
+                            )
+                              //new list of alive tracks
+                              .where('alive', '==', true)
+                              .get()
+                              .then(data => {
+                                data.forEach(track => {
+                                  aliveTracks.push(track.data())
+                                })
+                                return aliveTracks
+                              })
+
+                              .then(() => {
+                                let batch = db.batch()
+                                if (aliveTracks.length > 0) {
+                                  aliveTracks.forEach(track => {
+                                    batch.update(
+                                      db.doc(
+                                        `albums/${
+                                          album.data().albumId
+                                        }/tracks/${track.trackId}`
+                                      ),
+                                      {
+                                        votes: 0,
+                                      }
+                                    )
+                                  })
+                                  batch
+                                    .commit()
+                                    .then(() => {
+                                      console.log(
+                                        'made it to end with no errors'
+                                      )
+                                      return
+                                    })
+                                    .catch(err => {
+                                      console.error(err)
+                                    })
+                                } else {
+                                  return
+                                }
+                              })
+                          })
+                      } else {
+                        return
+                      }
+                    })
+                })
+            }
+            // return res.json({ message: 'votes counted and reset' })
+          )
+          .catch(err => {
+            console.log(err)
+          })
       })
   })
-
-// TODO: write archive votes function
 
 //archive data before vote tally
 exports.archivePollData = functions.pubsub

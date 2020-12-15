@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
-import { postVote2 } from '../redux/actions/dataActions'
+import { postVote2, anonVote } from '../redux/actions/dataActions'
 
 import FormControl from '@material-ui/core/FormControl'
 import Paper from '@material-ui/core/Paper'
@@ -51,7 +51,15 @@ class PollNew extends Component {
       disabled: false,
       open: false,
       errors: {},
+      voted: false,
+      IP: '',
     }
+  }
+
+  componentDidMount() {
+    fetch('https://api.ipify.org/?format=json')
+      .then(results => results.json())
+      .then(data => this.setState({ IP: data.ip }))
   }
 
   handleSelectedTrack(selection) {
@@ -61,8 +69,42 @@ class PollNew extends Component {
   submitVote = event => {
     event.preventDefault()
     if (this.state.selection !== '') {
+      let today = new Date().toLocaleDateString()
+
+      let voteDoc = {
+        date: new Date().toLocaleDateString(),
+        albumId: this.props.album.albumId,
+        selection: this.state.selection,
+      }
+
       this.setState({ submitted: true, disabled: true })
-      this.props.postVote2(this.props.album.albumId, this.state.selection)
+      if (this.props.user.authenticated) {
+        this.props.postVote2(this.props.album.albumId, this.state.selection)
+        window.localStorage.setItem(
+          this.props.album.albumName,
+          JSON.stringify(voteDoc)
+        )
+      } else {
+        let checkVoteDoc = window.localStorage.getItem(
+          this.props.album.albumName
+        )
+        let voteDocJSON = JSON.parse(checkVoteDoc)
+        if (!voteDocJSON || voteDocJSON.date !== today) {
+          this.props.anonVote(
+            this.props.album.albumId,
+            this.state.selection,
+            this.state.IP
+          )
+          console.log('vote cast')
+          window.localStorage.setItem(
+            this.props.album.albumName,
+            JSON.stringify(voteDoc)
+          )
+        } else {
+          console.log('already voted')
+          this.setState({ submitted: true, disabled: true, voted: true })
+        }
+      }
     } else return
   }
 
@@ -125,7 +167,9 @@ class PollNew extends Component {
       } else return
     }
 
-    let submitButtonOption = authenticated ? (
+    let submitButtonOption = this.state.voted ? (
+      <div>You have already voted today!</div>
+    ) : (
       <Button
         type='submit'
         variant='contained'
@@ -135,18 +179,6 @@ class PollNew extends Component {
         onClick={this.submitVote}
       >
         Cast Vote
-      </Button>
-    ) : (
-      <Button
-        type='link'
-        component={Link}
-        to='/login'
-        variant='outlined'
-        color='primary'
-        disabled={this.state.disabled}
-        className={classes.submitButton}
-      >
-        Log In to Vote
       </Button>
     )
 
@@ -171,6 +203,7 @@ class PollNew extends Component {
 
 PollNew.propTypes = {
   postVote2: PropTypes.func.isRequired,
+  anonVote: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
 }
 
@@ -180,6 +213,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { postVote2 })(
+export default connect(mapStateToProps, { postVote2, anonVote })(
   withStyles(styles)(PollNew)
 )

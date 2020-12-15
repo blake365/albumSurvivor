@@ -200,6 +200,8 @@ exports.editAlbumDetails = (req, res) => {
 
 // cast vote function
 exports.castVote2 = (req, res) => {
+  let limit
+
   const voteDocument = {
     trackId: req.params.trackId,
     createdAt: new Date().toISOString(),
@@ -211,56 +213,199 @@ exports.castVote2 = (req, res) => {
 
   let todayDate = new Date().getDate()
   // TODO: limit should equal number of active polls
-  db.collection(`/users/${req.user.userName}/votes`)
-    .orderBy('createdAt', 'desc')
-    .limit(3)
+  db.collection('albums')
+    .where('alive', '==', true)
     .get()
     .then(query => {
-      doc = query.docs
-      console.log('')
-      const votemap = doc.map(doc => {
-        let didVote
-        if (
-          doc.data().voteDay === todayDate &&
-          doc.data().albumId === req.params.albumId
-        ) {
-          didVote = true
-        } else {
-          didVote = false
-        }
-        return didVote
-      })
-      console.log(votemap)
+      limit = query.docs.length
+      return limit
+    })
+    .then(limit => {
+      db.collection(`/users/${req.user.userName}/votes`)
+        .orderBy('createdAt', 'desc')
+        .limit(limit)
+        .get()
+        .then(query => {
+          doc = query.docs
+          const votemap = doc.map(doc => {
+            let didVote
+            if (
+              doc.data().voteDay === todayDate &&
+              doc.data().albumId === req.params.albumId
+            ) {
+              didVote = true
+            } else {
+              didVote = false
+            }
+            return didVote
+          })
+          // console.log(votemap)
 
-      if (votemap.includes(true)) {
-        return res.status(403).json({ error: 'You have already voted today!' })
-      } else {
-        const trackDocument = db.doc(
-          `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
-        )
-        let trackData = {}
-        return trackDocument
-          .get()
-          .then(doc => {
-            trackData = doc.data()
-            trackData.trackId = doc.id
-            trackData.name = doc.data().name
-            voteDocument.name = trackData.name
-            trackData.votes++
-            return trackDocument.update({
-              votes: trackData.votes,
-            })
-          })
-          .then(() => {
-            db.collection(`/users/${req.user.userName}/votes`).add(voteDocument)
-          })
-          .then(() => {
-            return res.status(200).json({
-              message: 'Your vote has been submitted!',
-              voteHistory: voteDocument,
-            })
-          })
-      }
+          if (votemap.includes(true)) {
+            return res
+              .status(403)
+              .json({ error: 'You have already voted today!' })
+          } else {
+            const trackDocument = db.doc(
+              `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+            )
+            let trackData = {}
+            return trackDocument
+              .get()
+              .then(doc => {
+                trackData = doc.data()
+                trackData.trackId = doc.id
+                trackData.name = doc.data().name
+                voteDocument.name = trackData.name
+                trackData.votes++
+                return trackDocument.update({
+                  votes: trackData.votes,
+                })
+              })
+              .then(() => {
+                db.collection(`/users/${req.user.userName}/votes`).add(
+                  voteDocument
+                )
+              })
+              .then(() => {
+                return res.status(200).json({
+                  message: 'Your vote has been submitted!',
+                  voteHistory: voteDocument,
+                })
+              })
+          }
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+    })
+}
+
+exports.anonVote = (req, res) => {
+  let limit
+
+  console.log(req.body)
+  const anonUser = {
+    IPaddress: req.body.IPaddress,
+    type: 'anon',
+  }
+
+  const dummyVote = {
+    trackId: 123,
+    voteDay: 0,
+    createdAt: new Date().toISOString(),
+  }
+
+  const voteDocument = {
+    trackId: req.body.trackId,
+    albumId: req.body.albumId,
+    createdAt: new Date().toISOString(),
+    voteDay: new Date().getDate(),
+  }
+
+  let todayDate = new Date().getDate()
+
+  db.collection('albums')
+    .where('alive', '==', true)
+    .get()
+    .then(query => {
+      limit = query.docs.length
+      return limit
+    })
+    .then(limit => {
+      db.doc(`/users/${req.body.IPaddress}`)
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            db.collection(`users/${req.body.IPaddress}/votes`)
+              .orderBy('createdAt', 'desc')
+              .limit(limit)
+              .get()
+              .then(query => {
+                doc = query.docs
+                const votemap = doc.map(doc => {
+                  let didVote
+                  if (
+                    doc.data().voteDay === todayDate &&
+                    doc.data().albumId === req.params.albumId
+                  ) {
+                    didVote = true
+                  } else {
+                    didVote = false
+                  }
+                  return didVote
+                })
+                if (votemap.includes(true)) {
+                  return res.status(403).json({
+                    error:
+                      'It appears you or someone with your IP address has already voted today. Make an account if this issue perists',
+                  })
+                } else {
+                  const trackDocument = db.doc(
+                    `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+                  )
+                  let trackData = {}
+                  return trackDocument
+                    .get()
+                    .then(doc => {
+                      trackData = doc.data()
+                      trackData.votes++
+                      return trackDocument.update({
+                        votes: trackData.votes,
+                      })
+                    })
+                    .then(() => {
+                      db.collection(`/users/${req.body.IPaddress}/votes`).add(
+                        voteDocument
+                      )
+                    })
+                    .then(() => {
+                      return res.status(200).json({
+                        message: 'Your vote has been submitted!',
+                      })
+                    })
+                }
+              })
+              .catch(err => {
+                console.error(err)
+                res.status(500).json({ error: err.code })
+              })
+          } else {
+            db.doc(`/users/${req.body.IPaddress}`)
+              .set(anonUser)
+              .then(() => {
+                return db
+                  .collection(`users/${req.body.IPaddress}/votes`)
+                  .add(dummyVote)
+              })
+              .then(() => {
+                const trackDocument = db.doc(
+                  `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
+                )
+                let trackData = {}
+                return trackDocument
+                  .get()
+                  .then(doc => {
+                    trackData = doc.data()
+                    trackData.votes++
+                    return trackDocument.update({
+                      votes: trackData.votes,
+                    })
+                  })
+                  .then(() => {
+                    db.collection(`/users/${req.body.IPaddress}/votes`).add(
+                      voteDocument
+                    )
+                  })
+                  .then(() => {
+                    return res.status(200).json({
+                      message: 'Your vote has been submitted!',
+                    })
+                  })
+              })
+          }
+        })
     })
     .catch(err => {
       console.error(err)
@@ -360,51 +505,50 @@ exports.uploadImage = (req, res) => {
 //   db.collection('albums')
 //     .where('activePoll', '==', true)
 //     .get()
-//     .then(data => {
-//       //get the tracks from each album
-//       data.forEach(album => {
+// .then(data => {
+//   //get the tracks from each album
+//   data.forEach(album => {
+//     db.collection(`albums/${album.data().albumId}/tracks`)
+//       .where('alive', '==', true)
+//       .get()
+//       .then(query => {
+//         doc = query.docs
+//         let roundVoteTotal = 0
+//         doc.forEach(track => {
+//           roundVoteTotal += track.data().votes
+//           return roundVoteTotal
+//         })
+//         console.log(roundVoteTotal)
+//         return roundVoteTotal
+//       })
+//       .then(roundVoteTotal => {
 //         db.collection(`albums/${album.data().albumId}/tracks`)
+//           //only alive tracks
 //           .where('alive', '==', true)
+//           // sort so the most votes is first item
+//           .orderBy('votes', 'desc')
 //           .get()
 //           .then(query => {
-//             doc = query.docs
-//             let roundVoteTotal = 0
-//             doc.forEach(track => {
-//               roundVoteTotal += track.data().votes
-//               return roundVoteTotal
-//             })
-//             console.log(roundVoteTotal)
-//             return roundVoteTotal
-//           })
-//           .then(roundVoteTotal => {
-//             db.collection(`albums/${album.data().albumId}/tracks`)
-//               //only alive tracks
-//               .where('alive', '==', true)
-//               // sort so the most votes is first item
-//               .orderBy('votes', 'desc')
-//               .get()
-//               .then(query => {
-//                 if (query.docs.length >= 1) {
-//                   //get the first item from the query
-//                   console.log(query.docs[0].data().name)
-//                   console.log(query.docs[0].data().trackId)
-//                   // get the document for the track with the most votes
-//                   db.doc(
-//                     `albums/${album.data().albumId}/tracks/${
-//                       query.docs[0].data().trackId
-//                     }`
-//                   )
-//                     .get()
-//                     .then(doc => {
-//                       // update document so alive=false and new fields are added
-//                       return doc.ref.update({
-//                         alive: false,
-//                         voteOutDay: new Date(),
-//                         respect: 0,
-//                         roundVoteTotal: roundVoteTotal,
-//                       })
-//                     })
-
+//             if (query.docs.length >= 1) {
+//               //get the first item from the query
+//               console.log(query.docs[0].data().name)
+//               console.log(query.docs[0].data().trackId)
+//               // get the document for the track with the most votes
+//               db.doc(
+//                 `albums/${album.data().albumId}/tracks/${
+//                   query.docs[0].data().trackId
+//                 }`
+//               )
+//                 .get()
+//                 .then(doc => {
+//                   // update document so alive=false and new fields are added
+//                   return doc.ref.update({
+//                     alive: false,
+//                     voteOutDay: new Date(),
+//                     respect: 0,
+//                     roundVoteTotal: roundVoteTotal,
+//                   })
+//                 })
 //                     .then(() => {
 //                       console.log('made it to vote reset')
 //                       let aliveTracks = []
