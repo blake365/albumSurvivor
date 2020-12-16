@@ -177,7 +177,7 @@ exports.editAlbumDetails = (req, res) => {
   db.doc(`albums/${req.params.albumId}`)
     .get()
     .then(doc => {
-      console.log(editAlbumData)
+      // console.log(editAlbumData)
       function clean(obj) {
         for (var propName in obj) {
           if (obj[propName] === null || obj[propName] === '') {
@@ -191,6 +191,47 @@ exports.editAlbumDetails = (req, res) => {
     })
     .then(() => {
       return res.status(200).json({ message: 'Album Edited' })
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'something went wrong' })
+      console.error(err)
+    })
+}
+
+exports.editTrackDetails = (req, res) => {
+  let trackListing
+  if (req.body.trackListing !== '') {
+    trackListing = parseInt(req.body.trackListing)
+  } else {
+    trackListing = req.body.trackListing
+  }
+
+  const editTrackData = {
+    name: req.body.name,
+    description: req.body.description,
+    trackListing: trackListing,
+    length: req.body.length,
+    lyrics: req.body.lyrics,
+    alive: req.body.alive,
+  }
+
+  db.doc(`albums/${req.params.albumId}/tracks/${req.params.trackId}`)
+    .get()
+    .then(doc => {
+      console.log(editTrackData)
+      function clean(obj) {
+        for (var propName in obj) {
+          if (obj[propName] === null || obj[propName] === '') {
+            delete obj[propName]
+          }
+        }
+      }
+      clean(editTrackData)
+      console.log(editTrackData)
+      return doc.ref.update(editTrackData)
+    })
+    .then(() => {
+      return res.status(200).json({ message: 'Song Edited' })
     })
     .catch(err => {
       res.status(500).json({ error: 'something went wrong' })

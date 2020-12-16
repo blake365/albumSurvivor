@@ -6,15 +6,10 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import NewReleasesIcon from '@material-ui/icons/NewReleases'
 
 const styles = theme => ({
   ...theme.spreadThis,
-  profileBody: {
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
   card: {
     marginBottom: 8,
   },
@@ -22,6 +17,18 @@ const styles = theme => ({
     textAlign: 'center',
     marginTop: 5,
     marginBottom: 5,
+  },
+  headline: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  title: {
+    flexGrow: 1,
+  },
+  newIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    color: 'limegreen',
   },
 })
 
@@ -55,10 +62,13 @@ class ArchivePost extends Component {
     const { tracks, loading } = this.state
 
     let totalVotes = 0
-    let totalVotesCalc = tracks.forEach(track => {
-      totalVotes += track.votes
-      return totalVotes
-    })
+    function totalVotesCalc() {
+      tracks.forEach(track => {
+        totalVotes += track.votes
+        return totalVotes
+      })
+    }
+    totalVotesCalc()
 
     let markup = !loading ? (
       tracks.map(track => (
@@ -78,11 +88,23 @@ class ArchivePost extends Component {
     return (
       <Card className={classes.card}>
         <CardContent>
-          <Typography variant='overline'>
-            {new Date(archive.archiveCreatedAt._seconds * 1000).toDateString()}
-            <Typography variant='h6' color='primary'>
-              {archive.albumName}
+          <div className={classes.headline}>
+            <Typography variant='overline' className={classes.title}>
+              {new Date(
+                archive.archiveCreatedAt._seconds * 1000
+              ).toDateString()}
             </Typography>
+            {new Date(
+              archive.archiveCreatedAt._seconds * 1000
+            ).toDateString() === new Date().toDateString() ? (
+              <span className={classes.newIcon}>
+                <NewReleasesIcon />
+                NEW
+              </span>
+            ) : null}
+          </div>
+          <Typography variant='h6' color='primary'>
+            {archive.albumName}
           </Typography>
           {markup}
           <Typography>Total Votes: {totalVotes}</Typography>

@@ -12,6 +12,7 @@ import AlbumDetails from '../components/admin/AlbumDetails'
 import { getAlbum } from '../redux/actions/dataActions'
 import EditAlbum from '../components/admin/EditAlbum'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import EditTrack from '../components/admin/EditTrack'
 
 //get one album, use albumId in url. allow editing album details
 
@@ -59,6 +60,7 @@ class albumPage extends Component {
           </Grid>
           <Grid item sm={8} xs={12}>
             <EditAlbum album={album} />
+            <EditTrack album={album} />
           </Grid>
           <Grid item sm={12} xs={12}></Grid>
         </Grid>

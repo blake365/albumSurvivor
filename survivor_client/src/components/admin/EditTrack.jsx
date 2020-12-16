@@ -6,20 +6,26 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
-
-import withStyles from '@material-ui/core/styles/withStyles'
-import PropTypes from 'prop-types'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 
+import withStyles from '@material-ui/core/styles/withStyles'
+import PropTypes from 'prop-types'
+
 import { connect } from 'react-redux'
-import { postNewTrackToAlbum } from '../../redux/actions/dataActions'
+import { editTrackData } from '../../redux/actions/dataActions'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 
 const styles = theme => ({
   ...theme.spreadThis,
+  container: {
+    marginTop: 20,
+  },
   pageTitle: {
     padding: '10px',
+    textAlign: 'center',
   },
   textField: {
     width: '80%',
@@ -34,16 +40,18 @@ const styles = theme => ({
   },
 })
 
-class SubmitTrackToAlbum extends Component {
+class EditTrack extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      trackId: '',
       name: '',
-      // description: '',
+      description: '',
       trackListing: '',
-      // length: '',
-      // lyrics: '',
+      length: '',
+      lyrics: '',
       albumId: '',
+      alive: true,
       errors: {},
     }
   }
@@ -53,20 +61,19 @@ class SubmitTrackToAlbum extends Component {
     this.setState({
       loading: true,
     })
-    const newTrackData = {
+    const editedTrackData = {
       name: this.state.name,
-      // description: this.state.description,
+      description: this.state.description,
       trackListing: this.state.trackListing,
-      // length: this.state.length,
-      // lyrics: this.state.lyrics,
+      length: this.state.length,
+      lyrics: this.state.lyrics,
+      alive: this.state.alive,
     }
-    this.props.postNewTrackToAlbum(this.state.albumId, newTrackData)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors })
-    }
+    this.props.editTrackData(
+      this.props.album.data.albumId,
+      this.state.trackId,
+      editedTrackData
+    )
   }
 
   handleChange = event => {
@@ -75,32 +82,41 @@ class SubmitTrackToAlbum extends Component {
     })
   }
 
+  handleSwitchChange = event => {
+    this.setState({
+      [event.target.name]: event.target.checked,
+    })
+  }
+
   render() {
     const {
       classes,
       UI: { loading },
-      albums,
+      album: { tracks },
     } = this.props
     const { errors } = this.state
 
     return (
-      <Paper className={classes.form}>
+      <Paper className={classes.container}>
         <Typography variant='h5' className={classes.pageTitle}>
-          Add A New Song To An Album
+          Edit Song Details
         </Typography>
-        <form noValidate onSubmit={this.handleSubmit}>
+        <form noValidate onSubmit={this.handleSubmit} className={classes.form}>
           <div className={classes.textField}>
-            <InputLabel id='demo-simple-select-label'>Select Album</InputLabel>
+            <InputLabel id='demo-simple-select-label'>
+              Select Song To Edit
+            </InputLabel>
             <Select
+              placeholder='Select Song'
               style={{ minWidth: 200 }}
-              labelId='select album'
-              name='albumId'
-              id='albumId'
-              value={this.state.albumId}
+              labelId='select song'
+              name='trackId'
+              id='trackId'
+              value={this.state.trackId}
               onChange={this.handleChange}
             >
-              {albums.map(album => (
-                <MenuItem value={album.albumId}>{album.albumName}</MenuItem>
+              {tracks.map(track => (
+                <MenuItem value={track.trackId}>{track.name}</MenuItem>
               ))}
             </Select>
           </div>
@@ -115,7 +131,6 @@ class SubmitTrackToAlbum extends Component {
             value={this.state.name}
             onChange={this.handleChange}
           />
-
           <TextField
             id='trackListing'
             name='trackListing'
@@ -126,6 +141,50 @@ class SubmitTrackToAlbum extends Component {
             error={errors.trackListing ? true : false}
             value={this.state.trackListing}
             onChange={this.handleChange}
+          />
+          <TextField
+            id='description'
+            name='description'
+            type='text'
+            label='Description'
+            className={classes.textField}
+            helperText={errors.description}
+            error={errors.description ? true : false}
+            value={this.state.description}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='lyrics'
+            name='lyrics'
+            type='text'
+            label='Lyrics'
+            className={classes.textField}
+            helperText={errors.lyrics}
+            error={errors.lyrics ? true : false}
+            value={this.state.lyrics}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='length'
+            name='length'
+            type='text'
+            label='Length'
+            className={classes.textField}
+            helperText={errors.length}
+            error={errors.length ? true : false}
+            value={this.state.length}
+            onChange={this.handleChange}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                color='primary'
+                checked={this.state.alive}
+                onChange={this.handleSwitchChange}
+                name='alive'
+              />
+            }
+            label='Is This Song Alive?'
           />
           {errors.general && (
             <Typography variant='body2' className={classes.customError}>
@@ -153,7 +212,7 @@ class SubmitTrackToAlbum extends Component {
   }
 }
 
-SubmitTrackToAlbum.propTypes = {
+EditTrack.propTypes = {
   classes: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
 }
@@ -162,6 +221,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { postNewTrackToAlbum })(
-  withStyles(styles)(SubmitTrackToAlbum)
+export default connect(mapStateToProps, { editTrackData })(
+  withStyles(styles)(EditTrack)
 )

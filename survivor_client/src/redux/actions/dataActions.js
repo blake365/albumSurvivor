@@ -307,6 +307,30 @@ export const editAlbumData = (albumId, editAlbumData) => dispatch => {
     })
 }
 
+export const editTrackData = (albumId, trackId, editTrackData) => dispatch => {
+  dispatch({ type: LOADING_UI })
+  axios
+    .put(`/albums/${albumId}/tracks/${trackId}`, editTrackData)
+    .then(res => {
+      dispatch({
+        type: POST_ALBUM,
+        payload: res.data,
+      })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
+      dispatch(getAlbum(albumId))
+      dispatch(clearErrors())
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      })
+    })
+}
+
 export const postNewAlbum = newAlbumData => dispatch => {
   dispatch({ type: LOADING_UI })
   axios

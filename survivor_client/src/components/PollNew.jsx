@@ -62,7 +62,9 @@ class PollNew extends Component {
   }
 
   // componentDidMount() {
-  //   console.log(this.props.data.IP)
+  //   // console.log(new Date())
+  //   let dateTest = new Date().toUTCString().split(' ')[1]
+  //   console.log(dateTest)
   // }
 
   handleSelectedTrack(selection) {
@@ -72,10 +74,10 @@ class PollNew extends Component {
   submitVote = event => {
     event.preventDefault()
     if (this.state.selection !== '') {
-      let today = new Date().getDate()
+      let today = new Date().toUTCString().split(' ')[1]
 
       let voteDoc = {
-        date: new Date().getDate(),
+        date: new Date().toUTCString().split(' ')[1],
         albumId: this.props.album.albumId,
         selection: this.state.selection,
       }

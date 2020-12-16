@@ -24,7 +24,7 @@ const styles = theme => ({
   },
   card: {
     margin: 8,
-    width: 250,
+    width: 300,
   },
   image: {
     objectFit: 'cover',
@@ -110,9 +110,17 @@ class AlbumDetails extends Component {
         <Card className={classes.card}>
           <CardContent>
             {/**TODO: add other fields to track list display */}
-            <div>Tracks:</div>
+            <strong>Tracks:</strong>
             {tracks.map((track, index) => (
-              <Typography variant='body1' key={index}>
+              <Typography
+                variant='body1'
+                key={index}
+                style={
+                  track.alive
+                    ? { color: 'green' }
+                    : { textDecoration: 'line-through' }
+                }
+              >
                 {track.trackListing}: {track.name} -- {track.votes}{' '}
               </Typography>
             ))}
