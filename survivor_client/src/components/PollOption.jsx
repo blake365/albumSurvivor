@@ -14,6 +14,9 @@ import Chip from '@material-ui/core/Chip'
 const styles = theme => ({
   ...theme.spreadThis,
   content: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
     padding: 0,
     '&:hover': {
       background: '#4caf50',
@@ -25,7 +28,8 @@ const styles = theme => ({
   trackInfo: {
     margin: 8,
     flexGrow: 1,
-    overflow: 'scroll',
+    overflow: 'wrap',
+    width: '70%',
   },
   voteDisplay: {
     margin: 7,
@@ -77,7 +81,6 @@ class PollOption extends Component {
           <Grid container alignItems='center'>
             <Grid item className={classes.trackInfo}>
               <Typography variant='h6'>{name}</Typography>
-              {/* <Typography variant='subtitle1'>{description}</Typography> */}
             </Grid>
             <Grid item>
               {submitted ? (

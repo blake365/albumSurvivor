@@ -98,6 +98,9 @@ exports.getOneAlbumsTracks = (req, res) => {
 }
 
 exports.postNewAlbum = (req, res) => {
+  if (req.body.albumName.trim() === '' || req.body.artist.trim() === '') {
+    return res.status(400).json({ error: 'Required fields must not be empty' })
+  }
   const newAlbum = {
     albumName: req.body.albumName,
     artist: req.body.artist,
@@ -129,17 +132,17 @@ exports.postNewAlbum = (req, res) => {
 
 exports.postNewTrackToAlbum = (req, res) => {
   if (req.body.name.trim() === '' || req.body.trackListing.trim() === '') {
-    return res.status(400).json({ body: 'Field(s) must not be empty' })
+    return res.status(400).json({ error: 'Required fields must not be empty' })
   }
 
   let trackListing = parseInt(req.body.trackListing)
 
   const newTrack = {
     name: req.body.name,
-    description: req.body.description,
+    // description: req.body.description,
     trackListing: trackListing,
-    length: req.body.length,
-    lyrics: req.body.lyrics,
+    // length: req.body.length,
+    // lyrics: req.body.lyrics,
     votes: 0,
     alive: true,
     trackId: '',
@@ -255,7 +258,7 @@ exports.castVote2 = (req, res) => {
   let todayDate = new Date().getDate()
   // TODO: limit should equal number of active polls
   db.collection('albums')
-    .where('alive', '==', true)
+    .where('activePoll', '==', true)
     .get()
     .then(query => {
       limit = query.docs.length
@@ -348,7 +351,7 @@ exports.anonVote = (req, res) => {
   let todayDate = new Date().getDate()
 
   db.collection('albums')
-    .where('alive', '==', true)
+    .where('activePoll', '==', true)
     .get()
     .then(query => {
       limit = query.docs.length

@@ -5,6 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { connect } from 'react-redux'
 import { getArchives } from '../redux/actions/dataActions'
 import ArchivePost from './ArchivePost'
+import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -24,11 +25,25 @@ const styles = theme => ({
 class ArchiveWrapper extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      start: 0,
+      direction: '',
+    }
   }
 
   componentDidMount() {
-    this.props.getArchives()
+    const start = {
+      direction: 'older',
+    }
+    this.props.getArchives(start)
+  }
+
+  handleAllSubmit = event => {
+    event.preventDefault()
+    const start = {
+      direction: 'all',
+    }
+    this.props.getArchives(start)
   }
 
   render() {
@@ -43,7 +58,21 @@ class ArchiveWrapper extends Component {
       </div>
     ))
 
-    return <div className={classes.wrapper}>{archiveMarkup}</div>
+    return (
+      <div>
+        <div className={classes.wrapper}>{archiveMarkup}</div>
+        <div style={{ textAlign: 'center' }}>
+          <Button
+            onClick={this.handleAllSubmit}
+            variant='contained'
+            size='large'
+            color='primary'
+          >
+            Show All
+          </Button>
+        </div>
+      </div>
+    )
   }
 }
 

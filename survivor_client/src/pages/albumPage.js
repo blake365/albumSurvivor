@@ -6,13 +6,14 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import MessageSlot from '../components/MessageSlot'
+// import MessageSlot from '../components/MessageSlot'
 
 import AlbumDetails from '../components/admin/AlbumDetails'
 import { getAlbum } from '../redux/actions/dataActions'
 import EditAlbum from '../components/admin/EditAlbum'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import EditTrack from '../components/admin/EditTrack'
+import SnackbarContainer from '../components/SnackbarContainer'
 
 //get one album, use albumId in url. allow editing album details
 
@@ -53,7 +54,7 @@ class albumPage extends Component {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <MessageSlot page='admin' />
+            <SnackbarContainer />
           </Grid>
           <Grid item sm={4} xs={12}>
             <AlbumDetails album={album} />

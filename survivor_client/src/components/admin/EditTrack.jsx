@@ -61,6 +61,7 @@ class EditTrack extends Component {
     this.setState({
       loading: true,
     })
+
     const editedTrackData = {
       name: this.state.name,
       description: this.state.description,
@@ -69,11 +70,16 @@ class EditTrack extends Component {
       lyrics: this.state.lyrics,
       alive: this.state.alive,
     }
-    this.props.editTrackData(
-      this.props.album.data.albumId,
-      this.state.trackId,
-      editedTrackData
-    )
+
+    if (this.state.trackId === '') {
+      return
+    } else {
+      this.props.editTrackData(
+        this.props.album.data.albumId,
+        this.state.trackId,
+        editedTrackData
+      )
+    }
   }
 
   handleChange = event => {

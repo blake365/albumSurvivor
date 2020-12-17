@@ -90,13 +90,12 @@ class ArchivePost extends Component {
         <CardContent>
           <div className={classes.headline}>
             <Typography variant='overline' className={classes.title}>
-              {new Date(
-                archive.archiveCreatedAt._seconds * 1000
-              ).toDateString()}
+              {new Date(archive.archiveCreatedAt).toDateString()}
             </Typography>
-            {new Date(
-              archive.archiveCreatedAt._seconds * 1000
-            ).toDateString() === new Date().toDateString() ? (
+            {new Date(archive.archiveCreatedAt).toDateString() ===
+              new Date().toDateString() ||
+            new Date(archive.archiveCreatedAt).getDate() ===
+              new Date().getDate() - 1 ? (
               <span className={classes.newIcon}>
                 <NewReleasesIcon />
                 NEW

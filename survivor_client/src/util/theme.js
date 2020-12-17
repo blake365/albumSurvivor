@@ -35,7 +35,7 @@ const theme = {
       marginTop: 20,
       marginBottom: 20,
       height: 46,
-      width: 78,
+      width: 'auto',
       position: 'relative',
     },
     customError: {

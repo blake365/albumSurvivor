@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { Grid } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { connect } from 'react-redux'
-
 import Hero from '../components/Hero'
-import MessageSlot from '../components/MessageSlot'
+// import MessageSlot from '../components/MessageSlot'
+import SnackbarContainer from '../components/SnackbarContainer'
 
-import PropTypes from 'prop-types'
 import PollWrapper from '../components/PollWrapper'
+
+import { getIP } from '../redux/actions/dataActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -17,14 +18,16 @@ const styles = theme => ({
 })
 
 export class home extends Component {
+  componentDidMount() {
+    this.props.getIP()
+  }
+
   render() {
     return (
       <Grid container spacing={1}>
+        <SnackbarContainer />
         <Grid item xs={12}>
           <Hero />
-        </Grid>
-        <Grid item xs={12}>
-          <MessageSlot />
         </Grid>
         <Grid item sm={12} xs={12}>
           <PollWrapper />
@@ -34,12 +37,4 @@ export class home extends Component {
   }
 }
 
-home.propTypes = {
-  user: PropTypes.object.isRequired,
-}
-
-const mapStateToProps = state => ({
-  user: state.user,
-})
-
-export default connect(mapStateToProps)(withStyles(styles)(home))
+export default connect(null, { getIP })(withStyles(styles)(home))

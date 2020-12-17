@@ -29,6 +29,23 @@ const refreshAlbums = () => dispatch => {
   dispatch({ type: REFRESH })
 }
 
+export const getIP = () => dispatch => {
+  fetch('https://api.ipify.org/?format=json')
+    .then(results => results.json())
+    .then(data =>
+      dispatch({
+        type: SET_IP,
+        payload: data.ip,
+      })
+    )
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
+      })
+    })
+}
+
 //get all tracks
 export const getTracks = () => dispatch => {
   dispatch({ type: LOADING_DATA })
@@ -97,17 +114,6 @@ export const getActiveAlbums = () => dispatch => {
         payload: res.data,
       })
     })
-    .then(() => {
-      fetch('https://api.ipify.org/?format=json')
-        .then(results => results.json())
-        .then(data =>
-          dispatch({
-            type: SET_IP,
-            payload: data.ip,
-          })
-        )
-    })
-
     .catch(err => {
       dispatch({
         type: SET_ERRORS,
@@ -374,10 +380,11 @@ export const postNewCommentary = newCommentaryData => dispatch => {
     })
 }
 
-export const getArchives = () => dispatch => {
+export const getArchives = start => dispatch => {
   dispatch({ type: LOADING_DATA })
+  console.log(start)
   axios
-    .get('/archives')
+    .post('/archives', start)
     .then(res => {
       dispatch({
         type: SET_ARCHIVES,

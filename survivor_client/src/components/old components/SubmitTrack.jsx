@@ -44,9 +44,6 @@ class SubmitTrack extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.setState({
-      loading: true,
-    })
     const newTrackData = {
       name: this.state.name,
       description: this.state.description,
@@ -79,6 +76,7 @@ class SubmitTrack extends Component {
         <Typography variant='h5' className={classes.pageTitle}>
           Add A New Song
         </Typography>
+
         <form noValidate onSubmit={this.handleSubmit}>
           <TextField
             id='name'

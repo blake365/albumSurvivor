@@ -52,6 +52,7 @@ class SubmitAlbum extends Component {
     this.setState({
       loading: true,
     })
+
     const newAlbumData = {
       albumName: this.state.albumName,
       artist: this.state.artist,
@@ -60,7 +61,12 @@ class SubmitAlbum extends Component {
       releaseYear: this.state.releaseYear,
       activePoll: this.state.activePoll,
     }
-    this.props.postNewAlbum(newAlbumData)
+
+    if (this.state.albumName === '') {
+      return
+    } else {
+      this.props.postNewAlbum(newAlbumData)
+    }
   }
 
   // componentWillUpdate(nextProps) {
@@ -93,12 +99,13 @@ class SubmitAlbum extends Component {
         <Typography variant='h5' className={classes.pageTitle}>
           Add A New Album
         </Typography>
+        <Typography variant='subtitle1'>* = required</Typography>
         <form noValidate onSubmit={this.handleSubmit}>
           <TextField
             id='albumName'
             name='albumName'
             type='text'
-            label='Album Name'
+            label='Album Name *'
             className={classes.textField}
             helperText={errors.albumName}
             error={errors.albumName ? true : false}
@@ -109,7 +116,7 @@ class SubmitAlbum extends Component {
             id='artist'
             name='artist'
             type='text'
-            label='Artist'
+            label='Artist *'
             className={classes.textField}
             helperText={errors.artist}
             error={errors.artist ? true : false}

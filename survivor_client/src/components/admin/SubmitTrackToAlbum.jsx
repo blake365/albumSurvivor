@@ -88,9 +88,13 @@ class SubmitTrackToAlbum extends Component {
         <Typography variant='h5' className={classes.pageTitle}>
           Add A New Song To An Album
         </Typography>
+        <Typography variant='subtitle1'>* = required</Typography>
+
         <form noValidate onSubmit={this.handleSubmit}>
           <div className={classes.textField}>
-            <InputLabel id='demo-simple-select-label'>Select Album</InputLabel>
+            <InputLabel id='demo-simple-select-label'>
+              Select Album *
+            </InputLabel>
             <Select
               style={{ minWidth: 200 }}
               labelId='select album'
@@ -100,7 +104,9 @@ class SubmitTrackToAlbum extends Component {
               onChange={this.handleChange}
             >
               {albums.map(album => (
-                <MenuItem value={album.albumId}>{album.albumName}</MenuItem>
+                <MenuItem key={album.albumId} value={album.albumId}>
+                  {album.albumName}
+                </MenuItem>
               ))}
             </Select>
           </div>
@@ -108,7 +114,7 @@ class SubmitTrackToAlbum extends Component {
             id='name'
             name='name'
             type='text'
-            label='Name'
+            label='Name *'
             className={classes.textField}
             helperText={errors.name}
             error={errors.name ? true : false}
@@ -120,7 +126,7 @@ class SubmitTrackToAlbum extends Component {
             id='trackListing'
             name='trackListing'
             type='number'
-            label='Track List Number'
+            label='Track List Number *'
             className={classes.textField}
             helperText={errors.trackListing}
             error={errors.trackListing ? true : false}

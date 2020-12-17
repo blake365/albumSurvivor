@@ -29,9 +29,10 @@ const {
 } = require('./handlers/albums')
 
 const {
-  getAllArchives,
+  getArchives,
   getOneArchiveEntry,
   archiveTest,
+  loadMoreArchives,
 } = require('./handlers/archives')
 
 const {
@@ -71,9 +72,10 @@ app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 // app.get('/albums/tally', tallyVotesTest)
 
 //archive routes
-app.get('/archives', getAllArchives)
+app.post('/archives', getArchives)
 // app.get('/archives/archive', archiveTest)
 app.get('/archives/:archiveId', getOneArchiveEntry)
+// app.get('/archives/more', loadMoreArchives)
 
 //album routes
 app.get('/albums', getAllAlbums)
@@ -256,7 +258,7 @@ exports.archivePollData = functions.pubsub
           albumArchive = {
             albumName: album.albumName,
             albumId: album.albumId,
-            archiveCreatedAt: new Date(),
+            archiveCreatedAt: new Date().getTime(),
             archiveId: '',
           }
           console.log(albumArchive)

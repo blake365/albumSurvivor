@@ -10,9 +10,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import SubmitAlbum from '../components/admin/SubmitAlbum'
 import SubmitTrackToAlbum from '../components/admin/SubmitTrackToAlbum'
 import AlbumList from '../components/admin/AlbumList'
-import MessageSlot from '../components/MessageSlot'
+// import MessageSlot from '../components/MessageSlot'
 
 import { getAlbums } from '../redux/actions/dataActions'
+import SnackbarContainer from '../components/SnackbarContainer'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -45,9 +46,7 @@ class admin extends Component {
         </div>
       ) : (
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <MessageSlot page='admin' />
-          </Grid>
+          <SnackbarContainer />
           <Grid item sm={6} xs={12}>
             <AlbumList albums={albums} />
           </Grid>
