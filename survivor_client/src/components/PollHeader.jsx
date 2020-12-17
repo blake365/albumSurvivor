@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core'
 
 import Typography from '@material-ui/core/Typography'
+import Alert from '@material-ui/lab/Alert'
 
 // import { connect } from 'react-redux'
 
@@ -27,6 +28,7 @@ const styles = theme => ({
   coverContainer: {
     marginRight: 10,
     minWidth: '50%',
+    width: '50%',
   },
   content: {
     // display: 'inline-block',
@@ -35,25 +37,69 @@ const styles = theme => ({
   header: {
     width: '100%',
     textAlign: 'center',
-    color: theme.palette.primary.main,
   },
 })
 
 class PollHeader extends Component {
   render() {
-    const { classes, tracks, albumName, artist, albumArt } = this.props
+    const {
+      classes,
+      tracks,
+      album: { albumName, artist, albumArt, numTracks },
+    } = this.props
+
+    let firstRoundMarkup = tracks.length === numTracks && (
+      <Alert
+        elevation={1}
+        icon={false}
+        severity='info'
+        variant='filled'
+        style={{
+          fontSize: '1.3rem',
+          padding: '0px 10px 0px 10px',
+          justifyContent: 'center',
+        }}
+      >
+        Welcome to the first round!
+      </Alert>
+    )
 
     let finalRoundMarkup = tracks.length === 2 && (
-      <Typography variant='h3'>Final Round!</Typography>
+      <Alert
+        elevation={1}
+        icon={false}
+        severity='warning'
+        variant='filled'
+        style={{
+          fontSize: '1.3rem',
+          padding: '0px 10px 0px 10px',
+          justifyContent: 'center',
+        }}
+      >
+        Final Round!
+      </Alert>
     )
 
     let winnerMarkup = tracks.length === 1 && (
-      <Typography variant='h3'>{tracks[0].name} is the Winner!</Typography>
+      <Alert
+        elevation={1}
+        icon={false}
+        severity='success'
+        variant='filled'
+        style={{
+          fontSize: '1.3rem',
+          padding: '0px 10px 0px 10px',
+          justifyContent: 'center',
+        }}
+      >
+        {tracks[0].name} is the Winner!
+      </Alert>
     )
 
     return (
       <div>
         <div className={classes.header}>
+          {firstRoundMarkup}
           {finalRoundMarkup}
           {winnerMarkup}
         </div>

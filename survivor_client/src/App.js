@@ -27,7 +27,8 @@ import axios from 'axios'
 import AuthRoute2 from './util/AuthRoute2'
 import Footer from './components/layout/Footer'
 
-axios.defaults.baseURL = 'http://localhost:5001/albumsurvivor/us-central1/api'
+axios.defaults.baseURL =
+  'https://us-central1-albumsurvivor.cloudfunctions.net/api'
 
 const theme = createMuiTheme(themeFile)
 

@@ -193,12 +193,7 @@ class PollNew extends Component {
     return (
       <div>
         <Paper className={classes.PollBody} elevation={2}>
-          <PollHeader
-            tracks={tracks}
-            artist={album.artist}
-            albumName={album.albumName}
-            albumArt={album.albumArt}
-          />
+          <PollHeader tracks={tracks} album={album} />
           <FormControl disabled={this.state.disabled} fullWidth>
             {checkForWinner()}
             {checkForButton()}

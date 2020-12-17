@@ -48,6 +48,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5001/albumsurvivor/us-central1/api"
+  "proxy": "https://us-central1-albumsurvivor.cloudfunctions.net/api"
 
 }
