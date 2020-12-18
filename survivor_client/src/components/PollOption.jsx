@@ -29,7 +29,7 @@ const styles = theme => ({
     margin: 8,
     flexGrow: 1,
     overflow: 'wrap',
-    width: '70%',
+    width: '60%',
   },
   voteDisplay: {
     margin: 7,

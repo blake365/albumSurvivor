@@ -25,6 +25,8 @@ const {
   payRespects2,
   tallyVotesTest,
   anonVote,
+  roundWinnerTest,
+  roundEndedTest,
   // editTrackDetails,
 } = require('./handlers/albums')
 
@@ -117,6 +119,10 @@ app.delete(
   deleteCommentary
 )
 
+//TODO: round winner test route
+// app.get('/roundEnded', roundEndedTest)
+// app.get('/roundWinner', roundWinnerTest)
+
 // User routes
 app.post('/signup', signup)
 app.post('/login', login)
@@ -124,11 +130,94 @@ app.get('/user', FBAuth, getAuthenticatedUser)
 
 exports.api = functions.https.onRequest(app)
 
+//check for round ended
+exports.checkForRoundEnded = functions.pubsub
+  .schedule('59 18 * * *')
+  .timeZone('America/New_York')
+  .onRun(context => {
+    console.log('This will be run every day at 6:59PM Eastern!')
+    //get the active albums
+    db.collection('albums')
+      .where('activePoll', '==', true)
+      .get()
+      .then(data => {
+        //get the tracks from each album
+        data.forEach(album => {
+          db.collection(`albums/${album.data().albumId}/tracks`)
+            .where('alive', '==', true)
+            .get()
+            .then(query => {
+              if (query.docs.length === 0) {
+                let albumDocument = db.doc(`albums/${album.data().albumId}`)
+                return albumDocument.get().then(doc => {
+                  console.log(doc.data().albumName)
+                  return albumDocument.update({
+                    activePoll: false,
+                  })
+                })
+              } else {
+                return
+              }
+            })
+          console.log('complete')
+          return
+        })
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  })
+
+//check for final round
+exports.checkForRoundWinner = functions.pubsub
+  .schedule('5 19 * * *')
+  .timeZone('America/New_York')
+  .onRun(context => {
+    console.log('This will be run every day at 7:05PM Eastern!')
+    //get the active albums
+    db.collection('albums')
+      .where('activePoll', '==', true)
+      .get()
+      .then(data => {
+        //get the tracks from each album
+        data.forEach(album => {
+          db.collection(`albums/${album.data().albumId}/tracks`)
+            .where('alive', '==', true)
+            .get()
+            .then(query => {
+              if (query.docs.length === 1) {
+                let trackDocument = db.doc(
+                  `albums/${album.data().albumId}/tracks/${
+                    query.docs[0].data().trackId
+                  }`
+                )
+                let trackData = {}
+                return trackDocument.get().then(doc => {
+                  console.log(doc.data().name)
+                  trackData = doc.data()
+                  trackData.votes++
+                  console.log(trackData.votes)
+                  return trackDocument.update({
+                    votes: trackData.votes,
+                  })
+                })
+              } else {
+                return
+              }
+            })
+          return
+        })
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  })
+
 // updated vote tally function
 //vote tally
 // minutes, hours, day of month, month, day of week - '0 0 * * *' daily at midnight
 exports.tallyAllVotes = functions.pubsub
-  .schedule('0 19 * * *')
+  .schedule('1 19 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
     console.log('This will be run every day at 7PM Eastern!')
@@ -240,10 +329,10 @@ exports.tallyAllVotes = functions.pubsub
 
 //archive data before vote tally
 exports.archivePollData = functions.pubsub
-  .schedule('59 18 * * *')
+  .schedule('0 19 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
-    console.log('This will be run every day at 6:58PM Eastern!')
+    console.log('This will be run every day at 6:59PM Eastern!')
     //get albums to archive
     db.collection('albums')
       .where('activePoll', '==', true)

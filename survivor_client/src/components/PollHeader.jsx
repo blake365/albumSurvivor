@@ -5,6 +5,9 @@ import { withStyles } from '@material-ui/core'
 
 import Typography from '@material-ui/core/Typography'
 import Alert from '@material-ui/lab/Alert'
+import MusicNoteIcon from '@material-ui/icons/MusicNote'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 
 // import { connect } from 'react-redux'
 
@@ -12,13 +15,14 @@ const styles = theme => ({
   ...theme.spreadThis,
   card: {
     display: 'flex',
-    justifyContent: 'center',
+    margin: '8px 4px 8px 4px',
+
+    // justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 260,
+    maxHeight: 260,
   },
   cover: {
-    margin: 4,
     borderRadius: '1%',
     maxWidth: 250,
     width: '100%',
@@ -26,17 +30,33 @@ const styles = theme => ({
     border: '1px solid black',
   },
   coverContainer: {
-    marginRight: 10,
-    minWidth: '50%',
+    position: 'relative',
+    // marginRight: 10,
+    margin: 'auto',
     width: '50%',
+  },
+  titleAndArtist: {
+    width: '50%',
+    paddingLeft: 8,
   },
   content: {
     // display: 'inline-block',
     margin: '2px 4px 2px 4px',
   },
   header: {
-    width: '100%',
+    margin: 4,
     textAlign: 'center',
+  },
+  spotify: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    position: 'absolute',
+    bottom: '3%',
+    left: '2%',
+    '&:hover': {
+      backgroundColor: '#0069d9',
+      borderColor: '#0062cc',
+      boxShadow: 'none',
+    },
   },
 })
 
@@ -45,7 +65,7 @@ class PollHeader extends Component {
     const {
       classes,
       tracks,
-      album: { albumName, artist, albumArt, numTracks },
+      album: { albumName, artist, albumArt, numTracks, spotifyURI },
     } = this.props
 
     let firstRoundMarkup = tracks.length === numTracks && (
@@ -111,8 +131,20 @@ class PollHeader extends Component {
               src={albumArt}
               title={albumName}
             />
+            {spotifyURI ? (
+              <Tooltip title='Open in Spotify' placement='top'>
+                <IconButton
+                  className={classes.spotify}
+                  href={`https://open.spotify.com/album/${spotifyURI}`}
+                  target='_blank'
+                  color='primary'
+                >
+                  <MusicNoteIcon style={{ color: '#7FFF00' }} />
+                </IconButton>
+              </Tooltip>
+            ) : null}
           </div>
-          <div>
+          <div className={classes.titleAndArtist}>
             <Typography variant='h5' className={classes.content}>
               {albumName}
             </Typography>

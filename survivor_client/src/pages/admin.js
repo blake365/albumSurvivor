@@ -50,7 +50,7 @@ class admin extends Component {
           <Grid item sm={6} xs={12}>
             <AlbumList albums={albums} />
           </Grid>
-          <Grid item sm={5} xs={12}>
+          <Grid item sm={6} xs={12}>
             <SubmitAlbum />
             <br />
             <SubmitTrackToAlbum albums={albums} />

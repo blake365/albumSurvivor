@@ -42,6 +42,7 @@ class SubmitAlbum extends Component {
       genre: '',
       numTracks: '',
       releaseYear: '',
+      spotify: '',
       activePoll: false,
       errors: {},
     }
@@ -60,6 +61,7 @@ class SubmitAlbum extends Component {
       numTracks: this.state.numTracks,
       releaseYear: this.state.releaseYear,
       activePoll: this.state.activePoll,
+      spotifyURI: this.state.spotify,
     }
 
     if (this.state.albumName === '') {
@@ -132,6 +134,17 @@ class SubmitAlbum extends Component {
             helperText={errors.genre}
             error={errors.genre ? true : false}
             value={this.state.genre}
+            onChange={this.handleChange}
+          />
+          <TextField
+            id='spotify'
+            name='spotify'
+            type='text'
+            label='Spotify URI'
+            className={classes.textField}
+            helperText={errors.spotify}
+            error={errors.spotify ? true : false}
+            value={this.state.spotify}
             onChange={this.handleChange}
           />
           <TextField

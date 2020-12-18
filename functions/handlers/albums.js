@@ -105,10 +105,11 @@ exports.postNewAlbum = (req, res) => {
     albumName: req.body.albumName,
     artist: req.body.artist,
     genre: req.body.genre,
-    numTracks: req.body.numTracks,
+    numTracks: parseInt(req.body.numTracks),
     releaseYear: req.body.releaseYear,
     createdAt: new Date().toISOString(),
     activePoll: req.body.activePoll,
+    spotifyURI: req.body.spotifyURI,
     albumId: '',
   }
 
@@ -172,9 +173,10 @@ exports.editAlbumDetails = (req, res) => {
     albumName: req.body.albumName,
     artist: req.body.artist,
     genre: req.body.genre,
-    numTracks: req.body.numTracks,
+    numTracks: parseInt(req.body.numTracks),
     releaseYear: req.body.releaseYear,
     activePoll: req.body.activePoll,
+    spotifyURI: req.body.spotifyURI,
   }
 
   db.doc(`albums/${req.params.albumId}`)
@@ -328,10 +330,11 @@ exports.castVote2 = (req, res) => {
 
 exports.anonVote = (req, res) => {
   let limit
+  let IPaddress = req.body.IPaddress.slice(0, 10)
 
   console.log(req.body)
   const anonUser = {
-    IPaddress: req.body.IPaddress,
+    IPaddress: IPaddress,
     type: 'anon',
   }
 
@@ -358,11 +361,11 @@ exports.anonVote = (req, res) => {
       return limit
     })
     .then(limit => {
-      db.doc(`/users/${req.body.IPaddress}`)
+      db.doc(`/users/${IPaddress}`)
         .get()
         .then(doc => {
           if (doc.exists) {
-            db.collection(`users/${req.body.IPaddress}/votes`)
+            db.collection(`users/${IPaddress}/votes`)
               .orderBy('createdAt', 'desc')
               .limit(limit)
               .get()
@@ -383,7 +386,7 @@ exports.anonVote = (req, res) => {
                 if (votemap.includes(true)) {
                   return res.status(403).json({
                     error:
-                      'It appears you or someone with your IP address has already voted today. Make an account if this issue perists',
+                      'It appears you or someone with your IP address has already voted today. Make an account if this issue persist.',
                   })
                 } else {
                   const trackDocument = db.doc(
@@ -400,7 +403,7 @@ exports.anonVote = (req, res) => {
                       })
                     })
                     .then(() => {
-                      db.collection(`/users/${req.body.IPaddress}/votes`).add(
+                      db.collection(`/users/${IPaddress}/votes`).add(
                         voteDocument
                       )
                     })
@@ -416,12 +419,10 @@ exports.anonVote = (req, res) => {
                 res.status(500).json({ error: err.code })
               })
           } else {
-            db.doc(`/users/${req.body.IPaddress}`)
+            db.doc(`/users/${IPaddress}`)
               .set(anonUser)
               .then(() => {
-                return db
-                  .collection(`users/${req.body.IPaddress}/votes`)
-                  .add(dummyVote)
+                return db.collection(`users/${IPaddress}/votes`).add(dummyVote)
               })
               .then(() => {
                 const trackDocument = db.doc(
@@ -438,9 +439,7 @@ exports.anonVote = (req, res) => {
                     })
                   })
                   .then(() => {
-                    db.collection(`/users/${req.body.IPaddress}/votes`).add(
-                      voteDocument
-                    )
+                    db.collection(`/users/${IPaddress}/votes`).add(voteDocument)
                   })
                   .then(() => {
                     return res.status(200).json({
@@ -541,6 +540,74 @@ exports.uploadImage = (req, res) => {
       })
   })
   busboy.end(req.rawBody)
+}
+
+exports.roundEndedTest = (req, res) => {
+  db.collection('albums')
+    .where('activePoll', '==', true)
+    .get()
+    .then(data => {
+      //get the tracks from each album
+      data.forEach(album => {
+        db.collection(`albums/${album.data().albumId}/tracks`)
+          .where('alive', '==', true)
+          .get()
+          .then(query => {
+            if (query.docs.length === 0) {
+              let albumDocument = db.doc(`albums/${album.data().albumId}`)
+              return albumDocument.get().then(doc => {
+                console.log(doc.data().albumName)
+                return albumDocument.update({
+                  activePoll: false,
+                })
+              })
+            }
+          })
+        return res.json('complete')
+      })
+    })
+    .catch(err => {
+      console.error(err)
+      return res.json('error')
+    })
+}
+
+exports.roundWinnerTest = (req, res) => {
+  db.collection('albums')
+    .where('activePoll', '==', true)
+    .get()
+    .then(data => {
+      //get the tracks from each album
+      data.forEach(album => {
+        db.collection(`albums/${album.data().albumId}/tracks`)
+          .where('alive', '==', true)
+          .get()
+          .then(query => {
+            if (query.docs.length === 1) {
+              let trackDocument = db.doc(
+                `albums/${album.data().albumId}/tracks/${
+                  query.docs[0].data().trackId
+                }`
+              )
+              let trackData = {}
+              return trackDocument.get().then(doc => {
+                console.log(doc.data().name)
+                trackData = doc.data()
+                trackData.votes++
+                console.log(trackData.votes)
+                return trackDocument.update({
+                  votes: trackData.votes,
+                })
+              })
+            }
+            return res.json('completed')
+          })
+      })
+    })
+    .catch(err => {
+      console.error(err)
+      return res.json('error')
+    })
 }
 
 // exports.tallyVotesTest = (req, res) => {
