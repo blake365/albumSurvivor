@@ -52,6 +52,7 @@ class Profile extends Component {
             })
             .map((vote, index) => (
               <div
+                key={index}
                 style={{ display: 'flex', alignContent: 'center', margin: 3 }}
               >
                 <img

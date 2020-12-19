@@ -288,11 +288,9 @@ exports.castVote2 = (req, res) => {
           // console.log(votemap)
 
           if (votemap.includes(true)) {
-            return res
-              .status(403)
-              .json({
-                error: 'You have already voted today! Vote not counted.',
-              })
+            return res.status(403).json({
+              error: 'You have already voted today! Vote not counted.',
+            })
           } else {
             let trackData = {}
             const albumDocument = db.doc(`/albums/${req.params.albumId}`)
@@ -336,7 +334,15 @@ exports.castVote2 = (req, res) => {
 
 exports.anonVote = (req, res) => {
   let limit
-  let IPaddress = req.body.IPaddress.slice(0, 10)
+  let IPaddress
+  if (req.body.IPaddress !== '') {
+    IPaddress = req.body.IPaddress.slice(0, 10)
+  } else {
+    return res.json({
+      error:
+        'An error occurred, please try again. Make an account if this problem persists.',
+    })
+  }
 
   console.log(req.body)
   const anonUser = {
@@ -613,6 +619,61 @@ exports.roundWinnerTest = (req, res) => {
     .catch(err => {
       console.error(err)
       return res.json('error')
+    })
+}
+
+exports.deleteAlbum = (req, res) => {
+  const collection = db.collection(`albums/${req.params.albumId}/tracks`)
+  const albumDoc = db.doc(`albums/${req.params.albumId}`)
+  collection
+    .get()
+    .then(query => {
+      // console.log('deleting tracks')
+      query.docs.forEach(doc => {
+        return doc.ref.delete()
+      })
+    })
+    .then(() => {
+      albumDoc
+        .get()
+        .then(doc => {
+          // console.log('deleting album')
+          if (!doc.exists) {
+            return res.status(404).json({ error: 'Album not found' })
+          } else {
+            return albumDoc.delete()
+          }
+        })
+        .then(() => {
+          res.json({ message: 'Album deleted successfully' })
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({ error: err.code })
+    })
+}
+
+exports.deleteTrack = (req, res) => {
+  const document = db.doc(
+    `albums/${req.params.albumId}/tracks/${req.params.trackId}`
+  )
+
+  document
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'Track not found' })
+      } else {
+        return document.delete()
+      }
+    })
+    .then(() => {
+      res.json({ message: 'Track deleted successfully' })
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({ error: err.code })
     })
 }
 

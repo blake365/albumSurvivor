@@ -3,11 +3,7 @@ const config = require('../util/config')
 const firebase = require('firebase')
 firebase.initializeApp(config)
 
-const {
-  validateSignupData,
-  validateLoginData,
-  reduceUserDetails,
-} = require('../util/validators')
+const { validateSignupData, validateLoginData } = require('../util/validators')
 
 // signup
 exports.signup = (req, res) => {
@@ -15,7 +11,6 @@ exports.signup = (req, res) => {
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
-    userName: req.body.userName,
   }
 
   const dummyVote = {
@@ -49,7 +44,6 @@ exports.signup = (req, res) => {
     .then(idToken => {
       token = idToken
       const userCredentials = {
-        userName: newUser.userName,
         email: newUser.email,
         createdAt: new Date().toISOString(),
         userId: userId,
@@ -109,37 +103,37 @@ exports.login = (req, res) => {
 }
 
 //get any users details
-exports.getUserDetails = (req, res) => {
-  let userData = {}
-  db.doc(`/users/${req.params.userName}`)
-    .get()
-    .then(doc => {
-      if (doc.exists) {
-        userData.user = doc.data()
-        console.log(userData.user)
-        return db
-          .collection(`/users/${req.params.userName}/votes`)
-          .orderBy('createdAt', 'desc')
-          .get()
-      } else {
-        return res.status(404).json({ error: 'User not found' })
-      }
-    })
-    .then(data => {
-      userData.voteHistory = []
-      data.forEach(doc => {
-        userData.voteHistory.push({
-          createdAt: doc.data().createdAt,
-          trackId: doc.data().trackId,
-        })
-      })
-      return res.json(userData)
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(500).json({ error: err.code })
-    })
-}
+// exports.getUserDetails = (req, res) => {
+//   let userData = {}
+//   db.doc(`/users/${req.params.userName}`)
+//     .get()
+//     .then(doc => {
+//       if (doc.exists) {
+//         userData.user = doc.data()
+//         console.log(userData.user)
+//         return db
+//           .collection(`/users/${req.params.userName}/votes`)
+//           .orderBy('createdAt', 'desc')
+//           .get()
+//       } else {
+//         return res.status(404).json({ error: 'User not found' })
+//       }
+//     })
+//     .then(data => {
+//       userData.voteHistory = []
+//       data.forEach(doc => {
+//         userData.voteHistory.push({
+//           createdAt: doc.data().createdAt,
+//           trackId: doc.data().trackId,
+//         })
+//       })
+//       return res.json(userData)
+//     })
+//     .catch(err => {
+//       console.error(err)
+//       return res.status(500).json({ error: err.code })
+//     })
+// }
 
 // get own user details
 exports.getAuthenticatedUser = (req, res) => {
@@ -174,66 +168,3 @@ exports.getAuthenticatedUser = (req, res) => {
       return res.status(500).json({ error: err.code })
     })
 }
-
-exports.onGoogleSignIn = googleUser => {
-  console.log('Google Auth Response', googleUser)
-  // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-  // Build Firebase credential with the Google ID token.
-  var credential = firebase.auth.GoogleAuthProvider.credential(
-    googleUser.getAuthResponse().id_token
-  )
-  console.log(credential)
-  // Sign in with credential from the Google user.
-  firebase
-    .auth()
-    .signInWithCredential(credential)
-    .then(data => {
-      return data.user.getIdToken()
-    })
-    .then(token => {
-      return res.json({ token })
-    })
-    .catch(error => {
-      // Handle Errors here.
-      var errorCode = error.code
-      var errorMessage = error.message
-      // The email of the user's account used.
-      var email = error.email
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential
-      // ...
-    })
-}
-
-// correlate trackID with track name in user doc
-// const trackNameAssociater = trackId => {
-//   let trackData = {}
-//   let voteData = {}
-
-//   db.doc(`/tracks/${trackId}`)
-//     .get()
-//     .then(doc => {
-//       trackData = doc.data()
-//       trackData.name = doc.data().name
-//       console.log(trackData.name)
-//       return trackData
-//     })
-//   voteData.name = trackData.name
-//   console.log(voteData.name)
-//   return voteData.name
-// }
-
-// Add user details
-// exports.addUserDetails = (req, res) => {
-//   let userDetails = reduceUserDetails(req.body)
-
-//   db.doc(`/users/${req.user.handle}`)
-//     .update(userDetails)
-//     .then(() => {
-//       return res.json({ message: 'Details added successfully' })
-//     })
-//     .catch(err => {
-//       console.error(err)
-//       return res.status(500).json({ error: err.code })
-//     })
-// }

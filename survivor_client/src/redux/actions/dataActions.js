@@ -1,6 +1,5 @@
 import {
   SET_TRACKS,
-  SET_DEAD_TRACKS,
   POST_VOTE,
   POST_TRACK,
   LOADING_DATA,
@@ -32,12 +31,12 @@ const refreshAlbums = () => dispatch => {
 export const getIP = () => dispatch => {
   fetch('https://api.ipify.org/?format=json')
     .then(results => results.json())
-    .then(data =>
+    .then(data => {
       dispatch({
         type: SET_IP,
         payload: data.ip,
       })
-    )
+    })
     .catch(err => {
       dispatch({
         type: SET_ERRORS,
@@ -141,30 +140,30 @@ export const getAlbum = albumId => dispatch => {
     })
 }
 
-export const postVote = trackId => dispatch => {
-  dispatch({ type: LOADING_UI })
-  axios
-    .post(`/tracks/${trackId}/vote`)
-    .then(res => {
-      dispatch({
-        type: POST_VOTE,
-        payload: res.data,
-      })
-      dispatch({
-        type: SET_MESSAGE,
-        payload: res.data,
-      })
-      dispatch(clearErrors())
-      dispatch(getUserData())
-      dispatch(getTracks())
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
-      })
-    })
-}
+// export const postVote = trackId => dispatch => {
+//   dispatch({ type: LOADING_UI })
+//   axios
+//     .post(`/tracks/${trackId}/vote`)
+//     .then(res => {
+//       dispatch({
+//         type: POST_VOTE,
+//         payload: res.data,
+//       })
+//       dispatch({
+//         type: SET_MESSAGE,
+//         payload: res.data,
+//       })
+//       dispatch(clearErrors())
+//       dispatch(getUserData())
+//       dispatch(getTracks())
+//     })
+//     .catch(err => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: err.response.data,
+//       })
+//     })
+// }
 
 export const postVote2 = (albumId, trackId) => dispatch => {
   dispatch({ type: LOADING_UI })
@@ -219,23 +218,23 @@ export const anonVote = (albumId, trackId, IPaddress) => dispatch => {
     })
 }
 
-export const getGraveyardTracks = () => dispatch => {
-  dispatch({ type: LOADING_DATA })
-  axios
-    .get('/tracks/dead')
-    .then(res => {
-      dispatch({
-        type: SET_DEAD_TRACKS,
-        payload: res.data,
-      })
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: [],
-      })
-    })
-}
+// export const getGraveyardTracks = () => dispatch => {
+//   dispatch({ type: LOADING_DATA })
+//   axios
+//     .get('/tracks/dead')
+//     .then(res => {
+//       dispatch({
+//         type: SET_DEAD_TRACKS,
+//         payload: res.data,
+//       })
+//     })
+//     .catch(err => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: [],
+//       })
+//     })
+// }
 
 export const payRespects = (albumId, trackId) => dispatch => {
   axios
@@ -448,6 +447,32 @@ export const uploadImage = (albumId, formData) => dispatch => {
     .post(`/albums/${albumId}/art`, formData)
     .then(() => {
       dispatch(getAlbums())
+    })
+    .catch(err => console.log(err))
+}
+
+export const deleteTrack = (albumId, trackId) => dispatch => {
+  axios
+    .delete(`/albums/${albumId}/tracks/${trackId}`)
+    .then(res => {
+      dispatch(getAlbum(albumId))
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
+    })
+    .catch(err => console.log(err))
+}
+
+export const deleteAlbum = albumId => dispatch => {
+  axios
+    .delete(`/albums/${albumId}`)
+    .then(res => {
+      dispatch(getAlbums())
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
     })
     .catch(err => console.log(err))
 }

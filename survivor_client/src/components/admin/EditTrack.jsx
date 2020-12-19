@@ -122,7 +122,9 @@ class EditTrack extends Component {
               onChange={this.handleChange}
             >
               {tracks.map(track => (
-                <MenuItem value={track.trackId}>{track.name}</MenuItem>
+                <MenuItem value={track.trackId} key={track.trackId}>
+                  {track.name}
+                </MenuItem>
               ))}
             </Select>
           </div>

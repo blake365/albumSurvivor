@@ -25,6 +25,8 @@ const {
   payRespects2,
   // tallyVotesTest,
   anonVote,
+  deleteAlbum,
+  deleteTrack,
   // roundWinnerTest,
   // roundEndedTest,
   // editTrackDetails,
@@ -85,7 +87,14 @@ app.put(
   checkAdminStatus,
   editTrackDetails
 )
-//TODO: delete routes for albums and tracks
+// delete routes for albums and tracks
+app.delete('/albums/:albumId', FBAuth, checkAdminStatus, deleteAlbum)
+app.delete(
+  '/albums/:albumId/tracks/:trackId',
+  FBAuth,
+  checkAdminStatus,
+  deleteTrack
+)
 
 // vote and like functions for tracks nested in albums
 app.post('/albums/:albumId/tracks/:trackId/anonVote', anonVote)
@@ -113,6 +122,7 @@ app.get('/user', FBAuth, getAuthenticatedUser)
 
 exports.api = functions.https.onRequest(app)
 
+//Scheduled functions
 //check for round ended
 exports.checkForRoundEnded = functions.pubsub
   .schedule('59 18 * * *')

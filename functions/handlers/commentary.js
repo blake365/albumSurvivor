@@ -57,7 +57,6 @@ exports.getCommentary = (req, res) => {
 
 exports.deleteCommentary = (req, res) => {
   const document = db.doc(`/commentary/${req.params.commentaryId}`)
-
   document
     .get()
     .then(doc => {
