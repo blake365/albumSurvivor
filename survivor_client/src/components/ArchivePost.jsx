@@ -71,14 +71,21 @@ class ArchivePost extends Component {
     totalVotesCalc()
 
     let markup = !loading ? (
-      tracks.map(track => (
-        <div key={track.trackId}>
-          <Typography variant='body1'>
-            {track.trackListing}. {track.name}: <strong>{track.votes}</strong>{' '}
-            votes
-          </Typography>
-        </div>
-      ))
+      tracks.length === 1 ? (
+        <Typography variant='body1'>
+          {tracks[0].trackListing}. {tracks[0].name}:{' '}
+          <strong style={{ color: 'green' }}>Winner!</strong> votes
+        </Typography>
+      ) : (
+        tracks.map(track => (
+          <div key={track.trackId}>
+            <Typography variant='body1'>
+              {track.trackListing}. {track.name}: <strong>{track.votes}</strong>{' '}
+              votes
+            </Typography>
+          </div>
+        ))
+      )
     ) : (
       <div className={classes.spinnerDiv}>
         <CircularProgress size={20} thickness={2} />

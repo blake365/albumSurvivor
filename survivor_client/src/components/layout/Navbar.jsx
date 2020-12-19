@@ -27,6 +27,15 @@ const styles = theme => ({
       marginLeft: 0,
     },
   },
+  toolbar: {
+    '@media (max-width: 600px)': {
+      paddingLeft: 4,
+    },
+    '@media (min-width: 600px)': {
+      paddingLeft: 20,
+      paddingRight: 20,
+    },
+  },
 })
 
 export class Navbar extends Component {
@@ -38,7 +47,7 @@ export class Navbar extends Component {
     const { classes, authenticated } = this.props
     return (
       <AppBar position='absolute'>
-        <Toolbar className=''>
+        <Toolbar className={classes.toolbar} disableGutters>
           <div className={classes.title}>
             <Link to='/'>
               <AlbumIcon fontSize='large' style={{ color: '#fff' }} />
@@ -57,7 +66,7 @@ export class Navbar extends Component {
                 component={Link}
                 to='/archive'
               >
-                Archives
+                Archive
               </Button>
               <ProfilePopper />
             </Fragment>
@@ -70,7 +79,7 @@ export class Navbar extends Component {
                 to='/archive'
                 style={{ textAlign: 'center' }}
               >
-                Archives
+                Archive
               </Button>
               <Button
                 color='inherit'

@@ -24,7 +24,7 @@ class Hero extends Component {
           Each day the song with the most votes is eliminated until only the
           best song is left standing. You may vote one time per day and the day
           will reset at <strong>7PM EST</strong>. Make an account to save your
-          vote history and pay respects to eliminated songs.
+          vote history.
         </Typography>
         {/** <Button variant='contained' color='primary'>
           <strong>Blog</strong>

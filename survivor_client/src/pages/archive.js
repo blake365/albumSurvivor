@@ -21,8 +21,13 @@ export class archive extends Component {
     return (
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Typography variant='h3' className={classes.hero}>
-            Archive of Votes
+          <Typography
+            variant='h3'
+            className={classes.hero}
+            align='center'
+            color='primary'
+          >
+            Vote Archive
           </Typography>
         </Grid>
         <Grid item sm={12} xs={12}>

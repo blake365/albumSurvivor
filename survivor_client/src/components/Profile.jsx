@@ -15,7 +15,7 @@ const styles = theme => ({
   ...theme.spreadThis,
   profileBody: {
     position: 'relative',
-    padding: 20,
+    padding: 10,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -41,17 +41,29 @@ class Profile extends Component {
       user: { voteHistory, credentials },
     } = this.props
 
-    let voteHistoryMarkup = voteHistory
-      .filter(vote => {
-        if ((vote.voteDay = 0)) {
-          return false
-        } else return true
-      })
-      .map((vote, index) => (
-        <Typography variant='h6' key={index}>
-          {vote.name}
-        </Typography>
-      ))
+    let voteHistoryMarkup =
+      voteHistory.length <= 1
+        ? 'Go cast your first vote!'
+        : voteHistory
+            .filter(vote => {
+              if (vote.trackId === 123) {
+                return false
+              } else return true
+            })
+            .map((vote, index) => (
+              <div
+                style={{ display: 'flex', alignContent: 'center', margin: 3 }}
+              >
+                <img
+                  alt='album art'
+                  src={vote.albumArt}
+                  style={{ height: 40, width: 40, marginRight: 5 }}
+                />
+                <Typography style={{ lineHeight: '40px' }} key={index}>
+                  {vote.name}
+                </Typography>
+              </div>
+            ))
 
     return (
       <Paper className={classes.profileBody} elevation={5}>
@@ -75,7 +87,9 @@ class Profile extends Component {
         >
           Log Out
         </Button>
-        <Typography variant='h5'>Vote History: </Typography>
+        <Typography variant='h5' align='center'>
+          Vote History
+        </Typography>
         <Typography variant='body2'></Typography>
         {voteHistoryMarkup}
       </Paper>

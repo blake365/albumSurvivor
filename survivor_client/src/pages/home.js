@@ -7,6 +7,7 @@ import Hero from '../components/Hero'
 import SnackbarContainer from '../components/SnackbarContainer'
 
 import PollWrapper from '../components/PollWrapper'
+import Commentary from '../components/Commentary'
 
 import { getIP } from '../redux/actions/dataActions'
 
@@ -28,6 +29,9 @@ export class home extends Component {
         <SnackbarContainer />
         <Grid item xs={12}>
           <Hero />
+        </Grid>
+        <Grid item xs={12}>
+          <Commentary />
         </Grid>
         <Grid item sm={12} xs={12}>
           <PollWrapper />

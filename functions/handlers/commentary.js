@@ -1,36 +1,28 @@
 const { user } = require('firebase-functions/lib/providers/auth')
 const { db } = require('../util/admin')
 
-exports.getAllCommentary = (req, res) => {
+exports.getLatestCommentary = (req, res) => {
   db.collection('commentary')
     .orderBy('createdAt', 'desc')
+    .limit(1)
     .get()
     .then(data => {
-      let commentaries = []
-      data.forEach(doc => {
-        commentaries.push({
-          commentaryId: doc.id,
-          title: doc.data().title,
-          body: doc.data().body,
-          userName: doc.data().userName,
-          createdAt: doc.data().createdAt,
-        })
-      })
-      return res.json(commentaries)
+      let commentary = {}
+      commentary = data.docs[0].data()
+      return res.json(commentary)
     })
     .catch(err => console.error(err))
 }
 
 exports.postCommentary = (req, res) => {
   if (req.body.body.trim() === '') {
-    return res.status(400).json({ body: 'Body must not be empty' })
+    return res.status(400).json({ error: 'Body must not be empty' })
   }
 
   const newCommentary = {
-    title: req.body.title,
     body: req.body.body,
     userName: req.user.userName,
-    createdAt: new Date().toDateString(),
+    createdAt: new Date(),
   }
 
   db.collection('commentary')
@@ -38,7 +30,7 @@ exports.postCommentary = (req, res) => {
     .then(doc => {
       const resCommentary = newCommentary
       resCommentary.commentaryId = doc.id
-      return res.json(resCommentary)
+      return res.status(200).json({ message: 'Text Updated' })
     })
     .catch(err => {
       return res.status(500).json({ error: 'something went wrong' })
@@ -51,7 +43,7 @@ exports.getCommentary = (req, res) => {
     .get()
     .then(doc => {
       if (!doc.exists) {
-        return res.status(404).json({ error: 'Scream not found' })
+        return res.status(404).json({ error: 'Commentary not found' })
       }
       commentaryData = doc.data()
       commentaryData.commentaryId = doc.id

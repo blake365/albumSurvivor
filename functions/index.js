@@ -1,15 +1,15 @@
 const functions = require('firebase-functions')
 const cors = require('cors')
 
-const {
-  getAliveTracks,
-  getDeadTracks,
-  castVote,
-  payRespects,
-  postNewTrack,
-  // tallyAllVotes,
-  // tallyVotesTest,
-} = require('./handlers/tracks')
+// const {
+//   getAliveTracks,
+//   getDeadTracks,
+//   castVote,
+//   payRespects,
+//   postNewTrack,
+//   // tallyAllVotes,
+//   // tallyVotesTest,
+// } = require('./handlers/tracks')
 
 const {
   getAllAlbums,
@@ -23,35 +23,22 @@ const {
   editTrackDetails,
   castVote2,
   payRespects2,
-  tallyVotesTest,
+  // tallyVotesTest,
   anonVote,
-  roundWinnerTest,
-  roundEndedTest,
+  // roundWinnerTest,
+  // roundEndedTest,
   // editTrackDetails,
 } = require('./handlers/albums')
 
 const {
   getArchives,
   getOneArchiveEntry,
-  archiveTest,
-  loadMoreArchives,
+  // archiveTest,
 } = require('./handlers/archives')
 
-const {
-  getAllCommentary,
-  postCommentary,
-  getCommentary,
-  deleteCommentary,
-} = require('./handlers/commentary')
+const { getLatestCommentary, postCommentary } = require('./handlers/commentary')
 
-const {
-  signup,
-  login,
-  // addUserDetails,
-  getAuthenticatedUser,
-  onGoogleSignIn,
-  // getUserDetails,
-} = require('./handlers/users')
+const { signup, login, getAuthenticatedUser } = require('./handlers/users')
 
 const express = require('express')
 const app = express()
@@ -63,21 +50,19 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
-// tracks routes
-app.get('/tracks', getAliveTracks)
-app.post('/track', FBAuth, checkAdminStatus, postNewTrack)
-app.get('/tracks/dead', getDeadTracks)
-app.post('/tracks/:trackId/vote', FBAuth, castVote)
-app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
+// OLD tracks routes
+// app.get('/tracks', getAliveTracks)
+// app.post('/track', FBAuth, checkAdminStatus, postNewTrack)
+// app.get('/tracks/dead', getDeadTracks)
+// app.post('/tracks/:trackId/vote', FBAuth, castVote)
+// app.get('/tracks/:trackId/payrespects', FBAuth, payRespects)
 
-//FIXME: vote tally test
+// vote tally test
 // app.get('/albums/tally', tallyVotesTest)
 
 //archive routes
 app.post('/archives', getArchives)
-// app.get('/archives/archive', archiveTest)
 app.get('/archives/:archiveId', getOneArchiveEntry)
-// app.get('/archives/more', loadMoreArchives)
 
 //album routes
 app.get('/albums', getAllAlbums)
@@ -93,33 +78,31 @@ app.post(
   postNewTrackToAlbum
 )
 app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails)
-//TODO: put route for editing track data
+//put route for editing track data
 app.put(
   '/albums/:albumId/tracks/:trackId',
   FBAuth,
   checkAdminStatus,
   editTrackDetails
 )
+//TODO: delete routes for albums and tracks
 
-//make vote and like functions for tracks nested in albums
+// vote and like functions for tracks nested in albums
 app.post('/albums/:albumId/tracks/:trackId/anonVote', anonVote)
 app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2)
 app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2)
 
-//commentary
-// TODO: edit commentary route and handler
-app.get('/commentary', getAllCommentary)
+//commentary aka 'what's happening' text
+app.get('/commentary', getLatestCommentary)
 app.post('/commentary', FBAuth, checkAdminStatus, postCommentary)
-// app.get('/commentary/:commentaryId', getCommentary) -- may not use this
-// TODO: add ui for commentary deletion
-app.delete(
-  '/commentary/:commentaryId',
-  FBAuth,
-  checkAdminStatus,
-  deleteCommentary
-)
+// app.delete(
+//   '/commentary/:commentaryId',
+//   FBAuth,
+//   checkAdminStatus,
+//   deleteCommentary
+// )
 
-//TODO: round winner test route
+// round ending and winner test routes
 // app.get('/roundEnded', roundEndedTest)
 // app.get('/roundWinner', roundWinnerTest)
 

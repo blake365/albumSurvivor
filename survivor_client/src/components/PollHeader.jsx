@@ -80,7 +80,7 @@ class PollHeader extends Component {
           justifyContent: 'center',
         }}
       >
-        Welcome to the first round!
+        First Round!
       </Alert>
     )
 

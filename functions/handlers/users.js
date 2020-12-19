@@ -164,6 +164,7 @@ exports.getAuthenticatedUser = (req, res) => {
           createdAt: doc.data().createdAt,
           trackId: doc.data().trackId,
           name: doc.data().name,
+          albumArt: doc.data().albumArt,
         })
       })
       return res.json(userData)

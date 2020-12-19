@@ -84,7 +84,9 @@ class GraveyardNew extends Component {
                     </TableCell>
                     <TableCell className={classes.body}>{row.name}</TableCell>
                     <TableCell align='center' className={classes.body}>
-                      {row.votes}
+                      {aliveTracks.length === 0 && index === 0
+                        ? 'Winner'
+                        : row.votes}
                     </TableCell>
                     <TableCell align='center' className={classes.body}>
                       {((row.votes / row.roundVoteTotal) * 100).toFixed(0)}%

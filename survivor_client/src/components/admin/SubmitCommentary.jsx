@@ -39,7 +39,6 @@ class SubmitTrack extends Component {
     super()
     this.state = {
       body: '',
-      title: '',
       errors: {},
     }
   }
@@ -48,16 +47,15 @@ class SubmitTrack extends Component {
     event.preventDefault()
     const newCommentaryData = {
       body: this.state.body,
-      title: this.state.title,
     }
     this.props.postNewCommentary(newCommentaryData)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors })
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.UI.errors) {
+  //     this.setState({ errors: nextProps.UI.errors })
+  //   }
+  // }
 
   handleChange = event => {
     this.setState({
@@ -75,20 +73,9 @@ class SubmitTrack extends Component {
     return (
       <Paper className={(classes.formContainer, classes.form)}>
         <Typography variant='h5' className={classes.pageTitle}>
-          Add New Commentary
+          Update 'What's Happening' Text
         </Typography>
         <form noValidate onSubmit={this.handleSubmit}>
-          <TextField
-            id='title'
-            name='title'
-            type='text'
-            label='Title'
-            className={classes.textField}
-            helperText={errors.title}
-            error={errors.title ? true : false}
-            value={this.state.title}
-            onChange={this.handleChange}
-          />
           <TextField
             id='body'
             name='body'

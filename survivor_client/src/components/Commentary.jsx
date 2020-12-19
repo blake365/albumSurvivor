@@ -5,21 +5,16 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { connect } from 'react-redux'
 
 import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
+import Paper from '@material-ui/core/Paper'
 
 import { getCommentary } from '../redux/actions/dataActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
-  profileBody: {
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
+
   card: {
-    marginBottom: 8,
+    padding: '5px 15px 5px 15px',
+    background: 'inherit',
   },
 })
 
@@ -34,18 +29,14 @@ class Commentary extends Component {
       data: { commentary },
     } = this.props
 
-    let commentaryMarkup = commentary.map((item, index) => (
-      <Card key={index} className={classes.card}>
-        <CardContent>
-          <Typography variant='overline'>{item.createdAt}</Typography>
-          <Typography variant='h5'>{item.title}</Typography>
-          <Typography variant='subtitle2'>{item.userName}</Typography>
-          <Typography variant='body1'>{item.body}</Typography>
-        </CardContent>
-      </Card>
-    ))
-
-    return <div className={classes.profileBody}>{commentaryMarkup}</div>
+    return (
+      <Paper className={classes.card} elevation={0}>
+        <Typography variant='h5' color='primary'>
+          What's Happening
+        </Typography>
+        <Typography variant='body1'>{commentary.body}</Typography>
+      </Paper>
+    )
   }
 }
 

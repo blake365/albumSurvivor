@@ -258,7 +258,7 @@ exports.castVote2 = (req, res) => {
   }
 
   let todayDate = new Date().getDate()
-  // TODO: limit should equal number of active polls
+  // limit should equal number of active polls
   db.collection('albums')
     .where('activePoll', '==', true)
     .get()
@@ -290,12 +290,18 @@ exports.castVote2 = (req, res) => {
           if (votemap.includes(true)) {
             return res
               .status(403)
-              .json({ error: 'You have already voted today!' })
+              .json({
+                error: 'You have already voted today! Vote not counted.',
+              })
           } else {
+            let trackData = {}
+            const albumDocument = db.doc(`/albums/${req.params.albumId}`)
+            albumDocument.get().then(doc => {
+              voteDocument.albumArt = doc.data().albumArt
+            })
             const trackDocument = db.doc(
               `/albums/${req.params.albumId}/tracks/${req.params.trackId}`
             )
-            let trackData = {}
             return trackDocument
               .get()
               .then(doc => {

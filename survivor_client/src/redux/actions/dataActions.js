@@ -181,7 +181,7 @@ export const postVote2 = (albumId, trackId) => dispatch => {
       })
       dispatch(clearErrors())
       dispatch(getUserData())
-      dispatch(getActiveAlbums())
+      // dispatch(getActiveAlbums())
     })
     .catch(err => {
       dispatch({
@@ -209,7 +209,7 @@ export const anonVote = (albumId, trackId, IPaddress) => dispatch => {
         payload: res.data,
       })
       dispatch(clearErrors())
-      dispatch(getActiveAlbums())
+      // dispatch(getActiveAlbums())
     })
     .catch(err => {
       dispatch({
@@ -254,6 +254,10 @@ export const postNewTrack = newTrackData => dispatch => {
     .then(res => {
       dispatch({
         type: POST_TRACK,
+        payload: res.data,
+      })
+      dispatch({
+        type: SET_MESSAGE,
         payload: res.data,
       })
       dispatch(clearErrors())
@@ -370,6 +374,10 @@ export const postNewCommentary = newCommentaryData => dispatch => {
         type: POST_COMMENTARY,
         payload: res.data,
       })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
       dispatch(clearErrors())
     })
     .catch(err => {
@@ -382,7 +390,6 @@ export const postNewCommentary = newCommentaryData => dispatch => {
 
 export const getArchives = start => dispatch => {
   dispatch({ type: LOADING_DATA })
-  console.log(start)
   axios
     .post('/archives', start)
     .then(res => {

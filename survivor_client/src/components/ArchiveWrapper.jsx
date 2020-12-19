@@ -28,6 +28,7 @@ class ArchiveWrapper extends Component {
     this.state = {
       start: 0,
       direction: '',
+      showAll: false,
     }
   }
 
@@ -44,6 +45,7 @@ class ArchiveWrapper extends Component {
       direction: 'all',
     }
     this.props.getArchives(start)
+    this.setState({ showAll: true })
   }
 
   render() {
@@ -67,6 +69,7 @@ class ArchiveWrapper extends Component {
             variant='contained'
             size='large'
             color='primary'
+            disabled={this.state.showAll}
           >
             Show All
           </Button>
