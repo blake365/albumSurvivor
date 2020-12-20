@@ -566,24 +566,69 @@ exports.uploadImage = (req, res) => {
 //           .get()
 //           .then(query => {
 //             if (query.docs.length === 0) {
-//               let albumDocument = db.doc(`albums/${album.data().albumId}`)
-//               return albumDocument.get().then(doc => {
-//                 console.log(doc.data().albumName)
-//                 return albumDocument.update({
-//                   activePoll: false,
+//               //archive tracks since poll is over
+//               let finalArchive = {
+//                 albumName: album.data().albumName,
+//                 albumId: album.data().albumId,
+//                 artist: album.data().artist,
+//                 albumArt: album.data().albumArt,
+//                 spotifyURI: album.data().spotifyURI,
+//                 releaseYear: album.data().releaseYear,
+//                 numTracks: album.data().numTracks,
+//                 genre: album.data().genre,
+//                 createdAt: new Date().getTime(),
+//                 finalArchiveId: '',
+//               }
+
+//               db.collection('finalResults')
+//                 .add(finalArchive)
+//                 .then(doc => {
+//                   let finalArchiveId = doc.id
+//                   doc.update({
+//                     finalArchiveId: doc.id,
+//                   })
+//                   return finalArchiveId
 //                 })
-//               })
+//                 .then(finalArchiveId => {
+//                   db.collection(`albums/${album.data().albumId}/tracks`)
+//                     .orderBy('trackListing')
+//                     .get()
+//                     .then(data => {
+//                       data.forEach(doc => {
+//                         archiveTrack = {
+//                           name: doc.data().name,
+//                           trackId: doc.data().trackId,
+//                           trackListing: doc.data().trackListing,
+//                           voteOutDay: doc.data().voteOutDay,
+//                         }
+//                         db.collection(
+//                           `finalResults/${finalArchiveId}/tracks`
+//                         ).add(archiveTrack)
+//                       })
+//                     })
+//                     .then(() => {
+//                       // set poll to inactive
+//                       let albumDocument = db.doc(
+//                         `albums/${album.data().albumId}`
+//                       )
+//                       albumDocument.get().then(doc => {
+//                         return albumDocument.update({
+//                           activePoll: false,
+//                         })
+//                       })
+//                     })
+//                 })
+//             } else {
+//               return
 //             }
 //           })
-//         return res.json('complete')
 //       })
+//       return res.json('made it to the end')
 //     })
 //     .catch(err => {
 //       console.error(err)
-//       return res.json('error')
 //     })
 // }
-
 // exports.roundWinnerTest = (req, res) => {
 //   db.collection('albums')
 //     .where('activePoll', '==', true)

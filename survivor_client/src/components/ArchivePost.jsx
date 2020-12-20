@@ -111,7 +111,7 @@ class ArchivePost extends Component {
                 track.votes === mostVotes
                   ? { color: 'red' }
                   : track.votes === leastVotes
-                  ? { color: '#0d47a1' }
+                  ? { color: '#4caf50' }
                   : null
               }
             >
