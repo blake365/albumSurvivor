@@ -8,7 +8,6 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Chip from '@material-ui/core/Chip'
 
 // import LikeButton from './LikeButton'
 
@@ -28,7 +27,9 @@ const styles = theme => ({
     padding: 4,
   },
   tableContainer: {
-    padding: '10px 0 10px 0',
+    padding: '0 0 6px 0',
+    background:
+      'linear-gradient(0deg, rgba(21,101,192,1) 6px, rgba(255,255,255,1) 6px)',
   },
   winnerDisplay: {
     margin: 2,
@@ -42,11 +43,15 @@ class GraveyardNew extends Component {
 
     return (
       <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table aria-label='graveyard table' size='small'>
+        <Table
+          aria-label='graveyard table'
+          size='small'
+          style={{ background: '#fff' }}
+        >
           <TableHead>
             <TableRow>
               <TableCell align='center' className={classes.title} colSpan={4}>
-                Graveyard
+                Results
               </TableCell>
             </TableRow>
             <TableRow>
@@ -73,10 +78,17 @@ class GraveyardNew extends Component {
               deadTracks
                 .sort(function (a, b) {
                   // console.log(a.voteOutDay._seconds)
-                  return b.voteOutDay._seconds - a.voteOutDay._seconds
+                  return b.voteOutDay - a.voteOutDay
                 })
                 .map((row, index) => (
-                  <TableRow key={row.name}>
+                  <TableRow
+                    key={row.name}
+                    style={
+                      aliveTracks.length === 0 && index === 0
+                        ? { background: '#81d4fa' }
+                        : null
+                    }
+                  >
                     <TableCell
                       component='th'
                       scope='row'
@@ -90,15 +102,7 @@ class GraveyardNew extends Component {
                     </TableCell>
                     <TableCell className={classes.body}>{row.name}</TableCell>
                     <TableCell align='center' className={classes.body}>
-                      {aliveTracks.length === 0 && index === 0 ? (
-                        <Chip
-                          label='WINNER'
-                          color='primary'
-                          className={classes.winnerDisplay}
-                        />
-                      ) : (
-                        row.votes
-                      )}
+                      {row.votes}
                     </TableCell>
                     <TableCell align='center' className={classes.body}>
                       {((row.votes / row.roundVoteTotal) * 100).toFixed(0)}%

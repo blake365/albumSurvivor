@@ -22,7 +22,7 @@ const {
   editAlbumDetails,
   editTrackDetails,
   castVote2,
-  payRespects2,
+  // payRespects2,
   // tallyVotesTest,
   anonVote,
   deleteAlbum,
@@ -63,47 +63,48 @@ app.use(cors())
 // app.get('/albums/tally', tallyVotesTest)
 
 //archive routes
-app.post('/archives', getArchives)
-app.get('/archives/:archiveId', getOneArchiveEntry)
+app.post('/archives', getArchives) // ok
+app.get('/archives/:archiveId', getOneArchiveEntry) // ok
+// app.get('/archivetest', archiveTest)
 
 //album routes
-app.get('/albums', getAllAlbums)
-app.post('/albums/:albumId/art', FBAuth, uploadImage)
-app.get('/albums/active', getActiveAlbums)
-app.get('/albums/:albumId', getOneAlbum)
-app.get('/albums/:albumId/tracks', getOneAlbumsTracks)
-app.post('/albums', FBAuth, checkAdminStatus, postNewAlbum)
+app.get('/albums', getAllAlbums) //ok
+app.post('/albums/:albumId/art', FBAuth, uploadImage) // ok
+app.get('/albums/active', getActiveAlbums) //ok
+app.get('/albums/:albumId', getOneAlbum) //ok
+app.get('/albums/:albumId/tracks', getOneAlbumsTracks) // used in poll test
+app.post('/albums', FBAuth, checkAdminStatus, postNewAlbum) //ok
 app.post(
   '/albums/:albumId/tracks',
   FBAuth,
   checkAdminStatus,
   postNewTrackToAlbum
-)
-app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails)
+) //ok
+app.put('/albums/:albumId', FBAuth, checkAdminStatus, editAlbumDetails) //ok
 //put route for editing track data
 app.put(
   '/albums/:albumId/tracks/:trackId',
   FBAuth,
   checkAdminStatus,
   editTrackDetails
-)
+) //ok
 // delete routes for albums and tracks
-app.delete('/albums/:albumId', FBAuth, checkAdminStatus, deleteAlbum)
+app.delete('/albums/:albumId', FBAuth, checkAdminStatus, deleteAlbum) //ok
 app.delete(
   '/albums/:albumId/tracks/:trackId',
   FBAuth,
   checkAdminStatus,
   deleteTrack
-)
+) //ok
 
 // vote and like functions for tracks nested in albums
-app.post('/albums/:albumId/tracks/:trackId/anonVote', anonVote)
-app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2)
-app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2)
+app.post('/albums/:albumId/tracks/:trackId/anonVote', anonVote) // ok
+app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2) //ok
+// app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2) not used
 
 //commentary aka 'what's happening' text
 app.get('/commentary', getLatestCommentary)
-app.post('/commentary', FBAuth, checkAdminStatus, postCommentary)
+app.post('/commentary', FBAuth, checkAdminStatus, postCommentary) //ok
 // app.delete(
 //   '/commentary/:commentaryId',
 //   FBAuth,
@@ -142,8 +143,7 @@ exports.checkForRoundEnded = functions.pubsub
             .then(query => {
               if (query.docs.length === 0) {
                 let albumDocument = db.doc(`albums/${album.data().albumId}`)
-                return albumDocument.get().then(doc => {
-                  console.log(doc.data().albumName)
+                albumDocument.get().then(doc => {
                   return albumDocument.update({
                     activePoll: false,
                   })
@@ -152,7 +152,6 @@ exports.checkForRoundEnded = functions.pubsub
                 return
               }
             })
-          console.log('complete')
           return
         })
       })
@@ -162,49 +161,49 @@ exports.checkForRoundEnded = functions.pubsub
   })
 
 //check for final round
-exports.checkForRoundWinner = functions.pubsub
-  .schedule('5 19 * * *')
-  .timeZone('America/New_York')
-  .onRun(context => {
-    console.log('This will be run every day at 7:05PM Eastern!')
-    //get the active albums
-    db.collection('albums')
-      .where('activePoll', '==', true)
-      .get()
-      .then(data => {
-        //get the tracks from each album
-        data.forEach(album => {
-          db.collection(`albums/${album.data().albumId}/tracks`)
-            .where('alive', '==', true)
-            .get()
-            .then(query => {
-              if (query.docs.length === 1) {
-                let trackDocument = db.doc(
-                  `albums/${album.data().albumId}/tracks/${
-                    query.docs[0].data().trackId
-                  }`
-                )
-                let trackData = {}
-                return trackDocument.get().then(doc => {
-                  console.log(doc.data().name)
-                  trackData = doc.data()
-                  trackData.votes++
-                  console.log(trackData.votes)
-                  return trackDocument.update({
-                    votes: trackData.votes,
-                  })
-                })
-              } else {
-                return
-              }
-            })
-          return
-        })
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  })
+// exports.checkForRoundWinner = functions.pubsub
+//   .schedule('5 19 * * *')
+//   .timeZone('America/New_York')
+//   .onRun(context => {
+//     console.log('This will be run every day at 7:05PM Eastern!')
+//     //get the active albums
+//     db.collection('albums')
+//       .where('activePoll', '==', true)
+//       .get()
+//       .then(data => {
+//         //get the tracks from each album
+//         data.forEach(album => {
+//           db.collection(`albums/${album.data().albumId}/tracks`)
+//             .where('alive', '==', true)
+//             .get()
+//             .then(query => {
+//               if (query.docs.length === 1) {
+//                 let trackDocument = db.doc(
+//                   `albums/${album.data().albumId}/tracks/${
+//                     query.docs[0].data().trackId
+//                   }`
+//                 )
+//                 let trackData = {}
+//                 trackDocument.get().then(doc => {
+//                   // console.log(doc.data().name)
+//                   trackData = doc.data()
+//                   trackData.votes++
+//                   // console.log(trackData.votes)
+//                   return trackDocument.update({
+//                     votes: trackData.votes,
+//                   })
+//                 })
+//               } else {
+//                 return
+//               }
+//             })
+//           return
+//         })
+//       })
+//       .catch(err => {
+//         console.error(err)
+//       })
+//   })
 
 // updated vote tally function
 //vote tally
@@ -213,7 +212,7 @@ exports.tallyAllVotes = functions.pubsub
   .schedule('1 19 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
-    console.log('This will be run every day at 7PM Eastern!')
+    console.log('This will be run every day at 7:01PM Eastern!')
     //get the active albums
     db.collection('albums')
       .where('activePoll', '==', true)
@@ -222,6 +221,7 @@ exports.tallyAllVotes = functions.pubsub
         //get the tracks from each album
         data.forEach(
           album => {
+            //add up votes for the round
             db.collection(`albums/${album.data().albumId}/tracks`)
               .where('alive', '==', true)
               .get()
@@ -232,7 +232,7 @@ exports.tallyAllVotes = functions.pubsub
                   roundVoteTotal += track.data().votes
                   return roundVoteTotal
                 })
-                console.log(roundVoteTotal)
+                // console.log(roundVoteTotal)
                 return roundVoteTotal
               })
               .then(roundVoteTotal => {
@@ -243,10 +243,10 @@ exports.tallyAllVotes = functions.pubsub
                   .orderBy('votes', 'desc')
                   .get()
                   .then(query => {
-                    if (query.docs.length >= 1) {
+                    if (query.docs.length > 2) {
                       //get the first item from the query
-                      console.log(query.docs[0].data().name)
-                      console.log(query.docs[0].data().trackId)
+                      // console.log(query.docs[0].data().name)
+                      // console.log(query.docs[0].data().trackId)
                       // get the document for the track with the most votes
                       db.doc(
                         `albums/${album.data().albumId}/tracks/${
@@ -306,6 +306,23 @@ exports.tallyAllVotes = functions.pubsub
                               }
                             })
                         })
+                    } else if (query.docs.length === 2) {
+                      query.docs
+                        .forEach(doc => {
+                          return doc.ref.update({
+                            alive: false,
+                            voteOutDay: new Date(),
+                            respect: 0,
+                            roundVoteTotal: roundVoteTotal,
+                          })
+                        })
+                        .then(() => {
+                          console.log('made it to end with no errors')
+                          return
+                        })
+                        .catch(err => {
+                          console.error(err)
+                        })
                     } else {
                       return
                     }
@@ -325,7 +342,7 @@ exports.archivePollData = functions.pubsub
   .schedule('0 19 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
-    console.log('This will be run every day at 6:59PM Eastern!')
+    console.log('This will be run every day at 7:00PM Eastern!')
     //get albums to archive
     db.collection('albums')
       .where('activePoll', '==', true)
@@ -343,7 +360,7 @@ exports.archivePollData = functions.pubsub
             archiveCreatedAt: new Date().getTime(),
             archiveId: '',
           }
-          console.log(albumArchive)
+          // console.log(albumArchive)
           db.collection('archive')
             .add(albumArchive)
             .then(doc => {
@@ -365,6 +382,7 @@ exports.archivePollData = functions.pubsub
                       trackId: doc.data().trackId,
                       trackListing: doc.data().trackListing,
                       alive: doc.data().alive,
+                      voteOutDay: doc.data().voteOutDay,
                     }
                     db.collection(`archive/${archiveId}/tracks`).add(
                       archiveTrack

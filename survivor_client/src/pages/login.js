@@ -13,7 +13,7 @@ import PropTypes from 'prop-types'
 
 //redux
 import { connect } from 'react-redux'
-import { loginUser, loginGoogleUser } from '../redux/actions/userActions'
+import { loginUser } from '../redux/actions/userActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -44,25 +44,10 @@ class login extends Component {
     this.props.loginUser(userData, this.props.history)
   }
 
-  // handleGoogleSignIn = event => {
-  //   event.preventDefault()
-  //   this.props.loginGoogleUser(googleUser, this.props.history)
-  // }
-
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value,
     })
-  }
-
-  responseGoogle = response => {
-    console.log(response.tokenId)
-    this.props.loginGoogleUser(response, this.props.history)
-  }
-
-  logout = response => {
-    console.log(response)
-    console.log('logged out')
   }
 
   render() {
@@ -148,7 +133,6 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   loginUser,
-  loginGoogleUser,
 }
 
 export default connect(

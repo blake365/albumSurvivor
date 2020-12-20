@@ -27,7 +27,7 @@ class Footer extends Component {
           Album Survivor is developed by Blake Morgan.{' '}
           <a
             href='mailto:blake365morgan@me.com'
-            style={{ color: '#2196f3', textDecoration: 'underline' }}
+            style={{ color: '#1565c0', textDecoration: 'underline' }}
           >
             Contact Me
           </a>{' '}

@@ -1,6 +1,6 @@
 import {
   SET_USER,
-  POST_VOTE,
+  // POST_VOTE,
   //   SET_ERRORS,
   //   CLEAR_ERRORS,
   //   LOADING_UI,
@@ -14,7 +14,6 @@ const initialState = {
   loading: false,
   credentials: {},
   voteHistory: [],
-  voted: false,
 }
 
 const userReducer = (state = initialState, action) => {
@@ -38,11 +37,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         loading: true,
       }
-    case POST_VOTE:
-      return {
-        ...state,
-        voted: true,
-      }
+    // case POST_VOTE:
+    //   return {
+    //     ...state,
+    //     voted: true,
+    //   }
 
     default:
       return state

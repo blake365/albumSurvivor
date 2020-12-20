@@ -1,5 +1,4 @@
 import {
-  SET_TRACKS,
   POST_VOTE,
   POST_TRACK,
   LOADING_DATA,
@@ -15,18 +14,17 @@ import {
   SET_ALBUMS,
   SET_ALBUM,
   SET_ACTIVE_ALBUMS,
-  SET_ALBUM_TRACKS,
+  // SET_ALBUM_TRACKS,
   SET_ARCHIVES,
-  REFRESH,
   SET_IP,
 } from '../types'
 
 import axios from 'axios'
 
 // refresh albums
-const refreshAlbums = () => dispatch => {
-  dispatch({ type: REFRESH })
-}
+// const refreshAlbums = () => dispatch => {
+//   dispatch({ type: REFRESH })
+// }
 
 export const getIP = () => dispatch => {
   fetch('https://api.ipify.org/?format=json')
@@ -46,42 +44,42 @@ export const getIP = () => dispatch => {
 }
 
 //get all tracks
-export const getTracks = () => dispatch => {
-  dispatch({ type: LOADING_DATA })
-  axios
-    .get('/tracks')
-    .then(res => {
-      dispatch({
-        type: SET_TRACKS,
-        payload: res.data,
-      })
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: [],
-      })
-    })
-}
+// export const getTracks = () => dispatch => {
+//   dispatch({ type: LOADING_DATA })
+//   axios
+//     .get('/tracks')
+//     .then(res => {
+//       dispatch({
+//         type: SET_TRACKS,
+//         payload: res.data,
+//       })
+//     })
+//     .catch(err => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: [],
+//       })
+//     })
+// }
 
-//get tracks from album
-export const getAlbumTracks = albumId => dispatch => {
-  dispatch({ type: LOADING_DATA })
-  axios
-    .get(`/albums/${albumId}/tracks`)
-    .then(res => {
-      dispatch({
-        type: SET_ALBUM_TRACKS,
-        payload: res.data,
-      })
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: [],
-      })
-    })
-}
+// //get tracks from album
+// export const getAlbumTracks = albumId => dispatch => {
+//   dispatch({ type: LOADING_DATA })
+//   axios
+//     .get(`/albums/${albumId}/tracks`)
+//     .then(res => {
+//       dispatch({
+//         type: SET_ALBUM_TRACKS,
+//         payload: res.data,
+//       })
+//     })
+//     .catch(err => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: [],
+//       })
+//     })
+// }
 
 //get all albums
 export const getAlbums = () => dispatch => {
@@ -236,38 +234,38 @@ export const anonVote = (albumId, trackId, IPaddress) => dispatch => {
 //     })
 // }
 
-export const payRespects = (albumId, trackId) => dispatch => {
-  axios
-    .get(`/albums/${albumId}/tracks/${trackId}/payrespects`)
-    .then(() => {
-      dispatch(refreshAlbums())
-      dispatch(getActiveAlbums())
-    })
-    .catch(err => console.error(err))
-}
+// export const payRespects = (albumId, trackId) => dispatch => {
+//   axios
+//     .get(`/albums/${albumId}/tracks/${trackId}/payrespects`)
+//     .then(() => {
+//       dispatch(refreshAlbums())
+//       dispatch(getActiveAlbums())
+//     })
+//     .catch(err => console.error(err))
+// }
 
-export const postNewTrack = newTrackData => dispatch => {
-  dispatch({ type: LOADING_UI })
-  axios
-    .post('/track', newTrackData)
-    .then(res => {
-      dispatch({
-        type: POST_TRACK,
-        payload: res.data,
-      })
-      dispatch({
-        type: SET_MESSAGE,
-        payload: res.data,
-      })
-      dispatch(clearErrors())
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
-      })
-    })
-}
+// export const postNewTrack = newTrackData => dispatch => {
+//   dispatch({ type: LOADING_UI })
+//   axios
+//     .post('/track', newTrackData)
+//     .then(res => {
+//       dispatch({
+//         type: POST_TRACK,
+//         payload: res.data,
+//       })
+//       dispatch({
+//         type: SET_MESSAGE,
+//         payload: res.data,
+//       })
+//       dispatch(clearErrors())
+//     })
+//     .catch(err => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: err.response.data,
+//       })
+//     })
+// }
 
 export const postNewTrackToAlbum = (albumId, newTrackData) => dispatch => {
   dispatch({ type: LOADING_UI })
@@ -445,7 +443,11 @@ export const uploadImage = (albumId, formData) => dispatch => {
   dispatch({ type: LOADING_DATA })
   axios
     .post(`/albums/${albumId}/art`, formData)
-    .then(() => {
+    .then(res => {
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.data,
+      })
       dispatch(getAlbums())
     })
     .catch(err => console.log(err))

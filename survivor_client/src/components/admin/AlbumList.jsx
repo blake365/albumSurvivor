@@ -137,7 +137,7 @@ class AlbumList extends Component {
         </CardContent>
         <CardActions disableSpacing className={classes.cardActions}>
           <Button
-            size='small'
+            // size='small'
             color='primary'
             component={Link}
             to={`/albums/${album.albumId}`}

@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import NewReleasesIcon from '@material-ui/icons/NewReleases'
-import Chip from '@material-ui/core/Chip'
+import Alert from '@material-ui/lab/Alert'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -67,6 +67,25 @@ class ArchivePost extends Component {
     const { tracks, loading } = this.state
 
     let totalVotes = 0
+    let mostVotes = Number.NEGATIVE_INFINITY
+    let leastVotes = Number.POSITIVE_INFINITY
+    var tmp
+
+    function mostVotesCalc() {
+      for (var i = tracks.length - 1; i >= 0; i--) {
+        tmp = tracks[i].votes
+        if (tmp < leastVotes) leastVotes = tmp
+        if (tmp > mostVotes) mostVotes = tmp
+      }
+    }
+
+    // function leastVotesCalc() {
+    //   tracks.forEach(track => {
+    //     totalVotes += track.votes
+    //     return totalVotes
+    //   })
+    // }
+
     function totalVotesCalc() {
       tracks.forEach(track => {
         totalVotes += track.votes
@@ -74,43 +93,42 @@ class ArchivePost extends Component {
       })
     }
     totalVotesCalc()
+    mostVotesCalc()
 
     let markup = !loading ? (
-      tracks.length === 1 ? (
-        <div style={{ display: 'flex', alignContent: 'center' }}>
-          <Typography variant='body1'>
-            {tracks[0].trackListing}. {tracks[0].name}:{' '}
+      tracks.map(track => (
+        <div
+          key={track.trackId}
+          style={{
+            display: 'flex',
+            alignContent: 'center',
+          }}
+        >
+          <Typography variant='body1' style={{ lineHeight: 1.7, width: '90%' }}>
+            {track.trackListing}.
+            <span
+              style={
+                track.votes === mostVotes
+                  ? { color: 'red' }
+                  : track.votes === leastVotes
+                  ? { color: '#0d47a1' }
+                  : null
+              }
+            >
+              {track.name}
+            </span>
           </Typography>
-          <Chip
-            label='WINNER'
-            color='primary'
-            className={classes.winnerDisplay}
-          />
-        </div>
-      ) : (
-        tracks.map(track => (
-          <div
-            key={track.trackId}
-            style={{ display: 'flex', alignContent: 'center' }}
+          <Typography
+            variant='body1'
+            style={{
+              marginLeft: 'auto',
+              lineHeight: 1.7,
+            }}
           >
-            <Typography
-              variant='body1'
-              style={{ lineHeight: 1.7, width: '90%' }}
-            >
-              {track.trackListing}. {track.name}
-            </Typography>
-            <Typography
-              variant='body1'
-              style={{
-                marginLeft: 'auto',
-                lineHeight: 1.7,
-              }}
-            >
-              {track.votes}
-            </Typography>
-          </div>
-        ))
-      )
+            {track.votes}
+          </Typography>
+        </div>
+      ))
     ) : (
       <div className={classes.spinnerDiv}>
         <CircularProgress size={20} thickness={2} />
@@ -134,6 +152,22 @@ class ArchivePost extends Component {
               </span>
             ) : null}
           </div>
+          {tracks.length === 2 && (
+            <Alert
+              severity='warning'
+              variant='filled'
+              icon={false}
+              style={{
+                fontSize: '0.9rem',
+                padding: '4px 8px',
+                height: 20,
+                width: 'fit-content',
+                alignItems: 'center',
+              }}
+            >
+              Final Round
+            </Alert>
+          )}
           <Typography variant='h6' color='primary'>
             {archive.albumName}
           </Typography>

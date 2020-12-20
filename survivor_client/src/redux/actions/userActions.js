@@ -7,31 +7,13 @@ import {
   SET_UNAUTHENTICATED,
 } from '../types'
 import axios from 'axios'
-import { getTracks } from './dataActions'
+// import { getTracks } from './dataActions'
 
 // login user
 export const loginUser = (userData, history) => dispatch => {
   dispatch({ type: LOADING_UI })
   axios
     .post('/login', userData)
-    .then(res => {
-      setAuthorizationHeader(res.data.token)
-      dispatch(getUserData())
-      dispatch({ type: CLEAR_ERRORS })
-      history.push('/')
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
-      })
-    })
-}
-
-export const loginGoogleUser = (googleUser, history) => dispatch => {
-  dispatch({ type: LOADING_UI })
-  axios
-    .post('/loginGoogle', googleUser)
     .then(res => {
       setAuthorizationHeader(res.data.token)
       dispatch(getUserData())
@@ -93,26 +75,26 @@ export const logoutUser = () => dispatch => {
 }
 
 // upload image
-export const uploadImage = formData => dispatch => {
-  dispatch({ type: LOADING_USER })
-  axios
-    .post(`/user/image`, formData)
-    .then(() => {
-      dispatch(getUserData())
-    })
-    .then(() => {
-      dispatch(getTracks())
-    })
-    .catch(err => console.log(err))
-}
+// export const uploadImage = formData => dispatch => {
+//   dispatch({ type: LOADING_USER })
+//   axios
+//     .post(`/user/image`, formData)
+//     .then(() => {
+//       dispatch(getUserData())
+//     })
+//     .then(() => {
+//       dispatch(getTracks())
+//     })
+//     .catch(err => console.log(err))
+// }
 
 //update user profile
-export const editUserDetails = userDetails => dispatch => {
-  dispatch({ type: LOADING_USER })
-  axios
-    .post(`/user`, userDetails)
-    .then(() => {
-      dispatch(getUserData())
-    })
-    .catch(err => console.log(err))
-}
+// export const editUserDetails = userDetails => dispatch => {
+//   dispatch({ type: LOADING_USER })
+//   axios
+//     .post(`/user`, userDetails)
+//     .then(() => {
+//       dispatch(getUserData())
+//     })
+//     .catch(err => console.log(err))
+// }

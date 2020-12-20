@@ -44,6 +44,7 @@ class albumPage extends Component {
       user,
       data: { album, loading },
     } = this.props
+
     let albumPageMarkup =
       user.credentials.type !== 'admin' ? (
         <div>No No</div>
