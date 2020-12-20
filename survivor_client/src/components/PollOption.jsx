@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography'
 import Radio from '@material-ui/core/Radio'
 import Avatar from '@material-ui/core/Avatar'
 import Chip from '@material-ui/core/Chip'
-
 // import { connect } from 'react-redux'
 
 const styles = theme => ({
@@ -19,7 +18,7 @@ const styles = theme => ({
     flexWrap: 'nowrap',
     padding: 0,
     '&:hover': {
-      background: '#4caf50',
+      background: theme.palette.secondary.main,
     },
     '&:last-child': {
       paddingBottom: 0,
@@ -32,9 +31,10 @@ const styles = theme => ({
     width: '60%',
   },
   voteDisplay: {
+    color: 'black',
     margin: 7,
     padding: 0,
-    backgroundColor: '#4caf50',
+    backgroundColor: theme.palette.secondary.main,
   },
   winnerDisplay: {
     margin: 7,
@@ -70,7 +70,7 @@ class PollOption extends Component {
         style={
           selection === trackId
             ? {
-                background: 'linear-gradient(45deg, #81c784 30%, #fff 90%)',
+                background: 'linear-gradient(45deg, #81d4fa 30%, #fff 90%)',
                 border: 'solid 1px black',
                 margin: 4,
               }
@@ -107,7 +107,7 @@ class PollOption extends Component {
                   value={trackId}
                   name={name}
                   inputProps={{ 'aria-label': name }}
-                  color='default'
+                  color='primary'
                 />
               )}
             </Grid>

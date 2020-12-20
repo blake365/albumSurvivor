@@ -8,6 +8,8 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
+import Chip from '@material-ui/core/Chip'
+
 // import LikeButton from './LikeButton'
 
 const styles = theme => ({
@@ -27,6 +29,10 @@ const styles = theme => ({
   },
   tableContainer: {
     padding: '10px 0 10px 0',
+  },
+  winnerDisplay: {
+    margin: 2,
+    padding: 0,
   },
 })
 
@@ -84,9 +90,15 @@ class GraveyardNew extends Component {
                     </TableCell>
                     <TableCell className={classes.body}>{row.name}</TableCell>
                     <TableCell align='center' className={classes.body}>
-                      {aliveTracks.length === 0 && index === 0
-                        ? 'Winner'
-                        : row.votes}
+                      {aliveTracks.length === 0 && index === 0 ? (
+                        <Chip
+                          label='WINNER'
+                          color='primary'
+                          className={classes.winnerDisplay}
+                        />
+                      ) : (
+                        row.votes
+                      )}
                     </TableCell>
                     <TableCell align='center' className={classes.body}>
                       {((row.votes / row.roundVoteTotal) * 100).toFixed(0)}%

@@ -1,15 +1,18 @@
+import blue from '@material-ui/core/colors/blue'
+import lightblue from '@material-ui/core/colors/lightBlue'
+
 const theme = {
   palette: {
     primary: {
-      light: '#64b5f6',
-      main: '#2196f3',
-      dark: '#1976d2',
+      light: blue['700'],
+      main: blue['800'],
+      dark: blue['900'],
       contrastText: '#fff',
     },
     secondary: {
-      light: '#ffffff',
-      main: '#cfd8dc',
-      dark: '#9ea7aa',
+      light: lightblue['100'],
+      main: lightblue['200'],
+      dark: lightblue['300'],
       contrastText: '#000',
     },
   },

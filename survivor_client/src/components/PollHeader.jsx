@@ -8,6 +8,7 @@ import Alert from '@material-ui/lab/Alert'
 import MusicNoteIcon from '@material-ui/icons/MusicNote'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
+import green from '@material-ui/core/colors/green'
 
 // import { connect } from 'react-redux'
 
@@ -48,12 +49,12 @@ const styles = theme => ({
     textAlign: 'center',
   },
   spotify: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     position: 'absolute',
     bottom: '3%',
     left: '2%',
     '&:hover': {
-      backgroundColor: '#0069d9',
+      backgroundColor: theme.palette.primary.main,
       borderColor: '#0062cc',
       boxShadow: 'none',
     },
@@ -137,9 +138,8 @@ class PollHeader extends Component {
                   className={classes.spotify}
                   href={`https://open.spotify.com/album/${spotifyURI}`}
                   target='_blank'
-                  color='primary'
                 >
-                  <MusicNoteIcon style={{ color: '#7FFF00' }} />
+                  <MusicNoteIcon style={{ color: green.A400 }} />
                 </IconButton>
               </Tooltip>
             ) : null}

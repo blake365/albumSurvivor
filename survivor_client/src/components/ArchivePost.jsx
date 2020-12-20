@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import NewReleasesIcon from '@material-ui/icons/NewReleases'
+import Chip from '@material-ui/core/Chip'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -29,6 +30,10 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     color: 'limegreen',
+  },
+  winnerDisplay: {
+    margin: 7,
+    padding: 0,
   },
 })
 
@@ -72,16 +77,36 @@ class ArchivePost extends Component {
 
     let markup = !loading ? (
       tracks.length === 1 ? (
-        <Typography variant='body1'>
-          {tracks[0].trackListing}. {tracks[0].name}:{' '}
-          <strong style={{ color: 'green' }}>Winner!</strong> votes
-        </Typography>
+        <div style={{ display: 'flex', alignContent: 'center' }}>
+          <Typography variant='body1'>
+            {tracks[0].trackListing}. {tracks[0].name}:{' '}
+          </Typography>
+          <Chip
+            label='WINNER'
+            color='primary'
+            className={classes.winnerDisplay}
+          />
+        </div>
       ) : (
         tracks.map(track => (
-          <div key={track.trackId}>
-            <Typography variant='body1'>
-              {track.trackListing}. {track.name}: <strong>{track.votes}</strong>{' '}
-              votes
+          <div
+            key={track.trackId}
+            style={{ display: 'flex', alignContent: 'center' }}
+          >
+            <Typography
+              variant='body1'
+              style={{ lineHeight: 1.7, width: '90%' }}
+            >
+              {track.trackListing}. {track.name}
+            </Typography>
+            <Typography
+              variant='body1'
+              style={{
+                marginLeft: 'auto',
+                lineHeight: 1.7,
+              }}
+            >
+              {track.votes}
             </Typography>
           </div>
         ))
@@ -113,7 +138,24 @@ class ArchivePost extends Component {
             {archive.albumName}
           </Typography>
           {markup}
-          <Typography>Total Votes: {totalVotes}</Typography>
+          <div style={{ display: 'flex', alignContent: 'center' }}>
+            <Typography
+              variant='body1'
+              style={{ fontWeight: 700, lineHeight: 1.7 }}
+            >
+              Total Votes:
+            </Typography>{' '}
+            <Typography
+              variant='body1'
+              style={{
+                marginLeft: 'auto',
+                lineHeight: 1.7,
+                fontWeight: 700,
+              }}
+            >
+              {totalVotes}
+            </Typography>
+          </div>
         </CardContent>
       </Card>
     )

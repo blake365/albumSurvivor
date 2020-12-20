@@ -147,7 +147,7 @@ class PollNew extends Component {
 
     let PollEndedMarkup = (
       <Typography variant='h5' align='center'>
-        The Poll has ended, check back soon for the next album
+        This poll has ended. Check back soon for the next album.
       </Typography>
     )
 
