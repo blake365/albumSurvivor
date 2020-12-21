@@ -8,6 +8,7 @@ import {
   SET_ALBUMS,
   SET_ALBUM,
   SET_ACTIVE_ALBUMS,
+  SET_FINAL_ARCHIVES,
   // SET_ALBUM_TRACKS,
   SET_ARCHIVES,
   SET_IP,
@@ -21,6 +22,7 @@ const initialState = {
   message: null,
   commentary: [],
   archives: [],
+  finalArchives: [],
   IP: null,
 }
 
@@ -111,6 +113,12 @@ const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         archives: action.payload,
+        loading: false,
+      }
+    case SET_FINAL_ARCHIVES:
+      return {
+        ...state,
+        finalArchives: action.payload,
         loading: false,
       }
     default:

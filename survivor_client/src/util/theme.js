@@ -15,6 +15,12 @@ const theme = {
       dark: lightblue['300'],
       contrastText: '#000',
     },
+    info: {
+      light: blue['700'],
+      main: blue['800'],
+      dark: blue['900'],
+      contrastText: '#fff',
+    },
   },
   spreadThis: {
     typography: {

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
-import { getArchives } from '../redux/actions/dataActions'
 import ArchivePost from './ArchivePost'
 import Button from '@material-ui/core/Button'
 
@@ -30,13 +29,6 @@ class ArchiveWrapper extends Component {
       direction: '',
       showAll: false,
     }
-  }
-
-  componentDidMount() {
-    const start = {
-      direction: 'older',
-    }
-    this.props.getArchives(start)
   }
 
   handleAllSubmit = event => {
@@ -80,7 +72,6 @@ class ArchiveWrapper extends Component {
 }
 
 ArchiveWrapper.propTypes = {
-  getArchives: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
 }
 
@@ -88,6 +79,4 @@ const mapStateToProps = state => ({
   data: state.data,
 })
 
-export default connect(mapStateToProps, { getArchives })(
-  withStyles(styles)(ArchiveWrapper)
-)
+export default connect(mapStateToProps)(withStyles(styles)(ArchiveWrapper))

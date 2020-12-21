@@ -88,26 +88,52 @@ exports.getArchives = (req, res) => {
     })
 }
 
-// exports.loadMoreArchives = (req, res) => {
-//   next
-//     .get()
-//     .then(data => {
-//       let archiveList = []
-//       data.forEach(doc => {
-//         archiveList.push({
-//           albumId: doc.data().albumId,
-//           albumName: doc.data().albumName,
-//           archiveCreatedAt: doc.data().archiveCreatedAt,
-//           archiveId: doc.data().archiveId,
-//         })
-//       })
-//       return res.json(archiveList)
-//     })
-//     .catch(err => console.error(err))
-// }
+exports.getFinalArchives = (req, res) => {
+  db.collection('finalResults')
+    .orderBy('createdAt', 'desc')
+    .get()
+    .then(data => {
+      let finalArchiveList = []
+      data.forEach(doc => {
+        finalArchiveList.push({
+          albumId: doc.data().albumId,
+          albumName: doc.data().albumName,
+          createdAt: doc.data().createdAt,
+          finalArchiveId: doc.data().finalArchiveId,
+          artist: doc.data().artist,
+          albumArt: doc.data().albumArt,
+          genre: doc.data().genre,
+          releaseYear: doc.data().releaseYear,
+          spotifyURI: doc.data().spotifyURI,
+          numTracks: doc.data().numTracks,
+        })
+      })
+      return res.json(finalArchiveList)
+    })
+    .catch(err => console.error(err))
+}
+
+exports.getOneFinalArchiveEntry = (req, res) => {
+  // console.log(req.params.archiveId)
+  db.collection(`finalResults/${req.params.finalarchiveid}/tracks`)
+    .orderBy('trackListing')
+    .get()
+    .then(data => {
+      trackData = []
+      data.forEach(doc => {
+        trackData.push((track = doc.data()))
+        // console.log(doc.data())
+      })
+      return res.json(trackData)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({ error: err.code })
+    })
+}
 
 exports.getOneArchiveEntry = (req, res) => {
-  console.log(req.params.archiveId)
+  // console.log(req.params.archiveId)
   db.collection(`archive/${req.params.archiveId}/tracks`)
     .orderBy('trackListing')
     .where('alive', '==', true)
@@ -126,52 +152,52 @@ exports.getOneArchiveEntry = (req, res) => {
     })
 }
 
-exports.archiveTest = (req, res) => {
-  //get albums to archive
-  db.collection('albums')
-    .where('activePoll', '==', true)
-    .orderBy('createdAt')
-    .get()
-    .then(data => {
-      let activeAlbumList = []
-      data.forEach(doc => {
-        activeAlbumList.push((albumData = doc.data()))
-      })
-      activeAlbumList.forEach(album => {
-        albumArchive = {
-          albumName: album.albumName,
-          albumId: album.albumId,
-          archiveCreatedAt: new Date().getTime(),
-          archiveId: '',
-        }
-        console.log(albumArchive)
-        db.collection('archive')
-          .add(albumArchive)
-          .then(doc => {
-            let archiveId = doc.id
-            doc.update({
-              archiveId: doc.id,
-            })
-            return archiveId
-          })
-          .then(archiveId => {
-            db.collection(`albums/${album.albumId}/tracks`)
-              .orderBy('trackListing')
-              .get()
-              .then(data => {
-                data.forEach(doc => {
-                  archiveTrack = {
-                    name: doc.data().name,
-                    votes: doc.data().votes,
-                    trackId: doc.data().trackId,
-                    trackListing: doc.data().trackListing,
-                    alive: doc.data().alive,
-                  }
-                  db.collection(`archive/${archiveId}/tracks`).add(archiveTrack)
-                })
-              })
-          })
-      })
-    })
-  return res.json({ message: 'archive created' })
-}
+// exports.archiveTest = (req, res) => {
+//   //get albums to archive
+//   db.collection('albums')
+//     .where('activePoll', '==', true)
+//     .orderBy('createdAt')
+//     .get()
+//     .then(data => {
+//       let activeAlbumList = []
+//       data.forEach(doc => {
+//         activeAlbumList.push((albumData = doc.data()))
+//       })
+//       activeAlbumList.forEach(album => {
+//         albumArchive = {
+//           albumName: album.albumName,
+//           albumId: album.albumId,
+//           archiveCreatedAt: new Date().getTime(),
+//           archiveId: '',
+//         }
+//         console.log(albumArchive)
+//         db.collection('archive')
+//           .add(albumArchive)
+//           .then(doc => {
+//             let archiveId = doc.id
+//             doc.update({
+//               archiveId: doc.id,
+//             })
+//             return archiveId
+//           })
+//           .then(archiveId => {
+//             db.collection(`albums/${album.albumId}/tracks`)
+//               .orderBy('trackListing')
+//               .get()
+//               .then(data => {
+//                 data.forEach(doc => {
+//                   archiveTrack = {
+//                     name: doc.data().name,
+//                     votes: doc.data().votes,
+//                     trackId: doc.data().trackId,
+//                     trackListing: doc.data().trackListing,
+//                     alive: doc.data().alive,
+//                   }
+//                   db.collection(`archive/${archiveId}/tracks`).add(archiveTrack)
+//                 })
+//               })
+//           })
+//       })
+//     })
+//   return res.json({ message: 'archive created' })
+// }

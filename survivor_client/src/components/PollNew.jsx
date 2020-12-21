@@ -57,15 +57,8 @@ class PollNew extends Component {
       open: false,
       errors: {},
       voted: false,
-      // IP: '',
     }
   }
-
-  // componentDidMount() {
-  //   // console.log(new Date())
-  //   let dateTest = new Date().toUTCString().split(' ')[1]
-  //   console.log(dateTest)
-  // }
 
   handleSelectedTrack(selection) {
     this.setState({ selection })

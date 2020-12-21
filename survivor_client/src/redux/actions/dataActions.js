@@ -14,6 +14,7 @@ import {
   SET_ALBUMS,
   SET_ALBUM,
   SET_ACTIVE_ALBUMS,
+  SET_FINAL_ARCHIVES,
   // SET_ALBUM_TRACKS,
   SET_ARCHIVES,
   SET_IP,
@@ -392,6 +393,24 @@ export const getArchives = start => dispatch => {
     .then(res => {
       dispatch({
         type: SET_ARCHIVES,
+        payload: res.data,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: [],
+      })
+    })
+}
+
+export const getFinalArchives = () => dispatch => {
+  dispatch({ type: LOADING_DATA })
+  axios
+    .get('/finalarchives')
+    .then(res => {
+      dispatch({
+        type: SET_FINAL_ARCHIVES,
         payload: res.data,
       })
     })

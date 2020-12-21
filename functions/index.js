@@ -35,6 +35,8 @@ const {
 const {
   getArchives,
   getOneArchiveEntry,
+  getFinalArchives,
+  getOneFinalArchiveEntry,
   // archiveTest,
 } = require('./handlers/archives')
 
@@ -66,6 +68,8 @@ app.use(cors())
 app.post('/archives', getArchives) // ok
 app.get('/archives/:archiveId', getOneArchiveEntry) // ok
 // app.get('/archivetest', archiveTest)
+app.get('/finalarchives', getFinalArchives)
+app.get('/finalarchives/:finalarchiveid', getOneFinalArchiveEntry)
 
 //album routes
 app.get('/albums', getAllAlbums) //ok
@@ -103,7 +107,7 @@ app.post('/albums/:albumId/tracks/:trackId/vote', FBAuth, castVote2) //ok
 // app.get('/albums/:albumId/tracks/:trackId/payrespects', FBAuth, payRespects2) not used
 
 //commentary aka 'what's happening' text
-app.get('/commentary', getLatestCommentary)
+app.get('/commentary', getLatestCommentary) //ok
 app.post('/commentary', FBAuth, checkAdminStatus, postCommentary) //ok
 // app.delete(
 //   '/commentary/:commentaryId',
