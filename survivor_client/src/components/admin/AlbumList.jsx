@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Typography from '@material-ui/core/Typography'
@@ -17,7 +16,11 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import MyButton from '../../util/MyButton'
 
-import { uploadImage, deleteAlbum } from '../../redux/actions/dataActions'
+import {
+  uploadImage,
+  deleteAlbum,
+  getAlbum,
+} from '../../redux/actions/dataActions'
 import { CardMedia } from '@material-ui/core'
 
 const styles = theme => ({
@@ -56,6 +59,7 @@ class AlbumList extends Component {
     this.state = {
       albumId: null,
       open: false,
+      loading: false,
     }
   }
 
@@ -91,6 +95,16 @@ class AlbumList extends Component {
     this.setState({
       open: false,
     })
+  }
+
+  setAlbumState = event => {
+    event.preventDefault()
+    console.log(event.currentTarget.value)
+    this.props.getAlbum(event.currentTarget.value)
+    const editLink = document.getElementById('editLink')
+    setTimeout(function () {
+      editLink.click()
+    }, 500)
   }
 
   render() {
@@ -138,12 +152,17 @@ class AlbumList extends Component {
         <CardActions disableSpacing className={classes.cardActions}>
           <Button
             // size='small'
+            onClick={this.setAlbumState}
+            value={album.albumId}
             color='primary'
-            component={Link}
-            to={`/albums/${album.albumId}`}
+            // component={Link}
+            // to={`/albums/${album.albumId}`}
           >
             Edit Data
           </Button>
+          <a href={`/albums/${album.albumId}`} id='editLink' hidden='hidden'>
+            a
+          </a>
           <Button
             size='small'
             value={album.albumId}
@@ -159,12 +178,13 @@ class AlbumList extends Component {
             aria-describedby='alert-dialog-description'
           >
             <DialogTitle id='alert-dialog-title'>
-              Delete this Album?
+              Delete {album.albumName}?
             </DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
-                Are you sure you want to delete this Album and all associated
-                data? The archive will not be affected.
+                Are you sure you want to delete {album.albumName} and all
+                associated tracks and other data? The archive will not be
+                affected.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -192,6 +212,6 @@ const mapStateToProps = state => ({
   UI: state.UI,
 })
 
-export default connect(mapStateToProps, { uploadImage, deleteAlbum })(
+export default connect(mapStateToProps, { uploadImage, deleteAlbum, getAlbum })(
   withStyles(styles)(AlbumList)
 )

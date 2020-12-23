@@ -22,7 +22,7 @@ exports.postCommentary = (req, res) => {
   const newCommentary = {
     body: req.body.body,
     userName: req.user.userName,
-    createdAt: new Date(),
+    createdAt: new Date().getTime(),
   }
 
   db.collection('commentary')

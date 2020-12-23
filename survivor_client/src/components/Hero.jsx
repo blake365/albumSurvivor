@@ -23,7 +23,7 @@ class Hero extends Component {
           Vote for your <strong>least</strong> favorite song in the polls below.
           Each day the song with the most votes is eliminated until only the
           best song is left standing. You may vote one time per day and the day
-          will reset at <strong>7PM EST</strong>. Make an account to save your
+          will reset at <strong>7 PM EST</strong>. Make an account to save your
           vote history.
         </Typography>
         {/** <Button variant='contained' color='primary'>

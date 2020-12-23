@@ -18,14 +18,6 @@ const styles = theme => ({
 })
 
 export class archive extends Component {
-  componentDidMount() {
-    this.props.getFinalArchives()
-    const start = {
-      direction: 'older',
-    }
-    this.props.getArchives(start)
-  }
-
   render() {
     const {
       classes,

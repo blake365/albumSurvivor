@@ -269,118 +269,116 @@ exports.tallyAllVotes = functions.pubsub
       .get()
       .then(data => {
         //get the tracks from each album
-        data.forEach(
-          album => {
-            //add up votes for the round
-            db.collection(`albums/${album.data().albumId}/tracks`)
-              .where('alive', '==', true)
-              .get()
-              .then(query => {
-                doc = query.docs
-                let roundVoteTotal = 0
-                doc.forEach(track => {
-                  roundVoteTotal += track.data().votes
-                  return roundVoteTotal
-                })
-                // console.log(roundVoteTotal)
+        data.forEach(album => {
+          //add up votes for the round
+          db.collection(`albums/${album.data().albumId}/tracks`)
+            .where('alive', '==', true)
+            .get()
+            .then(query => {
+              doc = query.docs
+              let roundVoteTotal = 0
+              doc.forEach(track => {
+                roundVoteTotal += track.data().votes
                 return roundVoteTotal
               })
-              .then(roundVoteTotal => {
-                db.collection(`albums/${album.data().albumId}/tracks`)
-                  //only alive tracks
-                  .where('alive', '==', true)
-                  // sort so the most votes is first item
-                  .orderBy('votes', 'desc')
-                  .get()
-                  .then(query => {
-                    if (query.docs.length > 2) {
-                      //get the first item from the query
-                      // console.log(query.docs[0].data().name)
-                      // console.log(query.docs[0].data().trackId)
-                      // get the document for the track with the most votes
-                      db.doc(
-                        `albums/${album.data().albumId}/tracks/${
-                          query.docs[0].data().trackId
-                        }`
-                      )
-                        .get()
-                        .then(doc => {
-                          // update document so alive=false and new fields are added
-                          return doc.ref.update({
-                            alive: false,
-                            voteOutDay: new Date(),
-                            respect: 0,
-                            roundVoteTotal: roundVoteTotal,
-                          })
+              // console.log(roundVoteTotal)
+              return roundVoteTotal
+            })
+            .then(roundVoteTotal => {
+              db.collection(`albums/${album.data().albumId}/tracks`)
+                //only alive tracks
+                .where('alive', '==', true)
+                // sort so the most votes is first item
+                .orderBy('votes', 'desc')
+                .get()
+                .then(query => {
+                  if (query.docs.length > 2) {
+                    //get the first item from the query
+                    // console.log(query.docs[0].data().name)
+                    // console.log(query.docs[0].data().trackId)
+                    // get the document for the track with the most votes
+                    db.doc(
+                      `albums/${album.data().albumId}/tracks/${
+                        query.docs[0].data().trackId
+                      }`
+                    )
+                      .get()
+                      .then(doc => {
+                        // update document so alive=false and new fields are added
+                        return doc.ref.update({
+                          alive: false,
+                          voteOutDay: new Date().getTime(),
+                          respect: 0,
+                          roundVoteTotal: roundVoteTotal,
                         })
-                        .then(() => {
-                          console.log('made it to vote reset')
-                          let aliveTracks = []
-                          db.collection(`albums/${album.data().albumId}/tracks`)
-                            //new list of alive tracks
-                            .where('alive', '==', true)
-                            .get()
-                            .then(data => {
-                              data.forEach(track => {
-                                aliveTracks.push(track.data())
-                              })
-                              return aliveTracks
+                      })
+                      .then(() => {
+                        console.log('made it to vote reset')
+                        let aliveTracks = []
+                        db.collection(`albums/${album.data().albumId}/tracks`)
+                          //new list of alive tracks
+                          .where('alive', '==', true)
+                          .get()
+                          .then(data => {
+                            data.forEach(track => {
+                              aliveTracks.push(track.data())
                             })
+                            return aliveTracks
+                          })
 
-                            .then(() => {
-                              let batch = db.batch()
-                              if (aliveTracks.length > 0) {
-                                aliveTracks.forEach(track => {
-                                  batch.update(
-                                    db.doc(
-                                      `albums/${album.data().albumId}/tracks/${
-                                        track.trackId
-                                      }`
-                                    ),
-                                    {
-                                      votes: 0,
-                                    }
-                                  )
+                          .then(() => {
+                            let batch = db.batch()
+                            if (aliveTracks.length > 0) {
+                              aliveTracks.forEach(track => {
+                                batch.update(
+                                  db.doc(
+                                    `albums/${album.data().albumId}/tracks/${
+                                      track.trackId
+                                    }`
+                                  ),
+                                  {
+                                    votes: 0,
+                                  }
+                                )
+                              })
+                              batch
+                                .commit()
+                                .then(() => {
+                                  console.log('made it to end with no errors')
+                                  return
                                 })
-                                batch
-                                  .commit()
-                                  .then(() => {
-                                    console.log('made it to end with no errors')
-                                    return
-                                  })
-                                  .catch(err => {
-                                    console.error(err)
-                                  })
-                              } else {
-                                return
-                              }
-                            })
-                        })
-                    } else if (query.docs.length === 2) {
-                      query.docs
-                        .forEach(doc => {
-                          return doc.ref.update({
-                            alive: false,
-                            voteOutDay: new Date(),
-                            respect: 0,
-                            roundVoteTotal: roundVoteTotal,
+                                .catch(err => {
+                                  console.error(err)
+                                })
+                            } else {
+                              return
+                            }
                           })
+                      })
+                  } else if (query.docs.length === 2) {
+                    query.docs
+                      .forEach(doc => {
+                        return doc.ref.update({
+                          alive: false,
+                          voteOutDay: new Date().getTime(),
+                          respect: 0,
+                          roundVoteTotal: roundVoteTotal,
                         })
-                        .then(() => {
-                          console.log('made it to end with no errors')
-                          return
-                        })
-                        .catch(err => {
-                          console.error(err)
-                        })
-                    } else {
-                      return
-                    }
-                  })
-              })
-          }
-          // return res.json({ message: 'votes counted and reset' })
-        )
+                      })
+                      .then(() => {
+                        console.log('made it to end with no errors')
+                        return
+                      })
+                      .catch(err => {
+                        console.error(err)
+                      })
+                  } else {
+                    return
+                  }
+                })
+            })
+        })
+        return
       })
       .catch(err => {
         console.log(err)

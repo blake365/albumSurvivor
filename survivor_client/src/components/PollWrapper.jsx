@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
-import { getActiveAlbums } from '../redux/actions/dataActions'
 
 import PollTest from './PollTest'
 
@@ -23,18 +22,6 @@ const styles = theme => ({
 })
 
 class PollWrapper extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      IP: '',
-    }
-  }
-
-  componentDidMount() {
-    this.props.getActiveAlbums()
-  }
-
   render() {
     const {
       classes,
@@ -52,7 +39,6 @@ class PollWrapper extends Component {
 }
 
 PollWrapper.propTypes = {
-  getActiveAlbums: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
 }
 
@@ -60,6 +46,4 @@ const mapStateToProps = state => ({
   data: state.data,
 })
 
-export default connect(mapStateToProps, { getActiveAlbums })(
-  withStyles(styles)(PollWrapper)
-)
+export default connect(mapStateToProps)(withStyles(styles)(PollWrapper))

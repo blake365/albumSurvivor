@@ -9,7 +9,11 @@ import SnackbarContainer from '../components/SnackbarContainer'
 import PollWrapper from '../components/PollWrapper'
 import Commentary from '../components/Commentary'
 
-import { getIP } from '../redux/actions/dataActions'
+import {
+  getFinalArchives,
+  getArchives,
+  getActiveAlbums,
+} from '../redux/actions/dataActions'
 
 const styles = theme => ({
   ...theme.spreadThis,
@@ -20,7 +24,13 @@ const styles = theme => ({
 
 export class home extends Component {
   componentDidMount() {
-    this.props.getIP()
+    // this.props.getIP()
+    this.props.getActiveAlbums()
+    const start = {
+      direction: 'older',
+    }
+    this.props.getArchives(start)
+    this.props.getFinalArchives()
   }
 
   render() {
@@ -41,4 +51,8 @@ export class home extends Component {
   }
 }
 
-export default connect(null, { getIP })(withStyles(styles)(home))
+export default connect(null, {
+  getArchives,
+  getFinalArchives,
+  getActiveAlbums,
+})(withStyles(styles)(home))

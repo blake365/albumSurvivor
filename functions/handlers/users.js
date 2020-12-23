@@ -16,7 +16,7 @@ exports.signup = (req, res) => {
   const dummyVote = {
     trackId: 123,
     voteDay: 0,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().getTime(),
   }
 
   const { valid, errors } = validateSignupData(newUser)
@@ -45,7 +45,7 @@ exports.signup = (req, res) => {
       token = idToken
       const userCredentials = {
         email: newUser.email,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().getTime(),
         userId: userId,
         type: 'basic',
       }

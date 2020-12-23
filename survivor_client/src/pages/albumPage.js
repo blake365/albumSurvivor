@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 // import MessageSlot from '../components/MessageSlot'
 
 import AlbumDetails from '../components/admin/AlbumDetails'
-import { getAlbum } from '../redux/actions/dataActions'
+// import { getAlbum } from '../redux/actions/dataActions'
 import EditAlbum from '../components/admin/EditAlbum'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import EditTrack from '../components/admin/EditTrack'
@@ -27,17 +27,6 @@ const styles = theme => ({
 })
 
 class albumPage extends Component {
-  state = {
-    albumId: '',
-  }
-
-  componentDidMount() {
-    let path = this.props.location.pathname
-    let halves = path.split('/')
-    // console.log(halves[2])
-    this.props.getAlbum(halves[2])
-  }
-
   render() {
     const {
       classes,
@@ -83,6 +72,4 @@ const mapStateToProps = state => ({
   data: state.data,
 })
 
-export default connect(mapStateToProps, { getAlbum })(
-  withStyles(styles)(albumPage)
-)
+export default connect(mapStateToProps)(withStyles(styles)(albumPage))

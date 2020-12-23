@@ -107,7 +107,7 @@ exports.postNewAlbum = (req, res) => {
     genre: req.body.genre,
     numTracks: parseInt(req.body.numTracks),
     releaseYear: req.body.releaseYear,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().getTime(),
     activePoll: req.body.activePoll,
     spotifyURI: req.body.spotifyURI,
     albumId: '',
@@ -250,7 +250,7 @@ exports.castVote2 = (req, res) => {
 
   const voteDocument = {
     trackId: req.params.trackId,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().getTime(),
     voteDay: new Date().getDate(),
     name: '',
     albumId: req.params.albumId,
@@ -333,10 +333,18 @@ exports.castVote2 = (req, res) => {
 }
 
 exports.anonVote = (req, res) => {
-  let limit
+  let ip = req.header('x-forwarded-for') || req.connection.remoteAddress
   let IPaddress
-  if (req.body.IPaddress !== '') {
-    IPaddress = req.body.IPaddress.slice(0, 10)
+  let limit
+  if (ip.length < 15) {
+    ip = ip
+  } else {
+    var nyIP = ip.slice(7)
+    ip = nyIP
+  }
+
+  if (ip !== '' || ip !== undefined) {
+    IPaddress = ip.slice(0, 10)
   } else {
     return res.json({
       error:
@@ -353,13 +361,13 @@ exports.anonVote = (req, res) => {
   const dummyVote = {
     trackId: 123,
     voteDay: 0,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().getTime(),
   }
 
   const voteDocument = {
     trackId: req.body.trackId,
     albumId: req.body.albumId,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().getTime(),
     voteDay: new Date().getDate(),
   }
 
@@ -398,7 +406,7 @@ exports.anonVote = (req, res) => {
                 if (votemap.includes(true)) {
                   return res.status(403).json({
                     error:
-                      'It appears you or someone with your IP address has already voted today. Make an account if this issue persist.',
+                      'It appears you or someone with your IP address has already voted today. Make an account if this issue persists.',
                   })
                 } else {
                   const trackDocument = db.doc(

@@ -17,7 +17,7 @@ import {
   SET_FINAL_ARCHIVES,
   // SET_ALBUM_TRACKS,
   SET_ARCHIVES,
-  SET_IP,
+  // SET_IP,
 } from '../types'
 
 import axios from 'axios'
@@ -27,22 +27,22 @@ import axios from 'axios'
 //   dispatch({ type: REFRESH })
 // }
 
-export const getIP = () => dispatch => {
-  fetch('https://api.ipify.org/?format=json')
-    .then(results => results.json())
-    .then(data => {
-      dispatch({
-        type: SET_IP,
-        payload: data.ip,
-      })
-    })
-    .catch(err => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: [],
-      })
-    })
-}
+// export const getIP = () => dispatch => {
+//   fetch('https://api.ipify.org/?format=json')
+//     .then(results => results.json())
+//     .then(data => {
+//       dispatch({
+//         type: SET_IP,
+//         payload: data.ip,
+//       })
+//     })
+//     .catch(err => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: [],
+//       })
+//     })
+// }
 
 //get all tracks
 // export const getTracks = () => dispatch => {
