@@ -356,29 +356,21 @@ exports.tallyAllVotes = functions.pubsub
                           })
                       })
                   } else if (query.docs.length === 2) {
-                    query.docs
-                      .forEach(doc => {
-                        return doc.ref.update({
-                          alive: false,
-                          voteOutDay: new Date().getTime(),
-                          respect: 0,
-                          roundVoteTotal: roundVoteTotal,
-                        })
+                    query.docs.forEach(doc => {
+                      doc.ref.update({
+                        alive: false,
+                        voteOutDay: new Date().getTime(),
+                        respect: 0,
+                        roundVoteTotal: roundVoteTotal,
                       })
-                      .then(() => {
-                        console.log('made it to end with no errors')
-                        return
-                      })
-                      .catch(err => {
-                        console.error(err)
-                      })
+                      console.log('made it to final round tally')
+                    })
                   } else {
                     return
                   }
                 })
             })
         })
-        return
       })
       .catch(err => {
         console.log(err)
@@ -432,15 +424,18 @@ exports.archivePollData = functions.pubsub
                       alive: doc.data().alive,
                       voteOutDay: doc.data().voteOutDay,
                     }
-                    db.collection(`archive/${archiveId}/tracks`).add(
-                      archiveTrack
-                    )
+                    return db
+                      .collection(`archive/${archiveId}/tracks`)
+                      .add(archiveTrack)
                   })
                 })
             })
         })
+        console.log('archive created')
       })
-    return json({ message: 'archive created' })
+      .catch(err => {
+        console.log(err)
+      })
   })
 
 //old vote tally for only one poll

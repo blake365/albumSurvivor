@@ -762,7 +762,6 @@ exports.deleteTrack = (req, res) => {
 //               .get()
 //               .then(query => {
 //                 if (query.docs.length > 2) {
-//                   // console.log('normal poll vote tally')
 //                   //get the first item from the query
 //                   // console.log(query.docs[0].data().name)
 //                   // console.log(query.docs[0].data().trackId)
@@ -795,7 +794,6 @@ exports.deleteTrack = (req, res) => {
 //                           })
 //                           return aliveTracks
 //                         })
-
 //                         .then(() => {
 //                           let batch = db.batch()
 //                           if (aliveTracks.length > 0) {
@@ -826,15 +824,14 @@ exports.deleteTrack = (req, res) => {
 //                         })
 //                     })
 //                 } else if (query.docs.length === 2) {
-//                   // console.log('final round poll vote tally')
 //                   query.docs.forEach(doc => {
-//                     console.log(doc.data().name)
-//                     return doc.ref.update({
+//                     doc.ref.update({
 //                       alive: false,
 //                       voteOutDay: new Date().getTime(),
 //                       respect: 0,
 //                       roundVoteTotal: roundVoteTotal,
 //                     })
+//                     console.log('made it to end of final round tally')
 //                   })
 //                 } else {
 //                   return
@@ -842,9 +839,9 @@ exports.deleteTrack = (req, res) => {
 //               })
 //           })
 //       })
-//       return res.json({ message: 'votes counted and reset' })
 //     })
 //     .catch(err => {
 //       console.log(err)
 //     })
+//   return res.json({ message: 'made it to the end' })
 // }
