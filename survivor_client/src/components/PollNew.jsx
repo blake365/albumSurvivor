@@ -125,16 +125,7 @@ class PollNew extends Component {
         onSelection={this.handleSelectedTrack}
         submitted={submitted}
         voted={voted}
-      />
-    ))
-
-    let winnerMarkup = tracks.map(track => (
-      <PollOption
-        selection={track.trackId}
-        track={track}
-        key={track.name}
-        onSelection={this.handleSelectedTrack}
-        submitted='winner'
+        showVotes={album.showVotes}
       />
     ))
 
@@ -153,8 +144,6 @@ class PollNew extends Component {
         )
       } else if (tracks.length === 0) {
         return PollEndedMarkup
-      } else if (tracks.length === 1) {
-        return winnerMarkup
       } else {
         return PollOptionMarkup
       }
@@ -164,6 +153,16 @@ class PollNew extends Component {
       if (tracks.length > 1) {
         return submitButtonOption
       } else return
+    }
+
+    function checkForShowVotes() {
+      if (submitted && album.showVotes === false) {
+        return (
+          <Typography variant='body1' align='center'>
+            Votes for this poll are hidden until the round ends.
+          </Typography>
+        )
+      }
     }
 
     let submitButtonOption = this.state.voted ? (
@@ -190,6 +189,7 @@ class PollNew extends Component {
           <FormControl disabled={this.state.disabled} fullWidth>
             {checkForWinner()}
             {checkForButton()}
+            {checkForShowVotes()}
           </FormControl>
         </Paper>
       </div>

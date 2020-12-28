@@ -50,6 +50,10 @@ class Profile extends Component {
                 return false
               } else return true
             })
+            .sort(function (a, b) {
+              // console.log(a.voteOutDay._seconds)
+              return b.createdAt - a.createdAt
+            })
             .map((vote, index) => (
               <div
                 key={index}

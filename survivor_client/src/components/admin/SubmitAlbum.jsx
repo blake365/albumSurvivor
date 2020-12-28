@@ -45,6 +45,7 @@ class SubmitAlbum extends Component {
       spotify: '',
       activePoll: false,
       errors: {},
+      showVotes: true,
     }
   }
 
@@ -62,6 +63,7 @@ class SubmitAlbum extends Component {
       releaseYear: this.state.releaseYear,
       activePoll: this.state.activePoll,
       spotifyURI: this.state.spotify,
+      showVotes: this.state.showVotes,
     }
 
     if (this.state.albumName === '') {
@@ -179,6 +181,17 @@ class SubmitAlbum extends Component {
               />
             }
             label='Make this album an active poll?'
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                color='primary'
+                checked={this.state.showVotes}
+                onChange={this.handleSwitchChange}
+                name='showVotes'
+              />
+            }
+            label='Show votes after a vote is cast?'
           />
           {errors.general && (
             <Typography variant='body2' className={classes.customError}>

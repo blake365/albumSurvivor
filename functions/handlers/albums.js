@@ -18,6 +18,7 @@ exports.getAllAlbums = (req, res) => {
           genre: doc.data().genre,
           numTracks: doc.data().numTracks,
           releaseYear: doc.data().releaseYear,
+          showVotes: doc.data().showVotes,
         })
       })
       return res.json(albumList)
@@ -111,6 +112,7 @@ exports.postNewAlbum = (req, res) => {
     activePoll: req.body.activePoll,
     spotifyURI: req.body.spotifyURI,
     albumId: '',
+    showVotes: req.body.showVotes,
   }
 
   db.collection('albums')
@@ -177,6 +179,7 @@ exports.editAlbumDetails = (req, res) => {
     releaseYear: req.body.releaseYear,
     activePoll: req.body.activePoll,
     spotifyURI: req.body.spotifyURI,
+    showVotes: req.body.showVotes,
   }
 
   db.doc(`albums/${req.params.albumId}`)

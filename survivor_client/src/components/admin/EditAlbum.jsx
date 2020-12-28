@@ -45,6 +45,7 @@ class EditAlbum extends Component {
       spotify: '',
       activePoll: false,
       errors: {},
+      showVotes: true,
     }
   }
 
@@ -61,6 +62,7 @@ class EditAlbum extends Component {
       releaseYear: this.state.releaseYear,
       activePoll: this.state.activePoll,
       spotifyURI: this.state.spotify,
+      showVotes: this.state.showVotes,
     }
     this.props.editAlbumData(this.props.album.data.albumId, editedAlbumData)
   }
@@ -166,6 +168,18 @@ class EditAlbum extends Component {
               />
             }
             label='Make this album an active poll?'
+          />
+          <br />
+          <FormControlLabel
+            control={
+              <Switch
+                color='primary'
+                checked={this.state.showVotes}
+                onChange={this.handleSwitchChange}
+                name='showVotes'
+              />
+            }
+            label='Show votes after a vote is cast?'
           />
           {errors.general && (
             <Typography variant='body2' className={classes.customError}>

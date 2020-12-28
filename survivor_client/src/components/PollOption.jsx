@@ -7,7 +7,11 @@ import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Radio from '@material-ui/core/Radio'
 import Avatar from '@material-ui/core/Avatar'
-import Chip from '@material-ui/core/Chip'
+// import Chip from '@material-ui/core/Chip'
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked'
+import CancelIcon from '@material-ui/icons/Cancel'
+import CheckIcon from '@material-ui/icons/Check'
 // import { connect } from 'react-redux'
 
 const styles = theme => ({
@@ -61,8 +65,51 @@ class PollOption extends Component {
       submitted,
       voted,
       classes,
+      showVotes,
       track: { name, trackId, votes },
     } = this.props
+
+    let radioButton = (
+      <Radio
+        className={classes.radio}
+        checked={selection === trackId}
+        onChange={this.handleChange}
+        value={trackId}
+        name={name}
+        inputProps={{ 'aria-label': name }}
+        color='primary'
+      />
+    )
+
+    function radioButtonMarkup() {
+      if (submitted && showVotes) {
+        if (voted) {
+          return (
+            <Avatar className={classes.voteDisplay}>
+              {selection === trackId ? votes : votes}
+            </Avatar>
+          )
+        } else {
+          return (
+            <Avatar className={classes.voteDisplay}>
+              {selection === trackId ? votes + 1 : votes}
+            </Avatar>
+          )
+        }
+      } else if (submitted && showVotes === false) {
+        return (
+          <Avatar className={classes.voteDisplay}>
+            {selection === trackId ? (
+              <CheckIcon />
+            ) : (
+              <RadioButtonUncheckedIcon fontSize='small' />
+            )}
+          </Avatar>
+        )
+      } else {
+        return radioButton
+      }
+    }
 
     return (
       <Card
@@ -82,35 +129,7 @@ class PollOption extends Component {
             <Grid item className={classes.trackInfo}>
               <Typography variant='h6'>{name}</Typography>
             </Grid>
-            <Grid item>
-              {submitted ? (
-                submitted === 'winner' ? (
-                  <Chip
-                    label='WINNER'
-                    color='primary'
-                    className={classes.winnerDisplay}
-                  />
-                ) : voted ? (
-                  <Avatar className={classes.voteDisplay}>
-                    {selection === trackId ? votes : votes}
-                  </Avatar>
-                ) : (
-                  <Avatar className={classes.voteDisplay}>
-                    {selection === trackId ? votes + 1 : votes}
-                  </Avatar>
-                )
-              ) : (
-                <Radio
-                  className={classes.radio}
-                  checked={selection === trackId}
-                  onChange={this.handleChange}
-                  value={trackId}
-                  name={name}
-                  inputProps={{ 'aria-label': name }}
-                  color='primary'
-                />
-              )}
-            </Grid>
+            <Grid item>{radioButtonMarkup()}</Grid>
           </Grid>
         </CardContent>
       </Card>

@@ -130,7 +130,7 @@ exports.api = functions.https.onRequest(app)
 //Scheduled functions
 //check for round ended
 exports.checkForRoundEnded = functions.pubsub
-  .schedule('59 18 * * *')
+  .schedule('57 18 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
     console.log('This will be run every day at 6:59PM Eastern!')
@@ -160,7 +160,8 @@ exports.checkForRoundEnded = functions.pubsub
                   finalArchiveId: '',
                 }
 
-                db.collection('finalResults')
+                return db
+                  .collection('finalResults')
                   .add(finalArchive)
                   .then(doc => {
                     let finalArchiveId = doc.id
@@ -170,7 +171,8 @@ exports.checkForRoundEnded = functions.pubsub
                     return finalArchiveId
                   })
                   .then(finalArchiveId => {
-                    db.collection(`albums/${album.data().albumId}/tracks`)
+                    return db
+                      .collection(`albums/${album.data().albumId}/tracks`)
                       .orderBy('trackListing')
                       .get()
                       .then(data => {
@@ -181,9 +183,9 @@ exports.checkForRoundEnded = functions.pubsub
                             trackListing: doc.data().trackListing,
                             voteOutDay: doc.data().voteOutDay,
                           }
-                          db.collection(
-                            `finalResults/${finalArchiveId}/tracks`
-                          ).add(archiveTrack)
+                          return db
+                            .collection(`finalResults/${finalArchiveId}/tracks`)
+                            .add(archiveTrack)
                         })
                       })
                       .then(() => {
@@ -196,6 +198,7 @@ exports.checkForRoundEnded = functions.pubsub
                             activePoll: false,
                           })
                         })
+                        console.log('set album to inactive')
                       })
                   })
               } else {
@@ -411,7 +414,8 @@ exports.archivePollData = functions.pubsub
               return archiveId
             })
             .then(archiveId => {
-              db.collection(`albums/${album.albumId}/tracks`)
+              return db
+                .collection(`albums/${album.albumId}/tracks`)
                 .orderBy('trackListing')
                 .get()
                 .then(data => {
@@ -430,8 +434,8 @@ exports.archivePollData = functions.pubsub
                   })
                 })
             })
+          console.log('archive created')
         })
-        console.log('archive created')
       })
       .catch(err => {
         console.log(err)

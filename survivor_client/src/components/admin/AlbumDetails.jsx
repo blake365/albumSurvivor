@@ -124,6 +124,15 @@ class AlbumDetails extends Component {
                 Inactive Poll
               </Typography>
             )}
+            {data.showVotes ? (
+              <Typography variant='body1' className={classes.active}>
+                Show Votes
+              </Typography>
+            ) : (
+              <Typography variant='body1' className={classes.inactive}>
+                Don't Show Votes
+              </Typography>
+            )}
             <Typography variant='h5'>{data.albumName}</Typography>
             <Typography variant='body1'>{data.artist}</Typography>
             <Typography variant='body1'>{data.genre}</Typography>
