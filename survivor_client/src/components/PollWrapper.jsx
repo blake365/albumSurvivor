@@ -16,7 +16,7 @@ const styles = theme => ({
   onePoll: {
     margin: '0px 5px 10px 5px',
     flex: 1,
-    minWidth: 300,
+    minWidth: 350,
     maxWidth: 600,
   },
 })

@@ -53,7 +53,7 @@ export class Navbar extends Component {
               <AlbumIcon fontSize='large' style={{ color: '#fff' }} />
             </Link>
             <Link to='/'>
-              <Typography variant='h6' style={{ color: '#fff' }}>
+              <Typography variant='h6' style={{ color: '#fff', marginLeft: 5 }}>
                 Album Survivor
               </Typography>
             </Link>

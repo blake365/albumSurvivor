@@ -105,7 +105,7 @@ class ArchivePost extends Component {
           }}
         >
           <Typography variant='body1' style={{ lineHeight: 1.7, width: '90%' }}>
-            {track.trackListing}.
+            {track.trackListing}.{' '}
             <span
               style={
                 track.votes === mostVotes

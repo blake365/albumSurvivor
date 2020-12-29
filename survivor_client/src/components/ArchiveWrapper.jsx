@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import { connect } from 'react-redux'
+import { getArchives } from '../redux/actions/dataActions'
 import ArchivePost from './ArchivePost'
 import Button from '@material-ui/core/Button'
 
@@ -17,7 +18,7 @@ const styles = theme => ({
     margin: '0px 5px 10px 5px',
     flex: 1,
     minWidth: 250,
-    maxWidth: 400,
+    maxWidth: 325,
   },
 })
 
@@ -79,4 +80,6 @@ const mapStateToProps = state => ({
   data: state.data,
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(ArchiveWrapper))
+export default connect(mapStateToProps, { getArchives })(
+  withStyles(styles)(ArchiveWrapper)
+)

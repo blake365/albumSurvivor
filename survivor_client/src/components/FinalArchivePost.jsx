@@ -22,22 +22,9 @@ const styles = theme => ({
     marginTop: 5,
     marginBottom: 5,
   },
-  headline: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
   title: {
     fontWeight: '600',
     fontSize: '1.1rem',
-  },
-  newIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    color: 'limegreen',
-  },
-  winnerDisplay: {
-    margin: 7,
-    padding: 0,
   },
   header: {
     fontWeight: '600',
@@ -52,6 +39,11 @@ const styles = theme => ({
     padding: '0 0 6px 0',
     background:
       'linear-gradient(0deg, rgba(21,101,192,1) 6px, rgba(255,255,255,1) 6px)',
+  },
+  rowHover: {
+    '&:hover': {
+      backgroundColor: theme.palette.secondary.main,
+    },
   },
 })
 
@@ -111,7 +103,7 @@ class FinalArchivePost extends Component {
                 return b.voteOutDay - a.voteOutDay
               })
               .map((row, index) => (
-                <TableRow key={row.name}>
+                <TableRow key={row.name} className={classes.rowHover}>
                   <TableCell
                     component='th'
                     scope='row'
