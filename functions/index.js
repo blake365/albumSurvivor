@@ -426,7 +426,6 @@ exports.archivePollData = functions.pubsub
                       trackId: doc.data().trackId,
                       trackListing: doc.data().trackListing,
                       alive: doc.data().alive,
-                      voteOutDay: doc.data().voteOutDay,
                     }
                     return db
                       .collection(`archive/${archiveId}/tracks`)

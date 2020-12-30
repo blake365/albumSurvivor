@@ -149,6 +149,7 @@ exports.postNewTrackToAlbum = (req, res) => {
     votes: 0,
     alive: true,
     trackId: '',
+    voteOutDay: null,
   }
 
   db.collection(`albums/${req.params.albumId}/tracks`)
