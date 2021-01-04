@@ -39,7 +39,7 @@ class MessageSlot extends Component {
         onClose={this.handleClose}
         // style={{ marginTop: 10 }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={4500}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity='error' variant='filled'>

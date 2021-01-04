@@ -133,7 +133,7 @@ exports.checkForRoundEnded = functions.pubsub
   .schedule('57 18 * * *')
   .timeZone('America/New_York')
   .onRun(context => {
-    console.log('This will be run every day at 6:59PM Eastern!')
+    console.log('This will be run every day at 6:57PM Eastern!')
     //get the active albums
     db.collection('albums')
       .where('activePoll', '==', true)

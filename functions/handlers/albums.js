@@ -337,14 +337,14 @@ exports.castVote2 = (req, res) => {
 }
 
 exports.anonVote = (req, res) => {
-  let ip = req.header('x-forwarded-for') || req.connection.remoteAddress
+  let ip = req.connection.remoteAddress
   let IPaddress
   let limit
   if (ip.length < 15) {
     ip = ip
   } else {
-    var nyIP = ip.slice(7)
-    ip = nyIP
+    var myIP = ip.slice(7)
+    ip = myIP
   }
 
   if (ip !== '' || ip !== undefined) {
@@ -410,7 +410,7 @@ exports.anonVote = (req, res) => {
                 if (votemap.includes(true)) {
                   return res.status(403).json({
                     error:
-                      'It appears you or someone with your IP address has already voted today. Make an account if this issue persists.',
+                      'It appears you or someone with your IP address has already voted today. Make an account if this problem persists.',
                   })
                 } else {
                   const trackDocument = db.doc(
